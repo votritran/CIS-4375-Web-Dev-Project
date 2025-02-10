@@ -16,13 +16,37 @@
             color: white;
             padding: 10px;
             border-radius: 5px;
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 80px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .navbar .logo {
+            width: 150px;
+            height: auto;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -50px;
+            z-index: 10; /* Ensure logo is on top */
+            border: 6px solid #8b4513; 
+            transition: transform 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
+        }
+        .navbar .logo:hover {
+            transform: translateX(-50%) scale(1.1); /* Slightly enlarge on hover */
+            border-color: #552b0d; /* Change border color on hover */
         }
         .navbar ul {
             list-style-type: none;
             padding: 0;
             display: flex;
             justify-content: space-around;
+            flex: 1;
+            margin: 0;
         }
         .navbar a {
             color: white;
@@ -75,12 +99,20 @@
     </style>
 </head>
 <body>
-        <!-- Navigation bar -->
+    
+    <!-- Navigation bar -->
     <nav class="navbar">
+        
+        <!-- Menu -->
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">Menu</a></li>
             <li><a href="CakeOrder.html">Custom Cakes</a></li>
+        
+         <!-- Logo -->
+         <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+        
+            <li><a href="#">Event</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="#">Log in</a></li>
         </ul>
@@ -138,6 +170,10 @@
                 <option value="heart">Heart</option>
                 <option value="custom">Custom</option>
             </select>
+
+            <label for="cakeImage">Upload Image (optional):</label>
+            <input type="file" id="cakeImage" name="cakeImage" accept="image/*">
+
 
             <label for="description">Additional Details:</label>
             <textarea id="description" name="description" rows="4" placeholder="Describe any special requests..."></textarea>
