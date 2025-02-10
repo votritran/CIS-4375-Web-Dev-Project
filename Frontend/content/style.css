@@ -1,0 +1,99 @@
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f4e5;
+        margin: 0;
+        padding: 20px;
+    }
+    .navbar {
+        background-color: #8b4513;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        margin-bottom: 80px;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+    .navbar .logo {
+        width: 150px;
+        height: auto;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: -50px;
+        z-index: 10; /* Ensure logo is on top */
+        border: 6px solid #8b4513; 
+        transition: transform 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
+    }
+    .navbar .logo:hover {
+        transform: translateX(-50%) scale(1.1); /* Slightly enlarge on hover */
+        border-color: #552b0d; /* Change border color on hover */
+    }
+    .navbar ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: space-around;
+        flex: 1;
+        margin: 0;
+    }
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .navbar a:hover {
+        color: #ffffff;
+
+        
+    }
+    .navbar li:hover{
+        transition: transform 0.3s, color 0.3s;
+        transform: scale(1.2);
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #8b4513;
+    }
+    label {
+        font-weight: bold;
+    }
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        background-color: #8b4513;
+        color: white;
+        padding: 10px;
+        border: none;
+        width: 100%;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #6a2c0f;
+    }
+    .disclaimer {
+        text-align: center;
+        font-size: 14px;
+        color: red;
+        margin-top: 15px;
+    }
+
