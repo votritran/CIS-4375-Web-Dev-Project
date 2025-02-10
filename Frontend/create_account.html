@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Paris Sweet Patisserie</title>
+    <title>Create Account - Paris Sweet Patisserie</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,23 +69,10 @@
         button:hover {
             background-color: #6a2c0f;
         }
-        .error {
-            color: red;
+        .success {
+            color: green;
             font-size: 14px;
             display: none;
-        }
-        .secondary-btn {
-            background-color: #ddd;
-            color: #333;
-            border: none;
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .secondary-btn:hover {
-            background-color: #bbb;
         }
     </style>
 </head>
@@ -101,33 +88,32 @@
     </nav>
 
     <div class="container">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+        <h2>Create Account</h2>
+        <form id="createAccountForm">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="newEmail">Email:</label>
+            <input type="email" id="newEmail" name="newEmail" required>
 
-            <p class="error" id="errorMsg">Invalid email or password.</p>
+            <label for="newPassword">Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
 
-            <button type="submit">Login</button>
-            <button type="button" class="secondary-btn" onclick="window.location.href='create-account.html'">Create Account</button>
+            <p class="success" id="successMsg">Account created successfully! Redirecting to login...</p>
+
+            <button type="submit">Create Account</button>
         </form>
     </div>
 
     <script>
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
+        document.getElementById("createAccountForm").addEventListener("submit", function(event) {
             event.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+            document.getElementById("successMsg").style.display = "block";
 
-            // Dummy login (replace with actual backend validation)
-            if (email === "user@example.com" && password === "password123") {
-                window.location.href = "CakeOrder.html";
-            } else {
-                document.getElementById("errorMsg").style.display = "block";
-            }
+            // Simulating account creation (in real cases, store in database)
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 2000);
         });
     </script>
 </body>
