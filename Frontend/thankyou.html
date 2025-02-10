@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Paris Sweet Patisserie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f4e5;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .navbar {
+            background-color: #8b4513;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .navbar ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            color: #8b4513;
+        }
+        #confetti {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+        <!-- Navigation bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Menu</a></li>
+            <li><a href="CakeOrder.html">Custom Cakes</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Log in</a></li>
+        </ul>
+    </nav>
+
+    <div id="confetti"></div>
+    <h1>Thank You for Your Order!</h1>
+    <p>We will be reaching out to you soon to confirm your cake request.</p>
+
+    <script>
+        function createConfetti() {
+            const colors = ['#ff0', '#0f0', '#00f', '#f00', '#ff00', '#00ff', '#f0f'];
+            const confetti = document.getElementById('confetti');
+
+            for (let i = 0; i < 100; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.style.position = 'absolute';
+                confettiPiece.style.width = '10px';
+                confettiPiece.style.height = '10px';
+                confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confettiPiece.style.opacity = Math.random();
+                confettiPiece.style.borderRadius = '50%';
+                confettiPiece.style.left = Math.random() * 100 + 'vw';
+                confettiPiece.style.top = Math.random() * 100 + 'vh';
+                confettiPiece.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+                confettiPiece.style.animation = `fall 2s linear forwards`;
+                confetti.appendChild(confettiPiece);
+            }
+
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fall {
+                    to {
+                        transform: translate(-50%, 100vh) rotate(360deg);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        window.onload = createConfetti;
+    </script>
+</body>
+</html>
