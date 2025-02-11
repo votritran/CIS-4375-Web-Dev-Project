@@ -5,6 +5,7 @@
         margin: 0;
         padding: 20px;
         
+        
     }
     .navbar {
         background-color: #8b4513;
@@ -110,4 +111,63 @@
         top: 0;
         left: 0;
         z-index: 1000;
+    }
+
+
+    .menu-container {
+        width: 80%;                  /* Set the width of the container */
+        max-width: 800px;  
+        margin: 0 auto;              /* Center it horizontally */
+        padding: 30px;
+        background-color: #f8f8f8;
+        border-radius: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .menu-container h1 {
+        font-size: 36px;
+        margin-bottom: 40px;
+    }
+    
+    .menu-item {
+        display: inline-block;
+        width: 270px;
+        margin: 20px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-radius: 40px;
+    }
+    
+    .menu-item img {
+        width: 100%;
+        height: auto;
+        max-width: 200px;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    
+    .menu-item h3 {
+        font-size: 24px;
+        margin: 10px 0;
+    }
+    
+    .menu-item p {
+        font-size: 16px;
+        color: #555;
+    }
+    
+    .price {
+        font-size: 18px;
+        color: #e74c3c;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .header {
+        text-align: center;
+        
     }
