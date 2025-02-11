@@ -35,9 +35,16 @@
             <p class="error" id="errorMsg" style="display: none; color: red;">Invalid email or password.</p>
 
             <button type="submit">Login</button>
-            <button type="button" class="secondary-btn" onclick="window.location.href='create-account.html'">Create Account</button>
+            <button type="button" id="createAccountBtn" class="secondary-btn">Create Account</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById("createAccountBtn").addEventListener("click", function() {
+            window.location.href = "create_account.html"; 
+        });
+    </script>
+    
 
     <script>
         document.getElementById("loginForm").addEventListener("submit", function(event) {
