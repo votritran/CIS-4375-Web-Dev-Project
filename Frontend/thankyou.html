@@ -3,65 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - Paris Sweet Patisserie</title>
+    <title>Paris Sweet Patisserie - Cake Order Form</title>
+    <link rel="stylesheet" href="content/style.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f4e5;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-        .navbar {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .navbar ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: space-around;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-        h1 {
-            color: #8b4513;
-        }
-        #confetti {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            text-align:center; 
         }
     </style>
 </head>
 <body>
-        <!-- Navigation bar -->
+    
+    <!-- Navigation bar -->
     <nav class="navbar">
+        
+        <!-- Menu -->
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">Menu</a></li>
             <li><a href="CakeOrder.html">Custom Cakes</a></li>
+        
+         <!-- Logo -->
+         <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+        
+            <li><a href="#">Event</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="#">Log in</a></li>
         </ul>
     </nav>
 
     <div id="confetti"></div>
-    <h1>Thank You for Your Order!</h1>
+    <h1 >Thank You for Your Order!</h1>
     <p>We will be reaching out to you soon to confirm your cake request.</p>
 
     <script>

@@ -4,83 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paris Sweet Patisserie - Cake Order Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f4e5;
-            margin: 0;
-            padding: 20px;
-        }
-        .navbar {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .navbar ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: space-around;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-            color: #8b4513;
-        }
-        label {
-            font-weight: bold;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px;
-            border: none;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #6a2c0f;
-        }
-        .disclaimer {
-            text-align: center;
-            font-size: 14px;
-            color: red;
-            margin-top: 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="content/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
-        <!-- Navigation bar -->
+    
+    <!-- Navigation bar -->
     <nav class="navbar">
+        
+        <!-- Menu -->
         <ul>
             <li><a href="#">Home</a></li>
-            <li><a href="#">Menu</a></li>
+            <li><a href="menu.html">Menu</a></li>
             <li><a href="CakeOrder.html">Custom Cakes</a></li>
+        
+         <!-- Logo -->
+            <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+        
+            <li><a href="#">Event</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="#">Log in</a></li>
         </ul>
@@ -139,6 +80,10 @@
                 <option value="custom">Custom</option>
             </select>
 
+            <label for="cakeImage">Upload Image (optional):</label>
+            <input type="file" id="cakeImage" name="cakeImage" accept="image/*">
+
+
             <label for="description">Additional Details:</label>
             <textarea id="description" name="description" rows="4" placeholder="Describe any special requests..."></textarea>
 
@@ -148,5 +93,7 @@
         <!-- disclaimer -->
         <p class="disclaimer">Filling out this form does not guarantee an order. We will contact you via phone or email to confirm if we can fulfill your cake request.</p>
     </div>
+
+    
 </body>
 </html>
