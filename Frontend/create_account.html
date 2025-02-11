@@ -4,84 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - Paris Sweet Patisserie</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f4e5;
-            margin: 0;
-            padding: 20px;
-        }
-        .navbar {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .navbar ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: space-around;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h2 {
-            color: #8b4513;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px;
-            border: none;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #6a2c0f;
-        }
-        .success {
-            color: green;
-            font-size: 14px;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="content/style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
         <ul>
             <li><a href="#">Home</a></li>
-            <li><a href="#">Menu</a></li>
+            <li><a href="menu.html">Menu</a></li>
             <li><a href="CakeOrder.html">Custom Cakes</a></li>
+
+            <!-- Logo -->
+            <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+
+            <li><a href="#">Event</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="login.html">Log in</a></li>
         </ul>
@@ -99,7 +35,7 @@
             <label for="newPassword">Password:</label>
             <input type="password" id="newPassword" name="newPassword" required>
 
-            <p class="success" id="successMsg">Account created successfully! Redirecting to login...</p>
+            <p class="success" id="successMsg" style="display: none; color: green;">Account created successfully! Redirecting to login...</p>
 
             <button type="submit">Create Account</button>
         </form>
@@ -118,3 +54,4 @@
     </script>
 </body>
 </html>
+

@@ -4,97 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Paris Sweet Patisserie</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f4e5;
-            margin: 0;
-            padding: 20px;
-        }
-        .navbar {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .navbar ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: space-around;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h2 {
-            color: #8b4513;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px;
-            border: none;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #6a2c0f;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-            display: none;
-        }
-        .secondary-btn {
-            background-color: #ddd;
-            color: #333;
-            border: none;
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .secondary-btn:hover {
-            background-color: #bbb;
-        }
-    </style>
+    <link rel="stylesheet" href="content/style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
         <ul>
             <li><a href="#">Home</a></li>
-            <li><a href="#">Menu</a></li>
+            <li><a href="menu.html">Menu</a></li>
             <li><a href="CakeOrder.html">Custom Cakes</a></li>
+
+            <!-- Logo -->
+            <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+
+            <li><a href="#">Event</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="login.html">Log in</a></li>
         </ul>
@@ -109,7 +32,7 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
 
-            <p class="error" id="errorMsg">Invalid email or password.</p>
+            <p class="error" id="errorMsg" style="display: none; color: red;">Invalid email or password.</p>
 
             <button type="submit">Login</button>
             <button type="button" class="secondary-btn" onclick="window.location.href='create-account.html'">Create Account</button>
@@ -132,3 +55,4 @@
     </script>
 </body>
 </html>
+
