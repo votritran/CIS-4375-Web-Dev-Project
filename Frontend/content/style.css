@@ -16,18 +16,19 @@
         justify-content: space-between;
         align-items: center;
         position: relative;
-        margin-bottom: 80px;
-        margin-top: 40px;
+        margin-bottom: 120px;
+        margin-top: 100px;
         flex-wrap: wrap;
     }
     .navbar .logo {
-        width: 150px;
+        width: 180px;
         height: auto;
         border-radius: 50%;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        top: -50px;
+
+        top: -100px;
         z-index: 10; /* Ensure logo is on top */
         border: 6px solid #8b4513; 
         transition: transform 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
@@ -118,7 +119,7 @@
         width: 80%;                  /* Set the width of the container */
         max-width: 800px;  
         margin: 0 auto;              /* Center it horizontally */
-        padding: 30px;
+        padding: 20px;
         background-color: #f8f8f8;
         border-radius: 30px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
@@ -168,6 +169,46 @@
     }
 
     .header {
+
         text-align: center;
         
     }
+
+
+
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column; /* Stack the items vertically */
+        align-items: center;     /* Center the items horizontally */
+        margin-top: 100px;        /* Adjust top margin */
+        width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .navbar ul {
+        display: block; /* Change the navbar links to block-level for vertical stacking */
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar li {
+        margin: 20px 0; /* Add spacing between items */
+        text-align: center; /* Center the text inside each link */
+    }
+
+    .navbar .logo {
+        margin-top: 5px;  /* Provide some space between the logo and navbar items */
+        width: 150px;  /* Reduce logo size on smaller screens */
+    }
+
+    .navbar a {
+        font-size: 16px; /* Adjust font size for readability */
+    }
+
+    /* Optional: Adjust button style for smaller screens */
+    button {
+        width: auto; /* Allow button to be smaller */
+        padding: 10px 20px;
+    }
+}
