@@ -76,13 +76,16 @@
     }
     label {
         font-weight: bold;
+        display: block; /*Ensures label takes its own line*/
+        margin-bottom: 5pm; /*Adds spave between the label and the input*/
     }
     input, select, textarea {
-        width: 100%;
+        width: 95%;
         padding: 8px;
         margin: 5px 0 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        display: block; /*Ensures input is on its own label*/
     }
     button {
         background-color: #8b4513;
@@ -97,6 +100,7 @@
         background-color: #6a2c0f;
     }
     .disclaimer {
+        font-weight: bold;
         text-align: center;
         font-size: 14px;
         color: red;
