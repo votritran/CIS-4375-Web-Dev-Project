@@ -11,6 +11,12 @@ load_dotenv()
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
+from flask_cors import CORS
+
+app = flask.Flask(__name__)
+CORS(app)
+
+
 # database connection
 def create_connection():
     try:
@@ -96,7 +102,7 @@ def login():
         cursor = connection.cursor(dictionary=True)
 
         # Check if user is an admin 
-        cursor.execute("SELECT * FROM Owner WHERE OwnerUsername = %s", (email_or_username,))
+        cursor.execute("SELECT * FROM Owner WHERE OwnerEmail = %s", (email_or_username,))
         owner = cursor.fetchone()
         if owner and bcrypt.check_password_hash(owner["OwnerPassword"], password):
             return jsonify({"role": "admin", "redirect": "menu.html"}), 200
