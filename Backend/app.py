@@ -96,7 +96,6 @@ def login():
     data = request.json
     email_or_username = data.get("email_or_username")
     password = data.get("password")
-
     connection = create_connection()
     if connection:
         cursor = connection.cursor(dictionary=True)
@@ -105,7 +104,7 @@ def login():
         cursor.execute("SELECT * FROM Owner WHERE OwnerEmail = %s", (email_or_username,))
         owner = cursor.fetchone()
         if owner and bcrypt.check_password_hash(owner["OwnerPassword"], password):
-            return jsonify({"role": "admin", "redirect": "menu.html"}), 200
+            return jsonify({"role": "admin", "redirect": "admin_menu.html"}), 200
 
         # Check if user is a customer
         cursor.execute("SELECT * FROM Customer WHERE CustomerEmail = %s", (email_or_username,))
@@ -117,6 +116,7 @@ def login():
         connection.close()
     
     return jsonify({"message": "Invalid credentials"}), 401
+
 
 
 
