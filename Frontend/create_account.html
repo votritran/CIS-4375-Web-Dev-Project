@@ -41,6 +41,13 @@
             <!-- Password -->
             <label for="newPassword">Password:</label>
             <input type="password" id="newPassword" name="newPassword" required>
+<<<<<<< HEAD
+=======
+
+            <!-- Phone Number -->
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="^\d{10}$" required>
+>>>>>>> origin/main
     
             <!-- Success Message (Hidden by Default) -->
             <p class="success" id="successMsg" style="display: none; color: green;">Account created successfully! Redirecting to login...</p>
@@ -54,6 +61,7 @@
     <script>
         document.getElementById("createAccountForm").addEventListener("submit", function(event) {
             event.preventDefault();
+<<<<<<< HEAD
             document.getElementById("successMsg").style.display = "block";
 
             // Simulating account creation
@@ -65,3 +73,48 @@
 </body>
 </html>
 
+=======
+    
+            // Get values from the form
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            const email = document.getElementById("newEmail").value;
+            const password = document.getElementById("newPassword").value;
+            const phone = document.getElementById("phoneNumber").value;
+    
+            // Make API call to backend to register the user
+            fetch('http://127.0.0.1:5000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password,
+                    phone: phone,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("successMsg").style.display = "block"; 
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 2000);
+                } else {
+                    alert(data.message); 
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was an error creating your account.');
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>
+>>>>>>> origin/main
