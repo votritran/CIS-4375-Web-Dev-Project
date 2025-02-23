@@ -21,7 +21,6 @@
             <li><a href="event.html">Event</a></li>
             <li><a href="about_us.html">About Us</a></li>
             <li><a href="contact_us.html">Contact Us</a></li>
-            <li><a href="login.html">Log in</a></li>
         </ul>
     </nav>
 
@@ -39,12 +38,27 @@
             <input type="password" id="password" name="password" required>
             <!-- Error Message (Hidden by Default) -->
             <p class="error" id="errorMsg" style="display: none; color: red;">Invalid email or password.</p>
-            <!-- Login Button -->
-            <button type="submit">Login</button>
-            <!-- Redirect to Create Account Page -->
-            <button type="button" id="createAccountBtn" class="secondary-btn">Create Account</button>
+            <!-- Button Container -->
+            <div class="button-container">
+                <button type="submit">Login</button>
+                <button type="button" id="createAccountBtn" class="secondary-btn">Create Account</button>
+            </div>
         </form>
     </div>
+
+    <style>
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .button-container button {
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 
     <!-- Redirect to Create Account Page When Button is Clicked -->
     <script>
@@ -79,10 +93,8 @@
             }
         });
 
-        
         document.addEventListener("DOMContentLoaded", function() {
             const userRole = localStorage.getItem("userRole");
-
             if (userRole === "admin") {
                 document.getElementById("menu-link").href = "admin_menu.html";
                 document.getElementById("cakeorder-link").href = "admin_CakeOrder.html";

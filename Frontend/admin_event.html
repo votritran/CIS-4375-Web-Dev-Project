@@ -5,7 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Manage Events</title>
     <link rel="stylesheet" href="content/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
     <script defer src="content/script.js"></script>
+    <style>
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .button-container button {
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -52,24 +65,30 @@
                 <h3>Exclusive Pastry Sampling</h3>
                 <p>Join us for an exclusive tasting of our newest pastry collection.</p>
                 <p class="price">Date: March 15, 2025</p>
-                <button class="edit-event">Edit</button>
-                <button class="delete-event">Delete</button>
+                <div class="button-container">
+                    <button class="edit-event">Edit</button>
+                    <button class="delete-event">Delete</button>
+                </div>
             </li>
             <li class="menu-item">
                 <img src="photo/baking_workshop.jpg" alt="Baking Workshop" class="menu-image">
                 <h3>Hands-On Baking Experience</h3>
                 <p>Learn to bake authentic French pastries with our expert chefs.</p>
                 <p class="price">Date: April 10, 2025</p>
-                <button class="edit-event">Edit</button>
-                <button class="delete-event">Delete</button>
+                <div class="button-container">
+                    <button class="edit-event">Edit</button>
+                    <button class="delete-event">Delete</button>
+                </div>
             </li>
             <li class="menu-item">
                 <img src="photo/chocolate_festival.jpg" alt="Chocolate Festival" class="menu-image">
                 <h3>Indulge in Chocolate Creations</h3>
                 <p>Experience a variety of chocolate desserts and beverages.</p>
                 <p class="price">Date: May 5, 2025</p>
-                <button class="edit-event">Edit</button>
-                <button class="delete-event">Delete</button>
+                <div class="button-container">
+                    <button class="edit-event">Edit</button>
+                    <button class="delete-event">Delete</button>
+                </div>
             </li>
         </ul>
     </div>
@@ -101,8 +120,10 @@
                                     <h3>${title}</h3>
                                     <p>${description}</p>
                                     <p class='price'>Date: ${date}</p>
-                                    <button class='edit-event'>Edit</button>
-                                    <button class='delete-event'>Delete</button>`;
+                                    <div class='button-container'>
+                                        <button class='edit-event'>Edit</button>
+                                        <button class='delete-event'>Delete</button>
+                                    </div>`;
                     
                     eventList.appendChild(li);
                     eventForm.reset();
@@ -111,9 +132,9 @@
             
             eventList.addEventListener("click", (e) => {
                 if (e.target.classList.contains("delete-event")) {
-                    e.target.parentElement.remove();
+                    e.target.closest("li").remove();
                 } else if (e.target.classList.contains("edit-event")) {
-                    const li = e.target.parentElement;
+                    const li = e.target.closest("li");
                     document.getElementById("event-title").value = li.querySelector("h3").textContent;
                     document.getElementById("event-date").value = li.querySelector(".price").textContent.replace("Date: ", "");
                     document.getElementById("event-description").value = li.querySelector("p").textContent;
