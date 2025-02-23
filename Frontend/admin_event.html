@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Events</title>
+    <link rel="stylesheet" href="content/style.css">
+    <script defer src="content/script.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="CakeOrder.html">Custom Cakes</a></li>
+            <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+            <li><a href="admin_events.html">Events</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Log out</a></li>
+        </ul>
+    </nav>
+
+    <h1 class="header">Manage Events</h1>
+    
+    <!-- Event Form for Admins -->
+    <div class="container" id="admin-section" style="display: none;">
+        <h2>Add / Edit Event</h2>
+        <form id="event-form">
+            <label for="event-title">Event Title:</label>
+            <input type="text" id="event-title" required>
+            
+            <label for="event-date">Event Date:</label>
+            <input type="date" id="event-date" required>
+            
+            <label for="event-description">Description:</label>
+            <textarea id="event-description" required></textarea>
+            
+            <label for="event-image">Event Image URL:</label>
+            <input type="text" id="event-image" placeholder="Enter image path">
+            
+            <button type="submit">Save Event</button>
+        </form>
+    </div>
+    
+    <!-- Event Display -->
+    <div class="menu-container">
+        <h2>Upcoming Events</h2>
+        <ul id="event-list">
+            <li class="menu-item">
+                <img src="photo/pastry_tasting.jpg" alt="Pastry Tasting" class="menu-image">
+                <h3>Exclusive Pastry Sampling</h3>
+                <p>Join us for an exclusive tasting of our newest pastry collection.</p>
+                <p class="price">Date: March 15, 2025</p>
+                <button class="edit-event">Edit</button>
+                <button class="delete-event">Delete</button>
+            </li>
+            <li class="menu-item">
+                <img src="photo/baking_workshop.jpg" alt="Baking Workshop" class="menu-image">
+                <h3>Hands-On Baking Experience</h3>
+                <p>Learn to bake authentic French pastries with our expert chefs.</p>
+                <p class="price">Date: April 10, 2025</p>
+                <button class="edit-event">Edit</button>
+                <button class="delete-event">Delete</button>
+            </li>
+            <li class="menu-item">
+                <img src="photo/chocolate_festival.jpg" alt="Chocolate Festival" class="menu-image">
+                <h3>Indulge in Chocolate Creations</h3>
+                <p>Experience a variety of chocolate desserts and beverages.</p>
+                <p class="price">Date: May 5, 2025</p>
+                <button class="edit-event">Edit</button>
+                <button class="delete-event">Delete</button>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const adminSection = document.getElementById("admin-section");
+            const eventForm = document.getElementById("event-form");
+            const eventList = document.getElementById("event-list");
+            
+            // Simulate admin login check
+            const isAdmin = true; // Change this based on authentication logic
+            if (isAdmin) {
+                adminSection.style.display = "block";
+            }
+            
+            eventForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                
+                const title = document.getElementById("event-title").value;
+                const date = document.getElementById("event-date").value;
+                const description = document.getElementById("event-description").value;
+                const image = document.getElementById("event-image").value || "photo/default.jpg";
+                
+                if (title && date && description) {
+                    const li = document.createElement("li");
+                    li.classList.add("menu-item");
+                    li.innerHTML = `<img src="${image}" alt="${title}" class="menu-image">
+                                    <h3>${title}</h3>
+                                    <p>${description}</p>
+                                    <p class='price'>Date: ${date}</p>
+                                    <button class='edit-event'>Edit</button>
+                                    <button class='delete-event'>Delete</button>`;
+                    
+                    eventList.appendChild(li);
+                    eventForm.reset();
+                }
+            });
+            
+            eventList.addEventListener("click", (e) => {
+                if (e.target.classList.contains("delete-event")) {
+                    e.target.parentElement.remove();
+                } else if (e.target.classList.contains("edit-event")) {
+                    const li = e.target.parentElement;
+                    document.getElementById("event-title").value = li.querySelector("h3").textContent;
+                    document.getElementById("event-date").value = li.querySelector(".price").textContent.replace("Date: ", "");
+                    document.getElementById("event-description").value = li.querySelector("p").textContent;
+                    document.getElementById("event-image").value = li.querySelector("img").src;
+                    li.remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
