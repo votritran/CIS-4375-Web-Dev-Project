@@ -7,6 +7,7 @@
         
         
     }
+    
     .navbar {
         font-family: 'Dancing Script', cursive;
         background-color: #8b4513;
@@ -175,6 +176,9 @@
 
         text-align: center;
         
+    }
+    .loginbutton {
+        margin-bottom: 10px;
     }
 
 
