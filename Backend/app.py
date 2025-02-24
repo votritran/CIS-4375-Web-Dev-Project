@@ -166,9 +166,64 @@ def get_menu_items():
         return jsonify({"message": "Failed to fetch menu items due to database error."}), 500
 
     finally:
-        # Ensure the database connection is closed to free up resources
+        # Ensure the database connection is closed
         cursor.close()
         connection.close()
+
+#Endpoint for updating price of menu items
+@app.route('/menu/update', methods=['GET', 'POST'])
+def update_menu():
+    if request.method == 'GET':
+        # Establish a database connection
+        connection = create_connection()
+        try:
+            # Create a cursor to execute SQL queries
+            cursor = connection.cursor()
+            cursor.execute("SELECT ProductID, ProductName FROM Products")
+            products = cursor.fetchall() # Retrieve the result of the query
+            # Render the 'update-menu.html' template and pass the list of products
+            return render_template('update-menu.html', products=products)
+        except Error as e:
+            # If an error occurs during the database operation, print the error and return a failure response
+            print(f"Error fetching products: {e}")
+            return jsonify({"success": False, "message": "Failed to fetch products."}), 500
+        finally:
+            # Ensure the cursor and connection are closed to avoid database connection issues
+            cursor.close()
+            connection.close()
+
+    elif request.method == 'POST':
+        # When the request is a POST request, handle form submission for updating a menu item price
+        # Get the product ID and new price from the form data
+        product_id = request.form.get('product_id')
+        new_price = request.form.get('new_price')
+
+        # Check if product ID and new price are provided; if not, return an error
+        if not product_id or not new_price:
+            return jsonify({"success": False, "message": "Invalid input."})
+
+        # Establish a new database connection
+        connection = create_connection()
+        try:
+            # Create a cursor to execute SQL queries
+            cursor = connection.cursor()
+            # SQL query to update the price of the selected product in the database
+            cursor.execute("UPDATE Products SET ProductPrice = %s WHERE ProductID = %s", (new_price, product_id))
+            # Commit to save the changes
+            connection.commit()
+            # Return a success response if the update was successful
+            return jsonify({"success": True, "message": "Price updated successfully!"})
+
+        except Error as e:
+            # If an error occurs during the database operation, print the error and return a failure response
+            print(f"Error updating product price: {e}")
+            connection.rollback() # Rollback the transaction in case of error
+            return jsonify({"success": False, "message": "Failed to update price."}), 500
+        finally:
+            # Make sure the cursor and connection are closed after the operation
+            cursor.close()
+            connection.close()
+
 
 
 
