@@ -59,8 +59,8 @@
 
 
             <!-- Navigation Buttons -->
-            <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
-            <button class="next" onclick="plusSlides(1)">&#10095;</button>
+            <button class="prev" onclick="plusSlides(-1)">❮</button>
+            <button class="next" onclick="plusSlides(1)">❯</button>
         </div>
 
         <!-- Dots for navigation -->
@@ -118,7 +118,7 @@
 
     <!-- Footer Section -->
     <footer class="footer">
-        <p>&copy; 2025 Paris Sweet Patisserie. All rights reserved.</p>
+        <p>© 2025 Paris Sweet Patisserie. All rights reserved.</p>
         
     </footer>
 
@@ -126,7 +126,8 @@
     
         // JavaScript for slideshow
         let slideIndex = 0;
-        showSlides(); // Run initially to display the first slide.
+        let slideInterval = 10000; // 10 seconds
+        let slideTimeout; // Variable to store the timeout ID
 
         function showSlides() {
             let slides = document.getElementsByClassName("slide");
@@ -150,19 +151,32 @@
                 slides[slideIndex].style.opacity = 1; // Set final opacity to 1
             }, 100); // Delay the fade-in effect by 100ms
 
-            // Automatically move to the next slide after a certain time
-            setTimeout(showSlides, 10000); // Change slide every 10 seconds
-            }
+            // Clear the previous timeout and set a new timeout
+            clearTimeout(slideTimeout);
+            slideTimeout = setTimeout(nextSlide, slideInterval);
+        }
 
+        function nextSlide() {
+            slideIndex++;
+            let slides = document.getElementsByClassName("slide");
+            if (slideIndex >= slides.length) {
+                slideIndex = 0; // If next is clicked, go to the first slide
+            }
+            showSlides();
+        }
+
+        // Start the slideshow initially
+        showSlides();
 
 
         function plusSlides(n) {
+            //slideIndex += n;
+            clearTimeout(slideTimeout);
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
             slideIndex += n;
 
             // Handle the wrapping of slides (if we exceed the bounds, go back to the start or end)
-            let slides = document.getElementsByClassName("slide");
-            let dots = document.getElementsByClassName("dot");
-
             if (slideIndex >= slides.length) {
                 slideIndex = 0; // If next is clicked, go to the first slide
             } else if (slideIndex < 0) {
@@ -186,6 +200,8 @@
             setTimeout(function() {
                 slides[slideIndex].style.opacity = 1; // Set final opacity to 1
             }, 100); // Delay the fade-in effect by 100ms
+
+           slideTimeout = setTimeout(nextSlide, slideInterval);
             }
 
 
@@ -194,8 +210,10 @@
 
         // Function to select a slide by clicking the dot
         function currentSlide(n) {
+            clearTimeout(slideTimeout);
             slideIndex = n;
             showSlides(); // Update the slideshow
+            slideTimeout = setTimeout(nextSlide, slideInterval);
         }
 
         // Add event listeners to the dots
