@@ -1,19 +1,23 @@
 import flask
+from flask import render_template
 from flask import jsonify
 import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from flask import redirect, url_for
 
 
 # Flask app instance
-app = flask.Flask(__name__)
+#app = flask.Flask(__name__)
+app = flask.Flask(__name__, template_folder='../Frontend/templates')
+
 app.config["DEBUG"] = True
 
 from flask_cors import CORS
 
-app = flask.Flask(__name__)
+#app = flask.Flask(__name__)
 CORS(app)
 
 
@@ -119,6 +123,60 @@ def login():
     return jsonify({"message": "Invalid credentials"}), 401
 
 
+#New: Working for getting all menu item directly from the database
+@app.route('/api/get_menu', methods=['GET'])
+def get_menu_items():
+    # This is to establish a connection to the database
+    connection = create_connection()
+    # If the connection fails, return an error response
+    if not connection:
+        return jsonify({"success": False, "message": "Database connection failed"}), 500
+
+    try:
+        cursor = connection.cursor()
+
+        # This is get all products from the Products table in the database
+        cursor.execute("""
+            SELECT ProductID, ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName
+            FROM Products
+        """)
+        products = cursor.fetchall()
+        
+        # If we find no products, return an error response
+        if not products:
+            return jsonify({"success": False, "message": "No products found"}), 404
+
+        # This is to convert the database result into a structured JSON response
+        menu_items = []
+        for product in products:
+            menu_items.append({
+                "ProductID": product[0], # Unique identifier for the product
+                "ProductName": product[1], # Name of the product
+                "ProductDescription": product[2],  # Description of the product
+                "ProductPrice": product[3], # Price of the product
+                "ProductSize": product[4], # Size of the product
+                "CategoryName": product[5] # Category under which the product falls
+            })
+        # Return the list of menu items as a JSON response
+        return jsonify({"success": True, "menu_items": menu_items}), 200
+
+    except Error as e:
+        # Log the database error and return a failure response
+        print(f"Database error: {e}")
+        return jsonify({"message": "Failed to fetch menu items due to database error."}), 500
+
+    finally:
+        # Ensure the database connection is closed to free up resources
+        cursor.close()
+        connection.close()
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run()
+
