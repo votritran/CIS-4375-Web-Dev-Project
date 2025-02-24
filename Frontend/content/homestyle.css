@@ -188,7 +188,7 @@ button {
 
         img.slide-image {
             width: 100%;
-            height: 400px;
+            height: 450px;
             object-fit: cover; /* Ensures the images are properly scaled without distortion */
         }
 
@@ -248,11 +248,20 @@ button {
 .our-history {
     text-align: center;
     margin: 50px 0;
+    margin-bottom: 100px;
+}
+
+.our-history h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 40px;
+    color: #8b4513;
+    margin-bottom: 50px;
+    
 }
 
 .our-history h2 {
     font-family: 'Dancing Script', cursive;
-    font-size: 36px;
+    font-size: 30px;
     color: #8b4513;
     margin-bottom: 40px;
     
@@ -262,8 +271,9 @@ button {
     display: flex;
     justify-content: center; /* Center the content horizontally */
     align-items: center;     /* Vertically align the content in the middle */
-    gap: 30px;               /* Adds space between the image and text */
+    gap: 50px;               /* Adds space between the image and text */
     margin: 0 20px;
+    margin-bottom: 100px;
 }
 .history-image img {
     width: 100%;
@@ -301,4 +311,14 @@ button {
     .history-text {
         padding: 10px;  /* Reduced padding for smaller screens */
     }
+}
+.footer{
+    background-color: #8b4513;
+    
+    text-align: center;
+    color: #000000;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height:50px;
 }
