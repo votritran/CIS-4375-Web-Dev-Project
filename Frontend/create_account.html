@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Paris Sweet Patisserie</title>
+    <link rel="stylesheet" href="content/style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="CakeOrder.html">Custom Cakes</a></li>
+
+            <!-- Logo -->
+            <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+
+            <li><a href="#">Event</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="login.html">Log in</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>Create Account</h2>
+        <form id="createAccountForm">
+            <!-- First Name -->
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+    
+            <!-- Last Name -->
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+    
+            <!-- Email -->
+            <label for="newEmail">Email:</label>
+            <input type="email" id="newEmail" name="newEmail" required>
+    
+            <!-- Password -->
+            <label for="newPassword">Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+    
+            <!-- Success Message (Hidden by Default) -->
+            <p class="success" id="successMsg" style="display: none; color: green;">Account created successfully! Redirecting to login...</p>
+    
+            <!-- Submit Button -->
+            <button type="submit">Create Account</button>
+        </form>
+    </div>
+    
+
+    <script>
+        document.getElementById("createAccountForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            document.getElementById("successMsg").style.display = "block";
+
+            // Simulating account creation
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
+
