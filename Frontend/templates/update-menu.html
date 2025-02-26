@@ -1,76 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"> <!-- Sets the character encoding for the document -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures proper scaling on different devices -->
-    <title>Update Menu Item Price</title> <!-- Title of the page displayed in the browser tab -->
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Menu Item</title>
+    <script>
+        function showMessage(message) {
+            const messageElement = document.getElementById("message");
+            messageElement.innerText = message;
+            messageElement.style.display = "block";  // Make sure the message is visible
 
-<script>
-    // Wait for the DOM to be fully loaded before executing the script
-    document.addEventListener("DOMContentLoaded", function () {
-        
-        // Attach an event listener to the form submission
-        document.getElementById("updatePriceForm").addEventListener("submit", function (event) {
-            
-            event.preventDefault(); // Prevent the form from reloading the page on submission
-    
-            let formData = new FormData(this); // Collect form data for submission
-    
-            // Send a POST request with the form data to update the product price
-            fetch("/menu/update", {
-                method: "POST", // HTTP method
-                body: formData // Form data to be sent to the server
-            })
-            .then(response => response.json()) // Parse the JSON response from the server
-            .then(data => {
-                // Get the message div to display feedback to the user
-                let messageDiv = document.getElementById("message");
-                
-                // Check the server response for success or failure and display the appropriate message
-                if (data.success) {
-                    messageDiv.innerHTML = `<div style="color: green; font-weight: bold;">${data.message}</div>`;
-                } else {
-                    messageDiv.innerHTML = `<div style="color: red; font-weight: bold;">${data.message}</div>`;
-                }
-            })
-            .catch(error => {
-                // Handle errors if the fetch request fails
-                console.error("Error:", error);
-                document.getElementById("message").innerHTML = `<div style="color: red; font-weight: bold;">Something went wrong!</div>`;
-            });
-        });
-    });
-</script>
-    
+            // Hide the message after 3 seconds (3000ms)
+            setTimeout(function() {
+                messageElement.style.display = "none";
+            }, 2000);  // Adjust this time as needed
+        }
+    </script>
+</head>
 <body>
-    <h1>Update Menu Item Priceee</h1> <!-- Page title heading -->
-    
-    <!-- Form to update product price; form submission handled by JavaScript -->
-    <form id="updatePriceForm">
-    
-        <!-- Dropdown to select a product -->
+    <h1>Update Menu Item</h1>
+
+    <form id="updateForm">
         <label for="product_id">Select Product:</label>
         <select name="product_id" id="product_id" required>
-            <option value="" disabled selected>Select a product</option> <!-- Default prompt for product selection -->
-            
-            <!-- Dynamically populate the product options from the server-side data -->
+            <option value="" disabled selected>Select a product</option>
             {% for product in products %}
-                <option value="{{ product[0] }}">{{ product[1] }}</option> <!-- Display product name and set product ID as value -->
+                <option value="{{ product[0] }}">{{ product[1] }}</option>
             {% endfor %}
         </select>
         <br><br>
 
-        <!-- Input field for the new price of the selected product -->
-        <label for="new_price">New Price:</label>
-        <input type="number" name="new_price" id="new_price" step="0.01" min="0" required>
+        <label for="new_name">New Name (optional):</label>
+        <input type="text" name="new_name" id="new_name">
         <br><br>
 
-        <!-- Submit button to trigger the form submission -->
-        <button type="submit" class="btn btn-success">Update Price</button>
+        <label for="new_price">New Price (optional):</label>
+        <input type="number" name="new_price" id="new_price" step="0.01" min="0">
+        <br><br>
+
+        <label for="new_description">New Description (optional):</label>
+        <textarea name="new_description" id="new_description"></textarea>
+        <br><br>
+
+        <button type="submit" class="btn btn-success">Update Menu Item</button>
     </form>
 
-    <!-- Div to display success or error messages after form submission -->
     <div id="message"></div>
+
+    <script>
+        document.getElementById("updateForm").onsubmit = async function(event) {
+            event.preventDefault();
+            let formData = new FormData(document.getElementById("updateForm"));
+
+            let response = await fetch("/menu/update", {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json();
+            showMessage(result.message);
+        };
+    </script>
 </body>
 </html>

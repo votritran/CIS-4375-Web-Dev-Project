@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paris Sweet Patisserie - Menu</title>
     <!-- Link to external CSS file for styling the page -->
-    <link rel="stylesheet" href="content/style.css"> 
+    <link rel="stylesheet" href="content/menustyles.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -30,16 +30,16 @@
             
         <!-- Button to update an existing menu item price--> 
         <form action="http://127.0.0.1:5000/menu/update" method="get">
-            <button type="submit" class="btn btn-success">Update a Menu Item Price</button>
+            <button type="submit" class="btn btn-success">Update an Existing Menu Item</button>
         </form>
- 
-        <!-- Button to update an existing menu item name -->
+
+        <!-- Button to delete an existing menu  -->
         <form action="" method="get">
-            <button type="submit" class="btn btn-success">Update a Menu Item Name</button>
+            <button type="submit" class="btn btn-success">Delete a Menu Item </button>
         </form>
-        <!-- Button to update an existing menu item description -->
+        <!-- item Button to add a new menu item   -->
         <form action="" method="get">
-            <button type="submit" class="btn btn-success">Update a Menu Item Description</button>
+            <button type="submit" class="btn btn-success">Add a Menu Item</button>
         </form>
 
         </div>
@@ -54,19 +54,20 @@
         // Function to map product names to their respective image paths
         function getProductImage(productName) {
             const productImages = {
-                "American Breakfast": "photo/americanbreakfast.jpg",
-                "Breakfast Croissant": "photo/BreakfastCrossaint.jpg",
-                "Croque Monsieur": "photo/Croque.jpg",
-                "Friand": "photo/friand.jpg",
-                "French Onion Soup": "photo/FrenchOnion.jpg",
-                "Tomato Basil Soup": "photo/tomatobasil.jpg",
-                "Smoked Salmon Salad": "photo/smokedsalmon.jpg",
-                "Goat Cheese Salad": "photo/goatcheese.jpg",  // You may want to update this with the correct name
-                "Roasted Beef Sandwich": "photo/roastedbeef.jpg",
-                "Turkey Breast Sandwich": "photo/turkeybreast.jpg"
+                "1": "photo/americanbreakfast.jpg",
+                "2": "photo/BreakfastCrossaint.jpg",
+                "3": "photo/Croque.jpg",
+                "4": "photo/friand.jpg",
+                "5": "photo/FrenchOnion.jpg",
+                "6": "photo/FrenchOnion.jpg",
+                "7": "photo/tomatobasil.jpg",
+                "8": "photo/tomatobasil.jpg",
+                "9": "photo/smokedsalmon.jpg",
+                "10": "photo/goatcheese.jpg",
+                "11": "photo/roastedbeef.jpg",
+                "12": "photo/turkeybreast.jpg"
             };
-            // Return the image corresponding to the product name, or a default image if not found
-            return productImages[productName] || "photo/default-image.jpg"; // Fallback if not found
+            return productImages[productName] || "photo/default-image.jpg";
         }
 
         // Function to fetch menu items from the API
@@ -127,7 +128,7 @@
                     const productDiv = document.createElement('div');
                     productDiv.classList.add('product'); // For styling purposes
 
-                    const productImage = getProductImage(item.ProductName); // Get image based on product name
+                    const productImage = getProductImage(item.ProductID); // Get image based on product name
 
                     // Create the HTML for each product and append it to the category div
                     productDiv.innerHTML = `
