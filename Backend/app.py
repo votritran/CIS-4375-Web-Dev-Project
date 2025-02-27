@@ -167,8 +167,8 @@ def get_menu_items():
         connection.close()
         
 #update the menu items using the put method
-@app.route('/menu/update', methods=['GET', 'PUT'])
-def update_menu():
+@app.route('/menuitem/update', methods=['GET', 'PUT'])
+def update_menuitem():
     connection = create_connection()
     
     if request.method == 'GET':  # Fetch all products
