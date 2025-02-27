@@ -171,33 +171,41 @@ def get_menu_items():
 # Route to serve the update-menu.html
 @app.route('/menu/update', methods=['GET', 'POST'])
 def update_menu():
+    # Establish a database connection
     connection = create_connection()
     
-    if request.method == 'GET':
+    if request.method == 'GET': # Handle GET request (fetching products)
         try:
             cursor = connection.cursor()
+            # Retrieve all products with their details from the database
             cursor.execute("SELECT ProductID, ProductName, ProductPrice, ProductDescription FROM Products")
+            # Fetch all products from the query result
             products = cursor.fetchall()
+            # Render the update-menu.html template, passing the products data to it
             return render_template('update-menu.html', products=products)
         except Error as e:
+            # Print error message if database query fails
             print(f"Error fetching products: {e}")
             return jsonify({"success": False, "message": "Failed to fetch products."}), 500
         finally:
+            # Ensure the database cursor and connection are closed properly
             cursor.close()
             connection.close()
-
+            
+# Handle POST request (this is to update a product)
     elif request.method == 'POST':
+        # Get updated product details from the form submission
         product_id = request.form.get('product_id')
         new_name = request.form.get('new_name')
         new_price = request.form.get('new_price')
         new_description = request.form.get('new_description')
-
+        # Validate that a product ID is provided
         if not product_id:
             return jsonify({"success": False, "message": "Product ID is required."})
 
-        update_fields = []
-        values = []
-
+        update_fields = [] # List to store update queries
+        values = [] # List to store values for parameterized query
+        # This is to ensure that only the input provided will be updated, if something is left blank, no update is made
         if new_name:
             update_fields.append("ProductName = %s")
             values.append(new_name)
@@ -209,24 +217,29 @@ def update_menu():
         if new_description:
             update_fields.append("ProductDescription = %s")
             values.append(new_description)
-
+        
+        # If no updates were provided, return an error message
         if not update_fields:
             return jsonify({"success": False, "message": "No updates provided."})
 
+        # Append product ID to values list for WHERE clause
         values.append(product_id)
+        # this is to make the SQL UPDATE query dynamically
         query = f"UPDATE Products SET {', '.join(update_fields)} WHERE ProductID = %s"
 
+        # Establish a new database connection
         connection = create_connection()
         try:
             cursor = connection.cursor()
-            cursor.execute(query, values)
-            connection.commit()
+            cursor.execute(query, values) # Execute the update query
+            connection.commit() # Commit to save changes
             return jsonify({"success": True, "message": "Menu item updated successfully!"})
         except Error as e:
-            print(f"Error updating product: {e}")
+            print(f"Error updating product: {e}")  # Print error and roll back transaction in case of failure
             connection.rollback()
             return jsonify({"success": False, "message": "Failed to update menu item."}), 500
         finally:
+            # Ensure the database cursor and connection are closed properly
             cursor.close()
             connection.close()
 
