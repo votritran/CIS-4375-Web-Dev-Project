@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Home</title>
+    <link rel="stylesheet" href="content/homestyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+   
+</head>
+<body>
+
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <!-- Menu -->
+        <ul>
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="dbmenu.html">DBMenu</a></li>
+            <li><a href="CakeOrder.html">Custom Cakes</a></li>
+            <!--Logo in Navbar-->
+            <a href="Home.html"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+            <li><a href="event.html">Event</a></li>
+            <li><a href="contactus.html">Contact Us</a></li>
+            <li><a href="login.html">Log in</a></li>
+        </ul>
+    </nav>
+
+    <!-- Home Section with Slideshow -->
+    <section class="home-intro">
+        <h1>Welcome to Paris Sweet Patisserie</h1>
+        <p>"Experience the Flavors of Paris, Right Here in Houston."</p>
+
+        <!-- Slideshow Section -->
+        <div class="slideshow-container">
+            <!-- Slide 1 -->
+            <div class="slide">
+                <img src="photo/slideshow/france.jpg" alt="Delicious Pastries" class="slide-image">
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide">
+                <img src="photo/slideshow/onionsoup.jpg" alt="Beautiful Cakes" class="slide-image">
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide">
+                <img src="photo/slideshow/macaron.jpg" alt="Fresh Croissant" class="slide-image">
+            </div>
+             <!-- Slide 4 -->
+             <div class="slide">
+                <img src="photo/slideshow/coffee.jpg" alt="Fresh Croissant" class="slide-image">
+            </div>
+             <!-- Slide 5 -->
+             <div class="slide">
+                <img src="photo/slideshow/pastry.jpg" alt="Fresh Croissant" class="slide-image">
+            </div>
+
+
+
+            <!-- Navigation Buttons -->
+            <button class="prev" onclick="plusSlides(-1)">❮</button>
+            <button class="next" onclick="plusSlides(1)">❯</button>
+        </div>
+
+        <!-- Dots for navigation -->
+        <div class="dot-container">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </section>
+
+    <!-- Featured Items Section -->
+    <section class="our-history">
+        <h1>Our History</h1>
+        <div class="history-container">
+            <div class="history-image">
+                <img src="photo/slideshow/paris sweet.jpg" alt="Our History Image">
+            </div>
+            <div class="history-text">
+                <p>Paris Sweet Patisserie was founded in 2011 with the goal of bringing authentic French pastries to the heart of the city. Our journey began with a small bakery in Paris, and now we are proud to share our passion for fine pastries with the world. Every item we create is made with the finest ingredients, love, and dedication to the art of baking.</p>
+                <p>From croissants to custom cakes, we aim to offer an unforgettable experience with every bite. Join us on this sweet journey and experience the taste of Paris!</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="our-history">
+        <h1>Our Team</h1>
+        <div class="history-container">
+            <div class="history-text">
+                <h2>Head Pastry Chef</h2>
+                <p>Camile Nguyen is a pastry chef with over 45 years of experience, specialized in mousse cake, birthday cake, and custom wedding cake. He was born in Toulouse, France, to a French father and a Vietnamese mother, both of whom were also bakers. His family used to own a bakery in Paris, where he developed his love for French pastries from a young age. In 2005, he moved to the U.S. and opened his first bakery, Le Bec Fin, with his brother, earning praise for their authentic French creations. In 2008, Camile had the honor of serving as the pastry chef for President George W. Bush Jr. He later opened Paris Sweet in 2011, bringing a taste of Paris to Houston through his delicious pastries.</p>
+                
+            </div>
+            <div class="history-image">
+                <img src="photo/chef/Camile.jpeg" alt="Camile image">
+            </div>
+            
+        </div>
+        <div class="history-container">
+            <div class="history-image">
+                <img src="photo/chef/Irene.jpeg" alt="Camile image">
+            </div>
+            <div class="history-text">
+                <h2>Assistant Pastry Chef</h2>
+                <p>Irene Tran is a talented Vietnamese pastry chef specializing in French macarons and coffee crafting. She is a migrant from Vietnam, moved to the U.S. in 2009 and has since honed her skills with over 20 years of experience in coffee crafting. Irene’s bakery journey began in 2010 when she met Camile while working at the same pastry catering company. This encounter sparked her passion for pastries, particularly French macarons, and led her to pursue a successful career in the baking world.</p>
+                
+            </div>
+            
+            
+        </div>
+    </section>
+
+
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>© 2025 Paris Sweet Patisserie. All rights reserved.</p>
+        
+    </footer>
+
+    <script>
+    
+        // JavaScript for slideshow
+        let slideIndex = 0;
+        let slideInterval = 10000; // 10 seconds
+        let slideTimeout; // Variable to store the timeout ID
+
+        function showSlides() {
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+
+            // Remove active class from all slides and dots
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].classList.remove("active");
+            }
+
+            // Add active class to the current slide and dot
+            slides[slideIndex].style.opacity = 0; // Set initial opacity to 0
+            slides[slideIndex].classList.add("active");
+            dots[slideIndex].classList.add("active");
+
+            // Fade in the current slide
+            setTimeout(function() {
+                slides[slideIndex].style.opacity = 1; // Set final opacity to 1
+            }, 100); // Delay the fade-in effect by 100ms
+
+            // Clear the previous timeout and set a new timeout
+            clearTimeout(slideTimeout);
+            slideTimeout = setTimeout(nextSlide, slideInterval);
+        }
+
+        function nextSlide() {
+            slideIndex++;
+            let slides = document.getElementsByClassName("slide");
+            if (slideIndex >= slides.length) {
+                slideIndex = 0; // If next is clicked, go to the first slide
+            }
+            showSlides();
+        }
+
+        // Start the slideshow initially
+        showSlides();
+
+
+        function plusSlides(n) {
+            //slideIndex += n;
+            clearTimeout(slideTimeout);
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+            slideIndex += n;
+
+            // Handle the wrapping of slides (if we exceed the bounds, go back to the start or end)
+            if (slideIndex >= slides.length) {
+                slideIndex = 0; // If next is clicked, go to the first slide
+            } else if (slideIndex < 0) {
+                slideIndex = slides.length - 1; // If previous is clicked, go to the last slide
+            }
+
+            // Remove active class from all slides and dots
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].classList.remove("active");
+            }
+
+            // Add active class to the new slide and dot
+            slides[slideIndex].style.opacity = 0; // Set initial opacity to 0
+            slides[slideIndex].classList.add("active");
+            dots[slideIndex].classList.add("active");
+
+            // Fade in the new slide
+            setTimeout(function() {
+                slides[slideIndex].style.opacity = 1; // Set final opacity to 1
+            }, 100); // Delay the fade-in effect by 100ms
+
+           slideTimeout = setTimeout(nextSlide, slideInterval);
+            }
+
+
+
+
+
+        // Function to select a slide by clicking the dot
+        function currentSlide(n) {
+            clearTimeout(slideTimeout);
+            slideIndex = n;
+            showSlides(); // Update the slideshow
+            slideTimeout = setTimeout(nextSlide, slideInterval);
+        }
+
+        // Add event listeners to the dots
+        let dots = document.getElementsByClassName("dot");
+        for (let i = 0; i < dots.length; i++) {
+            dots[i].addEventListener('click', function () {
+                currentSlide(i); // When a dot is clicked, show the corresponding slide
+            });
+        }
+
+        // Add event listeners for swipe gestures
+        let slideshowContainer = document.querySelector(".slideshow-container");
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        slideshowContainer.addEventListener("touchstart", function(event) {
+        touchStartX = event.touches[0].clientX;
+        });
+
+        slideshowContainer.addEventListener("touchend", function(event) {
+        touchEndX = event.changedTouches[0].clientX;
+
+        if (touchEndX - touchStartX > 50) {
+            // Swipe left
+            plusSlides(-1);
+        } else if (touchStartX - touchEndX > 50) {
+            // Swipe right
+            plusSlides(1);
+        }
+        });
+
+        // Add event listeners for mouse swipe gestures
+        slideshowContainer.addEventListener("mousedown", function(event) {
+        mouseStartX = event.clientX;
+        });
+
+        slideshowContainer.addEventListener("mouseup", function(event) {
+        mouseEndX = event.clientX;
+
+        if (mouseEndX - mouseStartX > 50) {
+            // Swipe left
+            plusSlides(-1);
+        } else if (mouseStartX - mouseEndX > 50) {
+            // Swipe right
+            plusSlides(1);
+        }
+        });
+
+        // Add event listeners for mouse move gestures
+        let mouseStartX = 0;
+        let mouseEndX = 0;
+        let isMouseDown = false;
+
+        slideshowContainer.addEventListener("mousedown", function(event) {
+        mouseStartX = event.clientX;
+        isMouseDown = true;
+        });
+
+        slideshowContainer.addEventListener("mousemove", function(event) {
+        if (isMouseDown) {
+            mouseEndX = event.clientX;
+
+            if (mouseEndX - mouseStartX > 50) {
+            // Swipe left
+            plusSlides(-1);
+            isMouseDown = false;
+            } else if (mouseStartX - mouseEndX > 50) {
+            // Swipe right
+            plusSlides(1);
+            isMouseDown = false;
+            }
+        }
+        });
+
+        slideshowContainer.addEventListener("mouseup", function() {
+        isMouseDown = false;
+        });
+
+
+
+    </script>
+
+</body>
+</html>
