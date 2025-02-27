@@ -165,7 +165,70 @@ def get_menu_items():
         # Ensure the database connection is closed
         cursor.close()
         connection.close()
+        
+#update the menu items using the put method
+@app.route('/menu/update', methods=['GET', 'PUT'])
+def update_menu():
+    connection = create_connection()
+    
+    if request.method == 'GET':  # Fetch all products
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT ProductID, ProductName, ProductPrice, ProductDescription FROM Products")
+            products = cursor.fetchall()
+            return render_template('update-menu.html', products=products)
+        except Error as e:
+            print(f"Error fetching products: {e}")
+            return jsonify({"success": False, "message": "Failed to fetch products."}), 500
+        finally:
+            cursor.close()
+            connection.close()
 
+    elif request.method == 'PUT':  # Handle product update
+        try:
+            data = request.get_json()  # Get JSON data from request body
+            product_id = data.get('product_id')
+            new_name = data.get('new_name')
+            new_price = data.get('new_price')
+            new_description = data.get('new_description')
+
+            if not product_id:
+                return jsonify({"success": False, "message": "Product ID is required."}), 400
+
+            update_fields = []
+            values = []
+
+            if new_name:
+                update_fields.append("ProductName = %s")
+                values.append(new_name)
+
+            if new_price:
+                update_fields.append("ProductPrice = %s")
+                values.append(new_price)
+
+            if new_description:
+                update_fields.append("ProductDescription = %s")
+                values.append(new_description)
+
+            if not update_fields:
+                return jsonify({"success": False, "message": "No updates provided."}), 400
+
+            values.append(product_id)
+            query = f"UPDATE Products SET {', '.join(update_fields)} WHERE ProductID = %s"
+
+            cursor = connection.cursor()
+            cursor.execute(query, values)
+            connection.commit()
+
+            return jsonify({"success": True, "message": "Menu item updated successfully!"})
+
+        except Error as e:
+            print(f"Error updating product: {e}")
+            connection.rollback()
+            return jsonify({"success": False, "message": "Failed to update menu item."}), 500
+        finally:
+            cursor.close()
+            connection.close()
 
 
 # Route to serve the update-menu.html
