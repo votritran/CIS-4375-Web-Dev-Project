@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Menu Item</title>
+    <script>
+        function showMessage(message) {
+            const messageElement = document.getElementById("message");
+            messageElement.innerText = message;
+            messageElement.style.display = "block";  // Make sure the message is visible
+
+            // Hide the message after 3 seconds (3000ms)
+            setTimeout(function() {
+                messageElement.style.display = "none";
+            }, 2000);  // Adjust this time as needed
+        }
+    </script>
+</head>
+<body>
+    <h1>Update Menu Item</h1>
+
+    <form id="updateForm">
+        <label for="product_id">Select Product:</label>
+        <select name="product_id" id="product_id" required>
+            <option value="" disabled selected>Select a product</option>
+            {% for product in products %}
+                <option value="{{ product[0] }}">{{ product[1] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="new_name">New Name (optional):</label>
+        <input type="text" name="new_name" id="new_name">
+        <br><br>
+
+        <label for="new_price">New Price (optional):</label>
+        <input type="number" name="new_price" id="new_price" step="0.01" min="0">
+        <br><br>
+
+        <label for="new_description">New Description (optional):</label>
+        <textarea name="new_description" id="new_description"></textarea>
+        <br><br>
+
+        <button type="submit" class="btn btn-success">Update Menu Item</button>
+    </form>
+
+    <div id="message"></div>
+
+    <script>
+        document.getElementById("updateForm").onsubmit = async function(event) {
+            event.preventDefault();
+            let formData = new FormData(document.getElementById("updateForm"));
+
+            let response = await fetch("/menu/update", {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json();
+            showMessage(result.message);
+        };
+    </script>
+</body>
+</html>
