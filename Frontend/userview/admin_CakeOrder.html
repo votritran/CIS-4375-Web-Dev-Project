@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Cake Order Form</title>
+    <link rel="stylesheet" href="../content/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        
+        <!-- Menu -->
+        <ul>
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="dbmenu.html">DBMenu</a></li>
+            <li><a href="CakeOrder.html">Custom Cakes</a></li>
+        
+            <a href="Home.html"><img src="../photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+            <li><a href="event.html">Event</a></li>
+            <li><a href="contactus.html">Contact Us</a></li>
+            <li><a href="login.html">Log in</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>Paris Sweet Patisserie - Cake Request Form</h2>
+        <!-- thank you message after submit -->
+        <form action="thankyou.html" method="POST">
+
+        <!-- client info -->
+            <label for="name">Your Full Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="needByDate">Cake Needed By (Date):</label>
+            <input type="date" id="needByDate" name="needByDate" required>
+        
+        <!-- cake details  -->  
+            <label for="cakeType">Cake Type:</label>
+            <select id="cakeType" name="cakeType">
+                <option value="chocolate">Chocolate</option>
+                <option value="vanilla">Vanilla</option>
+                <option value="red velvet">Red Velvet</option>
+                <option value="carrot cake">Carrot Cake</option>
+                <option value="custom">Custom</option>
+            </select>
+
+            <label for="frosting">Frosting Type:</label>
+            <select id="frosting" name="frosting">
+                <option value="buttercream">Buttercream</option>
+                <option value="whipped cream">Whipped Cream</option>
+                <option value="fondant">Fondant</option>
+                <option value="ganache">Ganache</option>
+                <option value="custom">Custom</option>
+            </select>
+
+            <label for="size">Cake Size:</label>
+            <select id="size" name="size">
+                <option value="6-inch">6-inch</option>
+                <option value="8-inch">8-inch</option>
+                <option value="10-inch">10-inch</option>
+                <option value="custom">Custom</option>
+            </select>
+
+            <label for="shape">Cake Shape:</label>
+            <select id="shape" name="shape">
+                <option value="round">Round</option>
+                <option value="square">Square</option>
+                <option value="heart">Heart</option>
+                <option value="custom">Custom</option>
+            </select>
+
+            <label for="cakeImage">Upload Image (optional):</label>
+            <input type="file" id="cakeImage" name="cakeImage" accept="image/*">
+
+
+            <label for="description">Additional Details:</label>
+            <textarea id="description" name="description" rows="4" placeholder="Describe any special requests..."></textarea>
+
+            <button type="submit">Submit Order</button>
+        </form>
+
+        <!-- disclaimer -->
+        <p class="disclaimer">Filling out this form does not guarantee an order. We will contact you via phone or email to confirm if we can fulfill your cake request.</p>
+    </div>
+
+    
+</body>
+</html>
