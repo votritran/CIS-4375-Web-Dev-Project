@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Menu</title>
+    <!-- Link to external CSS file for styling the page -->
+    <link rel="stylesheet" href="../content/menustyles.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+
+        <!-- Menu -->
+        <ul>
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="dbmenu.html">DBMenu</a></li>
+            <li><a href="CakeOrder.html">Custom Cakes</a></li>
+            <a href="Home.html"><img src="../photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
+            <li><a href="event.html">Event</a></li>
+            <li><a href="contactus.html">Contact Us</a></li>
+            <li><a href="login.html">Log in</a></li>
+        </ul>
+    </nav>
+
+<div class="d-flex justify-content-center gap-4 mt-3">
+            
+        <!-- Button to update an existing menu item price--> 
+        <form action="http://127.0.0.1:5000/menu/update" method="get">
+            <button type="submit" class="btn btn-success">Update an Existing Menu Item</button>
+        </form>
+
+        <!-- Button to delete an existing menu  -->
+        <form action="" method="get">
+            <button type="submit" class="btn btn-success">Delete a Menu Item </button>
+        </form>
+        <!-- item Button to add a new menu item   -->
+        <form action="" method="get">
+            <button type="submit" class="btn btn-success">Add a Menu Item</button>
+        </form>
+
+        </div>
+    <!-- Main header -->
+    <h1 class="header">Our Delicious Menu</h1>
+
+    <!-- Menu Section -->
+
+    <div id="menu"></div>
+
+    <script>
+        // Function to map product names to their respective image paths
+        function getProductImage(productName) {
+            const productImages = {
+                "1": "photo/americanbreakfast.jpg",
+                "2": "photo/BreakfastCrossaint.jpg",
+                "3": "photo/Croque.jpg",
+                "4": "photo/friand.jpg",
+                "5": "photo/FrenchOnion.jpg",
+                "6": "photo/FrenchOnion.jpg",
+                "7": "photo/tomatobasil.jpg",
+                "8": "photo/tomatobasil.jpg",
+                "9": "photo/smokedsalmon.jpg",
+                "10": "photo/goatcheese.jpg",
+                "11": "photo/roastedbeef.jpg",
+                "12": "photo/turkeybreast.jpg"
+            };
+            return productImages[productName] || "photo/default-image.jpg";
+        }
+
+        // Function to fetch menu items from the API
+        async function fetchMenu() {
+            try {
+                // Fetch data from the local server's API
+                const response = await fetch('http://localhost:5000/api/get_menu'); // Updated to use local server URL
+                const data = await response.json();
+    
+                if (data.success) {
+                // If fetching is successful, call the function to display menu
+
+                    displayMenu(data.menu_items);
+                } else {
+                    // Show an error if fetching menu fails
+                    alert(data.message || 'Failed to fetch menu items');
+                }
+            } catch (error) {
+                // Catch and log any errors that occur during the fetch
+                console.error('Error fetching menu:', error);
+            }
+        }
+
+        // Function to group menu items by their category
+        function groupByCategory(menuItems) {
+            return menuItems.reduce((categories, item) => {
+                const category = item.CategoryName || 'Uncategorized';
+                if (!categories[category]) {
+                    categories[category] = [];
+                }
+                categories[category].push(item); // Add item to the correct category
+                return categories;
+            }, {});
+        }
+
+        // Function to display the fetched and grouped menu items
+        function displayMenu(menuItems) {
+            const groupedItems = groupByCategory(menuItems); // Group items by category
+            const menuContainer = document.getElementById('menu');
+            menuContainer.innerHTML = ''; // Clear any existing content
+            
+            // Loop through each category and create the HTML for displaying menu items
+
+            
+            for (const category in groupedItems) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.classList.add('category'); // For styling purposes
+
+                //Create and add category title
+                const categoryTitle = document.createElement('div');
+                categoryTitle.classList.add('category-title');
+                categoryTitle.textContent = category;
+
+                categoryDiv.appendChild(categoryTitle);
+
+                // Create individual product divs
+                groupedItems[category].forEach(item => {
+                    const productDiv = document.createElement('div');
+                    productDiv.classList.add('product'); // For styling purposes
+
+                    const productImage = getProductImage(item.ProductID); // Get image based on product name
+
+                    // Create the HTML for each product and append it to the category div
+                    productDiv.innerHTML = `
+                        <h3>${item.ProductName}</h3>
+                        <img src="${productImage}" alt="${item.ProductName}" class="menu-image"> <!-- Product image -->
+                        <p><strong>Description:</strong> ${item.ProductDescription}</p>
+                        <p><strong>Price:</strong> $${parseFloat(item.ProductPrice).toFixed(2)}</p>
+                        <p><strong>Size:</strong> ${item.ProductSize || 'N/A'}</p>
+                    `;
+                    categoryDiv.appendChild(productDiv);
+                });
+
+                // Append category div to the menu container
+                menuContainer.appendChild(categoryDiv);
+            }
+        }
+
+        // Initialize the page by fetching the menu items
+        fetchMenu();
+    </script>
+
+</body>
+</html>
