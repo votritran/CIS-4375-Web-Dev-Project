@@ -1,10 +1,16 @@
 import flask
 from flask import render_template #New stuff added for Menu Updation Feauture
 from flask import jsonify #New stuff added for Menu Updation Feauture
+from flask import request
+import smtplib
+import os
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+import email_backend
 load_dotenv()
 
 
@@ -17,6 +23,8 @@ from flask_cors import CORS
 
 CORS(app)
 
+# Register the email routes
+app.register_blueprint(email_backend.email_blueprint)
 
 # database connection
 def create_connection():
@@ -243,16 +251,5 @@ def update_menu():
             cursor.close()
             connection.close()
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    app.run()
-
+    app.run(debug=True)

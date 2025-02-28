@@ -8,17 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+
     <!-- Navigation bar -->
     <nav class="navbar">
-        
-        <!-- Menu -->
         <ul>
             <li><a href="Home.html">Home</a></li>
             <li><a href="menu.html">Menu</a></li>
             <li><a href="dbmenu.html">DBMenu</a></li>
             <li><a href="CakeOrder.html">Custom Cakes</a></li>
-            <!--Logo in Navbar-->
             <a href="Home.html"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
             <li><a href="event.html">Event</a></li>
             <li><a href="contactus.html">Contact Us</a></li>
@@ -28,24 +25,18 @@
 
     <section class="contact-us">
         <h1> Contact Us</h1>
-        <p> Is your question about custom cake?</p>
-        <p> try our Custom Cakes Form at <a href="CakeOrder.html">Customer Cake</a></p>
+        <p> Is your question about a custom cake?</p>
+        <p> Try our Custom Cakes Form at <a href="CakeOrder.html">Custom Cake</a></p>
         <h1> Contact Number</h1>
         <p>Phone Number: (281) 498-0887</p>    
-        
     </section>
-
 
     <section class="contact-us">
         <h1> Get in touch with us</h1>
-        
 
         <div class="container">
             <h2>Contact Form</h2>
-            <!-- thank you message after submit -->
-            <form onsubmit ="showThankYouMessage(event)">
-
-            <!-- client info -->
+            <form id="contactForm">
                 <label for="name">Your Full Name:</label>
                 <input type="text" id="name" name="name" required>
 
@@ -54,52 +45,76 @@
 
                 <label for="phone">Phone Number:</label>
                 <input type="tel" id="phone" name="phone" required>
-            
-                <label for="contact">Prefered contact method:</label>
+
+                <label for="contacttype">Preferred Contact Method:</label>
                 <select id="contacttype" name="contactType">
                     <option value="Email">Email</option>
                     <option value="PhoneNumber">Phone Number</option>
                 </select>
 
-                <label for="Language">Prefered Language:</label>
+                <label for="Language">Preferred Language:</label>
                 <select id="Language" name="Language">
                     <option value="English">English</option>
                     <option value="French">French/Français</option>
                     <option value="Vietnamese">Vietnamese/Tiếng Việt</option>
                 </select>
 
-
+                <label for="Subject">Subject:</label>
+                <input type="text" id="Subject" name="Subject" required>
 
                 <label for="message">Message:</label>
-                <textarea id="message" name="message" rows="6" placeholder="Describe any special requests..."></textarea>
+                <textarea id="message" name="message" rows="6" placeholder="Describe any special requests..." required></textarea>
 
                 <button type="submit">Submit</button>
             </form>
 
-            <!-- disclaimer -->
-            <p class="disclaimer">You will hear back from us within 24-48 hours. For immediate action please call us directly. </p>
+            <p class="disclaimer">You will hear back from us within 24-48 hours. For immediate action, please call us directly.</p>
         </div>
-
     </section>
 
     <footer class="footer">
         <p>&copy; 2025 Paris Sweet Patisserie. All rights reserved.</p>
-        
     </footer>
+
+    <script>
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+        
+            let formData = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                contactType: document.getElementById("contacttype").value,
+                Language: document.getElementById("Language").value,
+                Subject: document.getElementById("Subject").value,
+                message: document.getElementById("message").value
+            };
+        
+            fetch("http://127.0.0.1:5000/send_email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    showThankYouMessage();  // Call function after successful submission
+                } else {
+                    alert("There was an error sending your message. Please try again.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Failed to send message. Please check your connection and try again.");
+            });
+        });
+        
+        // Function to show the popup message
+        function showThankYouMessage() {
+            alert("Thank you for contacting us! You will hear back from us within 24-48 business hours.");
+            window.location.href = "home.html"; // Redirect to home page after submission
+        }
+        </script>
+        
 </body>
-
-<script>
-    // Function to show the popup message
-    function showThankYouMessage(event) {
-        event.preventDefault(); // Prevent form submission
-
-        // Show thank you message as a popup
-        alert("Thank you for contacting us! You will hear back from us within 24-48 business hours.");
-        window.location.href = "home.html";
-    }
-</script>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> Deon-KunnelSajeev
