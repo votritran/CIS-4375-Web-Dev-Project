@@ -4,7 +4,6 @@ from flask_bcrypt import Bcrypt
 import mysql.connector
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
 
 # Flask app instance
