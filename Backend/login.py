@@ -19,6 +19,6 @@ def login():
         connection.close()
 
         if owner and bcrypt.check_password_hash(owner["OwnerPassword"], password):
-            return jsonify({"role": "admin", "redirect": "admin_menu.html"}), 200
+            return jsonify({"role": "admin", "redirect": "../admin view/admin_menu.html"}), 200
 
     return jsonify({"message": "Invalid credentials"}), 401
