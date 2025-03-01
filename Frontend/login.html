@@ -13,16 +13,18 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <ul id="nav-links">
-            <li><a href="#">Home</a></li>
+            <li><a href="Home.html">Home</a></li>
             <li><a id="menu-link" href="menu.html">Menu</a></li>
             <li><a id="cakeorder-link" href="CakeOrder.html">Custom Cakes</a></li>
             <!-- Logo in Navbar -->
             <a href="#"><img src="photo/logo.jpg" alt="Paris Sweet Patisserie" class="logo"></a>
-            <li><a href="#">Event</a></li>
-            <li><a href="#">About Us</a></li>
-            <li><a href="login.html">Log in</a></li>
+            <li><a href="event.html">Event</a></li>
+            <li><a href="contactus.html">Contact US</a></li>
+            <li id="auth-section"></li>
         </ul>
     </nav>
+
+    
 
     <!-- Login Form Container -->
     <div class="container">
@@ -47,29 +49,55 @@
     <!-- Login Form Submission Handling -->
     <script>
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const response = await fetch("http://127.0.0.1:5000/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email: email, password: password }) 
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-        window.location.href = result.redirect;
-    } else {
-        document.getElementById("errorMsg").textContent = result.message;
-        document.getElementById("errorMsg").style.display = "block";
-    }
-});
-
+            event.preventDefault();
+    
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+    
+            const response = await fetch("http://127.0.0.1:5000/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email, password: password }) 
+            });
+    
+            const result = await response.json();
+            if (response.ok) {
+                // Store login state
+                localStorage.setItem("isAdminLoggedIn", "true");
+                window.location.href = result.redirect;
+            } else {
+                document.getElementById("errorMsg").textContent = result.message;
+                document.getElementById("errorMsg").style.display = "block";
+            }
+        });
+    
+        // Function to update navbar based on login state
+        function updateNavbar() {
+            const authSection = document.getElementById("auth-section");
+            const isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+    
+            if (isAdminLoggedIn) {
+                authSection.innerHTML = `
+                    <div class="dropdown">
+                        <button class="dropbtn">⚙️</button>
+                        <div class="dropdown-content">
+                            <a href="#" id="logout">Sign Out</a>
+                        </div>
+                    </div>
+                `;
+    
+                // Logout event listener
+                document.getElementById("logout").addEventListener("click", function() {
+                    localStorage.removeItem("isAdminLoggedIn");
+                    window.location.href = "login.html";
+                });
+            }
+        }
+    
+        // Run updateNavbar when the page loads
+        document.addEventListener("DOMContentLoaded", updateNavbar);
     </script>
+    
 </body>
 </html>
 
