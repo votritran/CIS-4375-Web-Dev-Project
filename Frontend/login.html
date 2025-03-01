@@ -6,7 +6,7 @@
     <title>Login - Paris Sweet Patisserie</title>
     
     <!-- Link to External Stylesheet -->
-    <link rel="stylesheet" href="content/style.css"> 
+    <link rel="stylesheet" href="content/login.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -71,31 +71,38 @@
             }
         });
     
-        // Function to update navbar based on login state
         function updateNavbar() {
-            const authSection = document.getElementById("auth-section");
-            const isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
-    
-            if (isAdminLoggedIn) {
-                authSection.innerHTML = `
-                    <div class="dropdown">
-                        <button class="dropbtn">⚙️</button>
-                        <div class="dropdown-content">
-                            <a href="#" id="logout">Sign Out</a>
-                        </div>
-                    </div>
-                `;
-    
-                // Logout event listener
-                document.getElementById("logout").addEventListener("click", function() {
+        const authSection = document.getElementById("auth-section");
+        const isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+        const isLoginPage = window.location.pathname.includes("login.html");
+
+        if (isAdminLoggedIn) {
+            // Simple dropdown using <select>
+            authSection.innerHTML = `
+                <select id="adminMenu">
+                    <option selected disabled>⚙️</option>
+                    <option value="logout">Sign Out</option>
+                </select>
+            `;
+
+            // Handle dropdown change
+            document.getElementById("adminMenu").addEventListener("change", function(event) {
+                if (event.target.value === "logout") {
                     localStorage.removeItem("isAdminLoggedIn");
                     window.location.href = "login.html";
-                });
-            }
+                }
+            });
+
+        } else {
+            // Show "Log In" text when not logged in
+            authSection.innerHTML = isLoginPage 
+                ? `<a href="login.html" id="login-text">Log in</a>` 
+                : `<a href="login.html" id="login-text">Log in</a>`;
         }
-    
-        // Run updateNavbar when the page loads
-        document.addEventListener("DOMContentLoaded", updateNavbar);
+    }
+
+    // Run updateNavbar on page load
+    document.addEventListener("DOMContentLoaded", updateNavbar);
     </script>
     
 </body>
