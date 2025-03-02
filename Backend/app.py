@@ -231,6 +231,70 @@ def update_menuitem():
             connection.close()
 
 
+# Route to serve the update-menu.html and update the menu after deleting a menu item
+@app.route('/delete_menuitem/update', methods=['GET', 'DELETE'])
+def update_menu():
+    connection = create_connection()
+    
+    if request.method == 'GET':
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT ProductID, ProductName, ProductPrice, ProductDescription FROM Products")
+            products = cursor.fetchall()
+            return render_template('update-menu.html', products=products)
+        except Error as e:
+            print(f"Error fetching products: {e}")
+            return jsonify({"success": False, "message": "Failed to fetch products or product was already deleted."}), 500
+        finally:
+            cursor.close()
+            connection.close()
+
+    elif request.method == 'DELETE':
+        product_id = request.form.get('product_id')
+        new_name = request.form.get('new_name')
+        new_price = request.form.get('new_price')
+        new_description = request.form.get('new_description')
+
+        if not product_id:
+            return jsonify({"success": False, "message": "Product ID is required."})
+
+        update_fields = []
+        values = []
+
+        if new_name:
+            update_fields.append("ProductName = %s")
+            values.append(new_name)
+
+        if new_price:
+            update_fields.append("ProductPrice = %s")
+            values.append(new_price)
+
+        if new_description:
+            update_fields.append("ProductDescription = %s")
+            values.append(new_description)
+
+        if not update_fields:
+            return jsonify({"success": False, "message": "No updates to delete are provided."})
+
+        values.append(product_id)
+        query = f"DELETE Products SET {', '.join(update_fields)} WHERE ProductID = %s"
+
+        connection = create_connection()
+        try:
+            cursor = connection.cursor()
+            cursor.execute(query, values)
+            connection.commit()
+            return jsonify({"success": True, "message": "Menu item deleted successfully!"})
+        except Error as e:
+            print(f"Error deleting product: {e}")
+            connection.rollback()
+            return jsonify({"success": False, "message": "Failed to delete menu item."}), 500
+        finally:
+            cursor.close()
+            connection.close()
+
+
+
 # Route to serve the update-menu.html
 @app.route('/menu/update', methods=['GET', 'POST'])
 def update_menu():
@@ -292,10 +356,6 @@ def update_menu():
         finally:
             cursor.close()
             connection.close()
-
-
-
-
 
 
 
