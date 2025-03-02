@@ -176,7 +176,24 @@
         text-align: center;
         
     }
-
+    #adminMenu {
+        width: 0px;  
+        height: 0%; 
+        font-size: 15px; 
+        cursor: pointer;
+        outline: none;
+        text-align: center;
+    }
+    
+    .admin-menu-container {
+        display: flex;
+        align-items: center;  
+        gap: 5px; 
+    }
+    
+    .gear-icon {
+        font-size: 20px; 
+    }
 
 
 @media (max-width: 900px) {

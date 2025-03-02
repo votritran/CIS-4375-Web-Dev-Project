@@ -177,13 +177,24 @@ h1 {
 }
 
 #adminMenu {
-    width: 80px;  /* Set a smaller width */
-    height: 0px; /* Adjust height to match navbar */
-    font-size: 16px; /* Adjust font size */
+    width: 0px;  
+    height: 0%; 
+    font-size: 15px; 
     cursor: pointer;
     outline: none;
     text-align: center;
 }
+
+.admin-menu-container {
+    display: flex;
+    align-items: center;  
+    gap: 5px; 
+}
+
+.gear-icon {
+    font-size: 20px; 
+}
+
 
 
 @media (max-width: 900px) {

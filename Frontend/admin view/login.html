@@ -71,40 +71,14 @@
             }
         });
     
-        function updateNavbar() {
-        const authSection = document.getElementById("auth-section");
-        const isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
-        const isLoginPage = window.location.pathname.includes("login.html");
-
-        if (isAdminLoggedIn) {
-            // Simple dropdown using <select>
-            authSection.innerHTML = `
-                <select id="adminMenu">
-                    <option selected disabled>⚙️</option>
-                    <option value="logout">Sign Out</option>
-                </select>
-            `;
-
-            // Handle dropdown change
-            document.getElementById("adminMenu").addEventListener("change", function(event) {
-                if (event.target.value === "logout") {
-                    localStorage.removeItem("isAdminLoggedIn");
-                    window.location.href = "../user view/login.html";
-                }
-            });
-
-        } else {
-            // Show "Log In" text when not logged in
-            authSection.innerHTML = isLoginPage 
-                ? `<a href="login.html" id="login-text">Log in</a>` 
-                : `<a href="login.html" id="login-text">Log in</a>`;
-        }
-    }
-
-    // Run updateNavbar on page load
-    document.addEventListener("DOMContentLoaded", updateNavbar);
+        
     </script>
     
+    <script src="navbar.js"></script>
+    <script>
+    updateNavbar();
+    </script>
+
 </body>
 </html>
 
