@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from dbconnection import create_connection
 from login import login
 app = flask.Flask(__name__, template_folder='../Frontend')
-from db_operations import get_menu_items, update_product 
+from db_operations import get_menu_items, add_product, add_product_route
 from flask import request
 
 app.config["DEBUG"] = True
@@ -42,41 +42,8 @@ def get_menu_items_route():
     return jsonify({"success": True, "menu_items": menu_items}), 200
 
 
-
-@app.route('/menu/update', methods=['GET', 'POST'])
-def update_menu():
-    connection = create_connection()
-    
-    if request.method == 'GET':  # Handle GET request (fetching products)
-        try:
-            cursor = connection.cursor()
-            cursor.execute("SELECT ProductID, ProductName, ProductPrice, ProductDescription FROM Products")
-            products = cursor.fetchall()
-            return render_template('dbmenu.html', products=products)
-        except Error as e:
-            print(f"Error fetching products: {e}")
-            return jsonify({"success": False, "message": "Failed to fetch products."}), 500
-        finally:
-            cursor.close()
-            connection.close()
-    
-    # Handle POST request (updating product)
-    elif request.method == 'POST':
-        product_id = request.form.get('product_id')
-        new_name = request.form.get('new_name')
-        new_price = request.form.get('new_price')
-        new_description = request.form.get('new_description')
-
-        if not product_id:
-            return jsonify({"success": False, "message": "Product ID is required."}), 400
-
-        # Call the update_product function from db_operations.py
-        success = update_product(product_id, new_name, new_price, new_description)
-        
-        if success:
-            return jsonify({"success": True, "message": "Menu item updated successfully!"}), 200
-        else:
-            return jsonify({"success": False, "message": "Failed to update menu item."}), 500
+# Register the add_product_route from db_operations
+add_product_route(app)  # Register the route with the app
 
 
 

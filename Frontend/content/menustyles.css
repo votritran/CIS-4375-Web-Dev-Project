@@ -393,3 +393,77 @@ h1 {
     font-weight: bold;       /* Makes the text bold */
     margin-bottom: 15px;     /* Adds space below the category title */
 }
+
+
+/* Style for the Add Product Form */
+#add-product-form-container {
+    width: 100%;
+    max-width: 500px; /* Reduced the width for a smaller form */
+    margin: 2rem auto;
+    padding: 1.5rem; /* Reduced padding */
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#add-product-form-container h2 {
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    color: #8b4513;
+    margin-bottom: 1rem;
+    font-size: 1.5rem; /* Slightly smaller title */
+}
+
+#product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem; /* Reduced the gap between elements */
+}
+
+#product-form label {
+    font-size: 1rem;
+    color: #333;
+}
+
+#product-form input,
+#product-form textarea {
+    padding: 0.6rem; /* Smaller padding */
+    font-size: 0.95rem; /* Slightly smaller font size */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+#product-form textarea {
+    height: 80px; /* Reduced the height of the textarea */
+}
+
+#product-form button {
+    padding: 0.8rem;
+    background-color: #8b4513;
+    border: none;
+    color: white;
+    font-size: 1rem; /* Reduced font size */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#product-form button:hover {
+    background-color: #ff6347;
+}
+
+@media (max-width: 600px) {
+    #add-product-form-container {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    .menu-container {
+        max-width: 250px; /* Even smaller menu cards on smaller screens */
+    }
+
+    #product-form {
+        gap: 0.5rem; /* Even smaller gap for smaller screens */
+    }
+}
