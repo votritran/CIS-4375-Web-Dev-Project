@@ -243,8 +243,128 @@ def update_menu():
             cursor.close()
             connection.close()
 
+# Getting events from the DB
+@app.route('/api/get_event', methods=['GET'])
+def get_events():
+    connection = create_connection()
+    if not connection:
+        return jsonify({"success": False, "message": "Database connection failed"}), 500
+
+    try:
+        cursor = connection.cursor()
+
+        # Get all events from Event table in DB
+        cursor.execute("""
+            SELECT EventID, EventName, EventDescription, EventDate, EventTime
+            FROM Events
+        """)
+        events = cursor.fetchall()
+        
+        if not events:
+            return jsonify({"success": False, "message": "No events were found"}), 404
+
+        # This is to convert the database result into a structured JSON response
+        events = []
+        for event in events:
+            events.append({
+                "EventID": event[0], # Unique identifier for the event
+                "EventName": event[1], # Name of the event
+                "EventDescription": event[2],  # Description of the event
+                "EventDate": event[3], # Date of the event
+                "EventTime": event[4], # Time of the event
+            })
+        # Return the list of events as a JSON response
+        return jsonify({"success": True, "events": events}), 200
+
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"message": "Failed to fetch events due to database error."}), 500
+
+    finally:
+        cursor.close()
+        connection.close()
 
 
+
+# Route to serve the update-event.html
+@app.route('/event/update', methods=['GET', 'POST'])
+def update_event():
+    # Establish a database connection
+    connection = create_connection()
+    
+    if request.method == 'GET': # Handle GET request (fetching events)
+        try:
+            cursor = connection.cursor()
+            # Retrieve all events to update from DB
+            cursor.execute("SELECT EventID, EventName, EventDescription, EventDate, EventTime FROM Events")
+            events = cursor.fetchall()
+            # Render the update-event.html template, passing the events data to it
+            return render_template('update-event.html', events=events)
+        
+        except Error as e:
+            print(f"Error fetching events: {e}")
+            return jsonify({"success": False, "message": "Failed to fetch events."}), 500
+        
+        finally:
+            cursor.close()
+            connection.close()
+            
+    # Handle POST request (this is to update a event)
+    elif request.method == 'POST':
+        # Get updated event details from the form submission
+        event_id = request.form.get('event_id')
+        new_name = request.form.get('new_name')
+        new_description = request.form.get('new_description')
+        new_date = request.form.get('new_date')
+        new_time = request.form.get('new_time')
+        # Validate that a event ID is provided
+        if not event_id:
+            return jsonify({"success": False, "message": "Event ID is required."})
+
+        update_fields = [] # List to store update queries
+        values = [] # List to store values for parameterized query
+        # This is to ensure that only the input provided will be updated, if something is left blank, no update is made
+        if new_name:
+            update_fields.append("EventName = %s")
+            values.append(new_name)
+
+        if new_description:
+            update_fields.append("EventDescription = %s")
+            values.append(new_description)
+
+        if new_date:
+            update_fields.append("EventDate = %s")
+            values.append(new_date)
+
+        if new_time:
+            update_fields.append("EventTime = %s")
+            values.append(new_date)
+        
+        # If no updates were provided, return an error message
+        if not update_fields:
+            return jsonify({"success": False, "message": "No updates provided."})
+
+        # Append event ID to values list for WHERE clause
+        values.append(event_id)
+        # this is to make the SQL UPDATE query dynamically
+        query = f"UPDATE Events SET {', '.join(update_fields)} WHERE EventID = %s"
+
+        # Establish a new database connection
+        connection = create_connection()
+        try:
+            cursor = connection.cursor()
+            cursor.execute(query, values) # Execute the update query
+            connection.commit() # Commit to save changes
+            return jsonify({"success": True, "message": "Event updated successfully!"})
+        
+        except Error as e:
+            print(f"Error updating event: {e}")
+            connection.rollback()
+            return jsonify({"success": False, "message": "Failed to update event."}), 500
+        
+        finally:
+            cursor.close()
+            connection.close()
 
 
 
