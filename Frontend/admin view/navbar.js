@@ -1,33 +1,25 @@
 function updateNavbar() {
     const authSection = document.getElementById("auth-section");
     const isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
-    const isLoginPage = window.location.pathname.includes("login.html");
 
     if (isAdminLoggedIn) {
         authSection.innerHTML = `
-            <div class="admin-menu-container">
-                <span class="gear-icon">👤</span>
-                <select id="adminMenu">
-                    <option selected disabled></option>
-                    <option value="logout">Log Out</option>
-                </select>
-            </div>
+            <select id="adminMenu">
+                <option selected disabled>⚙️</option>
+                <option value="logout">Sign Out</option>
+            </select>
         `;
 
         document.getElementById("adminMenu").addEventListener("change", function(event) {
             if (event.target.value === "logout") {
                 localStorage.removeItem("isAdminLoggedIn");
-                window.location.href = "../user view/login.html"; // Redirect to user login
+                window.location.href = "../user%20view/login.html"; 
             }
         });
-
     } else {
-        authSection.innerHTML = isLoginPage 
-            ? `<a href="../user view/login.html" id="login-text">Log in</a>` 
-            : `<a href="../user view/login.html" id="login-text">Log in</a>`;
+        authSection.innerHTML = `<a href="login.html" id="login-text">Log in</a>`;
     }
 }
 
-    // Run updateNavbar on page load
-    document.addEventListener("DOMContentLoaded", updateNavbar);
-  
+
+document.addEventListener("DOMContentLoaded", updateNavbar);
