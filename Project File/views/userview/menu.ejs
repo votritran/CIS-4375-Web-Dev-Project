@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Menu</title>
+    <link rel="stylesheet" href="../css/menustyles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <%- include('../partials/navbar') %>
+        
+    <!-- Main header -->
+    <h1 class="header">Our Delicious Menu</h1>
+
+    <!-- Menu Section -->
+    <div id="menu">
+        <% Object.keys(menuItems).forEach(function(category) { %>
+            <div class="menu-container">
+                <h2><%= category %></h2>
+                <div class="menu-items">
+                    <% menuItems[category].forEach(function(item) { %>
+                        <div class="menu-item">
+                            <h3><%= item.ProductName %></h3>
+                            <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.ProductName %>" class="menu-image">
+                            <p><strong>Description:</strong> <%= item.ProductDescription %></p>
+                            <p><strong>Price:</strong> $<%= item.ProductPrice %></p>
+                            <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+
+
+</body>
+</html>
