@@ -5,3 +5,5 @@ to run file follow the instructions:
 
 cd ProjectFile
 npm install express
+node server.js
+http://localhost:3000
