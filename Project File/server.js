@@ -1,11 +1,15 @@
-// Import required modules
 const express = require('express');
 const path = require('path');
-const connection = require('./config/dbconnection'); // Import the database connection
-require('dotenv').config();  // Load environment variables from .env file
-//Import menu routes
+require('dotenv').config(); // Load environment variables from .env file
+
+// Import routes
+const homeRoutes = require('./routes/homeRoutes');
 const menuRoutes = require('./routes/menuRoutes');
 const cakeorderRoutes = require('./routes/cakeorderRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+const contactusRoutes = require('./routes/contactusRoutes');
+const loginRoutes = require('./routes/loginRoutes');
+
 // Initialize Express app
 const app = express();
 
@@ -18,26 +22,22 @@ app.set('view engine', 'ejs');
 
 // Define static folder for serving CSS, images, and JS files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Middleware for parsing JSON request bodies
+app.use(express.json()); // This is required for POST requests with JSON data
+
+// Use imported routes
+app.use(homeRoutes);
 app.use(menuRoutes);
 app.use(cakeorderRoutes);
+app.use(eventRoutes);
+app.use(contactusRoutes);
+app.use(loginRoutes);
 
-// Route to render the Home page
-app.get('/', (req, res) => {
-    // Corrected slideshow images array
-    const slideshowImages = [
-        '/photo/slideshow/france.jpg',
-        '/photo/slideshow/macaron.jpg',
-        '/photo/slideshow/coffee.jpg',
-        '/photo/slideshow/pastry.jpg',
-        '/photo/slideshow/onionsoup.jpg'
-    ];
-
-    // Render the 'home' view with the slideshow images array
-    res.render('home', { slideshowImages });
+// Add a catch-all route for undefined routes
+app.use((req, res) => {
+    res.status(404).send('Page Not Found');
 });
-
-// Route to render the Cake Order page
-
 
 // Start the server
 app.listen(port, () => {

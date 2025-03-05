@@ -388,3 +388,13 @@
     margin-bottom: 15px;     /* Adds space below the category title */
 }
 
+.footer{
+    background-color: #8b4513;
+    
+    text-align: center;
+    color: #000000;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height:50px;
+}
