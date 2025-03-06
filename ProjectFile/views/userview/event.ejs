@@ -18,11 +18,11 @@
         
         <% events.forEach(function(event) { %>
             <div class="event-item">
-                <img src="<%= event.image %>" alt="<%= event.title %>" class="event-image">
-                <h3><%= event.title %></h3>
-                <p><strong>Date:</strong> <%= event.date %></p>
-                <p><strong>Time:</strong> <%= event.time %></p>
-                <p><strong>Description:</strong> <%= event.description %></p>
+                <img src="<%= event.Eventimage %>" alt="<%= event.title %>" class="event-image">
+                <h3><%= event.EventName %></h3>
+                <p><strong>Date:</strong> <%= event.EventDate %></p>
+                <p><strong>Time:</strong> <%= event.EventTime %></p>
+                <p><strong>Description:</strong> <%= event.EventDescription %></p>
             </div>
         <% }); %>
 
