@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Contact Us</title> <!-- Dynamic title -->
-    <link rel="stylesheet" href="../css/contactusstyle.css">
+    <link rel="stylesheet" href="/css/contactusstyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -14,20 +14,21 @@
 
     <section class="contact-us">
         <h1>Contact Us</h1>
-        <p>Is your question about custom cake?</p>
-        <p>Try our Custom Cakes Form at <a href="/cakeorder">Customer Cake</a></p>
+        <p>Is your question about a custom cake?</p>
+        <p>Try our Custom Cakes Form at <a href="/cakeorder">Custom Cake</a></p>
         <h1>Contact Number</h1>
         <p>Phone Number: <%= contactNumber %></p> <!-- Dynamic contact number -->
     </section>
 
     <section class="contact-us">
-        <h1>Get in touch with us</h1>
+        <h1>Get in Touch with Us</h1>
 
         <div class="container">
             <h2>Contact Form</h2>
-            <!-- thank you message after submit -->
-            <form onsubmit="showThankYouMessage(event)">
-                <!-- client info -->
+            
+            <!-- Contact Form -->
+            <form id="contactForm">
+                <!-- User Information -->
                 <label for="name">Your Full Name:</label>
                 <input type="text" id="name" name="name" required>
 
@@ -37,8 +38,8 @@
                 <label for="phone">Phone Number:</label>
                 <input type="tel" id="phone" name="phone" required>
             
-                <label for="contact">Preferred contact method:</label>
-                <select id="contacttype" name="contactType">
+                <label for="contactType">Preferred Contact Method:</label>
+                <select id="contactType" name="contactType">
                     <option value="Email">Email</option>
                     <option value="PhoneNumber">Phone Number</option>
                 </select>
@@ -50,34 +51,27 @@
                     <option value="Vietnamese">Vietnamese/Tiếng Việt</option>
                 </select>
 
+                <label for="Subject">Subject:</label>
+                <input type="text" id="Subject" name="Subject" required>
+
                 <label for="message">Message:</label>
-                <textarea id="message" name="message" rows="6" placeholder="Describe any special requests..."></textarea>
+                <textarea id="message" name="message" rows="6" placeholder="Describe any special requests..." required></textarea>
 
                 <button type="submit">Submit</button>
             </form>
 
-            <!-- disclaimer -->
-            <p class="disclaimer">You will hear back from us within 24-48 hours. For immediate action please call us directly.</p>
+            <!-- Disclaimer -->
+            <p class="disclaimer">You will hear back from us within 24-48 hours. For immediate action, please call us directly.</p>
         </div>
-
     </section>
 
     <footer class="footer">
         <p>&copy; 2025 Paris Sweet Patisserie. All rights reserved.</p>
     </footer>
 
-    <script>
-        // Function to show the popup message
-        function showThankYouMessage(event) {
-            event.preventDefault(); // Prevent form submission
-
-            // Show thank you message as a popup
-            alert("Thank you for contacting us! You will hear back from us within 24-48 business hours.");
-            window.location.href = "/contactus"; // refresh page
-        }
-    </script>
-
-    <!-- Footer Section -->
+    <!-- Include Footer -->
     <%- include('../partials/footer') %>
+
+    <script src="../js/contactus.js"></script>
 </body>
 </html>
