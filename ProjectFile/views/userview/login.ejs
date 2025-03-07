@@ -59,10 +59,8 @@
             }
         });
 
-        
         document.addEventListener("DOMContentLoaded", function() {
             const userRole = localStorage.getItem("userRole");
-
             if (userRole === "admin") {
                 document.getElementById("menu-link").href = "/admin_menu";
                 document.getElementById("cakeorder-link").href = "/admin_CakeOrder";
