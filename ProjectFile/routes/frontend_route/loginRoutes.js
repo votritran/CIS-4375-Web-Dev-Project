@@ -3,7 +3,7 @@ const router = express.Router(); // This was 'route' in your code, change it to 
 
 // Assuming you have bcrypt and connection set up already
 const bcrypt = require('bcrypt');
-const connection = require('../config/dbconnection'); // Import your database connection
+const connection = require('../../config/dbconnection'); // Import your database connection
 
 router.get('/login', (req, res) => {
     res.render('login');

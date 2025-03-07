@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../config/dbconnection');
+const connection = require('../../config/dbconnection');
 router.get('/event', (req, res) => {
     
     connection.query('SELECT * FROM Events', (err, results) => {

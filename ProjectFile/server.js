@@ -3,13 +3,16 @@ const path = require('path');
 require('dotenv').config(); // Load environment variables from .env file
 
 // Import routes
-const homeRoutes = require('./routes/homeRoutes');
-const menuRoutes = require('./routes/menuRoutes');
-const cakeorderRoutes = require('./routes/cakeorderRoutes');
-const eventRoutes = require('./routes/eventRoutes');
-const contactusRoutes = require('./routes/contactusRoutes');
-const loginRoutes = require('./routes/loginRoutes');
+const homeRoutes = require('./routes/frontend_route/homeRoutes');
+const menuRoutes = require('./routes/frontend_route/menuRoutes');
+const cakeorderRoutes = require('./routes/frontend_route/cakeorderRoutes');
+const eventRoutes = require('./routes/frontend_route/eventRoutes');
+const contactusRoutes = require('./routes/frontend_route/contactusRoutes');
+const loginRoutes = require('./routes/frontend_route/loginRoutes');
 
+
+//backend routes
+const adminmenuRoutes = require('./routes/backend_route/adminmenuRoutes');
 // Initialize Express app
 const app = express();
 
@@ -33,6 +36,7 @@ app.use(cakeorderRoutes);
 app.use(eventRoutes);
 app.use(contactusRoutes);
 app.use(loginRoutes);
+app.use(adminmenuRoutes);
 
 // Add a catch-all route for undefined routes
 app.use((req, res) => {

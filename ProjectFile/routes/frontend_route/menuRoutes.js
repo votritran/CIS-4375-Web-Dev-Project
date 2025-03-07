@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();  // Use Express Router for modular routes
-const connection = require('../config/dbconnection');  // Import the DB connection
+const connection = require('../../config/dbconnection');  // Import the DB connection
 
 // Route to fetch menu items from the database and render them in 'menu.ejs'
 router.get('/menu', (req, res) => {

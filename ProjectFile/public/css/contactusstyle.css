@@ -116,7 +116,7 @@ h1 {
     flex-direction: column; /* Stack the items vertically */
     align-items: center;     /* Center the items horizontally */
     margin-top: 100px;        /* Adjust top margin */
-    width: 200px;
+    width: 150px;
     margin-left: auto;
     margin-right: auto;
 }
