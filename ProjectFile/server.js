@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const path = require('path');
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -9,6 +9,7 @@ const cakeorderRoutes = require('./routes/cakeorderRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const contactusRoutes = require('./routes/contactusRoutes');
 const loginRoutes = require('./routes/loginRoutes');
+const emailRoutes = require('./routes/emailRoutes'); //Added the email route
 
 // Initialize Express app
 const app = express();
@@ -24,7 +25,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware for parsing JSON request bodies
-app.use(express.json()); // This is required for POST requests with JSON data
+app.use(express.json()); // Required for handling POST requests
 
 // Use imported routes
 app.use(homeRoutes);
@@ -33,6 +34,7 @@ app.use(cakeorderRoutes);
 app.use(eventRoutes);
 app.use(contactusRoutes);
 app.use(loginRoutes);
+app.use(emailRoutes); //Added email routes
 
 // Add a catch-all route for undefined routes
 app.use((req, res) => {
@@ -41,5 +43,5 @@ app.use((req, res) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is running on port http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
