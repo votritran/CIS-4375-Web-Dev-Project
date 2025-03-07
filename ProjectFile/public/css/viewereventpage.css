@@ -1,3 +1,4 @@
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f4e5;
@@ -17,7 +18,7 @@ body {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    margin-bottom: 120px;
+    margin-bottom: 100px;
     margin-top: 100px;
     flex-wrap: wrap;
 }
@@ -127,7 +128,7 @@ h1 {
         flex-direction: column; /* Stack the items vertically */
         align-items: center;     /* Center the items horizontally */
         margin-top: 100px;        /* Adjust top margin */
-        width: 150px;
+        width: 200px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -160,9 +161,9 @@ h1 {
 }
 
 .event-container {
-    max-width: 1200px; /* Adjust max-width to fit more items on the screen */
-    margin: auto;
+    max-width: 1200px; 
     background: #8b4513;
+    margin: auto;
     padding: 20px;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

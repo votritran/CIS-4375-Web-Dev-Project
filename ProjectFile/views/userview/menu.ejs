@@ -10,14 +10,22 @@
 <body>
     <!-- Navigation bar -->
     <%- include('../partials/navbar') %>
-        
+
     <!-- Main header -->
     <h1 class="header">Our Delicious Menu</h1>
 
     <!-- Menu Section -->
+    <div class="tabs">
+        <% Object.keys(menuItems).forEach(function(category, index) { %>
+            <div class="tab" data-tab="<%= category %>">
+                <%= category %>
+            </div>
+        <% }); %>
+    </div>
+
     <div id="menu">
-        <% Object.keys(menuItems).forEach(function(category) { %>
-            <div class="menu-container">
+        <% Object.keys(menuItems).forEach(function(category, index) { %>
+            <div class="menu-container" id="<%= category %>">
                 <h2><%= category %></h2>
                 <div class="menu-items">
                     <% menuItems[category].forEach(function(item) { %>
@@ -37,6 +45,7 @@
     <!-- Footer -->
     <%- include('../partials/footer') %>
 
-
+    <!-- Link to external JavaScript file -->
+    <script src="../js/menu.js"></script>
 </body>
 </html>

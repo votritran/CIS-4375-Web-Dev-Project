@@ -6,7 +6,7 @@
     <title>Login - Paris Sweet Patisserie</title>
     
     <!-- Link to External Stylesheet -->
-    <link rel="stylesheet" href="../css/style.css"> 
+    <link rel="stylesheet" href="../css/login.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -59,10 +59,8 @@
             }
         });
 
-        
         document.addEventListener("DOMContentLoaded", function() {
             const userRole = localStorage.getItem("userRole");
-
             if (userRole === "admin") {
                 document.getElementById("menu-link").href = "/admin_menu";
                 document.getElementById("cakeorder-link").href = "/admin_CakeOrder";
