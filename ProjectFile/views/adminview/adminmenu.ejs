@@ -10,14 +10,22 @@
 <body>
     <!-- Navigation bar -->
     <%- include('../partials/loginnavbar') %>
-        
+
     <!-- Main header -->
-    <h1 class="header">Our Delicious Test Menu</h1>
+    <h1 class="header">Our Delicious Menu</h1>
 
     <!-- Menu Section -->
+    <div class="tabs">
+        <% Object.keys(menuItems).forEach(function(category, index) { %>
+            <div class="tab" data-tab="<%= category %>">
+                <%= category %>
+            </div>
+        <% }); %>
+    </div>
+
     <div id="menu">
-        <% Object.keys(menuItems).forEach(function(category) { %>
-            <div class="menu-container">
+        <% Object.keys(menuItems).forEach(function(category, index) { %>
+            <div class="menu-container" id="<%= category %>">
                 <h2><%= category %></h2>
                 <div class="menu-items">
                     <% menuItems[category].forEach(function(item) { %>
@@ -27,12 +35,6 @@
                             <p><strong>Description:</strong> <%= item.ProductDescription %></p>
                             <p><strong>Price:</strong> $<%= item.ProductPrice %></p>
                             <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p>
-
-                            <!-- Edit Button -->
-                            <button class="edit-button" onclick="editItem(<%= item.ProductID %>)">Edit</button>
-
-                            <!-- Delete Button -->
-                            <button class="delete-button" onclick="deleteItem(<%= item.ProductID %>)">Delete</button>
                         </div>
                     <% }); %>
                 </div>
@@ -40,31 +42,10 @@
         <% }); %>
     </div>
 
-    <script>
-        function toggleDropdown() {
-            var dropdown = document.querySelector('.account-dropdown');
-            dropdown.classList.toggle('show');
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.matches('.account-icon') && !event.target.closest('.account-dropdown')) {
-                var dropdowns = document.querySelectorAll('.dropdown-content');
-                dropdowns.forEach(function(dropdown) {
-                    dropdown.style.display = "none"; // Hide dropdown if clicked outside
-                });
-            }
-        }
-
-        // Optional: Hide dropdown initially on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            var dropdowns = document.querySelectorAll('.dropdown-content');
-            dropdowns.forEach(function(dropdown) {
-                dropdown.style.display = "none"; // Initially hide the dropdown
-            });
-        });
-    </script>
-
     <!-- Footer -->
     <%- include('../partials/footer') %>
+
+    <!-- Link to external JavaScript file -->
+    <script src="../js/menu.js"></script>
 </body>
 </html>
