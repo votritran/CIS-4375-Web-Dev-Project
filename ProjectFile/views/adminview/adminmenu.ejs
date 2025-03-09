@@ -1,39 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paris Sweet Patisserie - Menu</title>
-    <link rel="stylesheet" href="../css/menustyles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <meta charset="UTF-8"> <!-- Character encoding for the webpage -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design for different screen sizes -->
+    <title>Paris Sweet Patisserie - Admin Menu</title> <!-- Title of the page displayed in the browser tab -->
+    <link rel="stylesheet" href="../css/admin_menu_styles.css"> <!-- Link to external CSS file for styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet"> <!-- Link to Google Fonts for a custom font -->
 </head>
 <body>
-    <!-- Navigation bar -->
+    <!-- Navigation bar (included from a partial template) -->
     <%- include('../partials/loginnavbar') %>
 
-    <!-- Main header -->
-    <h1 class="header">Our Delicious Menu</h1>
+    <!-- Main header for the admin menu -->
+    <h1 class="header">Admin Menu Management</h1>
 
-    <!-- Menu Section -->
+    <!-- Admin Update Section: Button to toggle the update form visibility -->
+    <div class="admin-update-section">
+        <!-- Button to toggle the visibility of the update form -->
+        <button class="update-btn" onclick="toggleUpdateForm()">Update Menu Item</button>
+
+        <!-- Update Item Form (Initially Hidden) -->
+        <div id="updateFormContainer" style="display: none; margin-top: 20px;">
+            <!-- Form to update the menu item -->
+            <form id="updateForm" onsubmit="submitForm(event)">
+                <!-- Dropdown to select a menu item to update -->
+                <label for="menu-item-select">Select Item to Update:</label>
+                <select id="menu-item-select" name="productID">
+                    <!-- Placeholder option in dropdown (disabled and selected by default) -->
+                    <option value="" disabled selected>Select a product to update</option>
+                    <!-- Loop through menuItems and create an option for each product -->
+                    <% Object.keys(menuItems).forEach(function(category) { %>
+                        <optgroup label="<%= category %>">
+                            <% menuItems[category].forEach(function(item) { %>
+                                <!-- Create an option for each item with its ProductID and ProductName -->
+                                <option value="<%= item.ProductID %>"><%= item.ProductName %></option>
+                            <% }); %>
+                        </optgroup>
+                    <% }); %>
+                </select>
+                <br><br>
+
+                <!-- Input field for updating the name of the item -->
+                <label for="newName">Updated Name:</label>
+                <input type="text" id="newName" name="newName" placeholder="Leave blank to keep current name">
+                <br><br>
+
+                <!-- Input field for updating the description of the item -->
+                <label for="newDescription">Updated Description:</label>
+                <input type="text" id="newDescription" name="newDescription" placeholder="Leave blank to keep current description">                
+                <br><br>
+
+                <!-- Input field for updating the price of the item -->
+                <label for="newPrice">Updated Price:</label>
+                <input type="number" step="0.01" id="newPrice" name="newPrice" placeholder="Leave blank to keep current price">
+                <br><br>
+
+                <!-- Input field for updating the size of the item -->
+                <label for="newSize">Updated Size:</label>
+                <input type="text" id="newSize" name="newSize" placeholder="Leave blank to keep current size">
+                <br><br>
+
+                <!-- Submit button for the form -->
+                <button type="submit">Submit Updates</button>
+            </form>
+
+            <!-- Placeholder for success or error messages after form submission -->
+            <div id="updateMessage" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+    <br>
+
+    <!-- Menu Section: Displays tabs and menu items -->
     <div class="tabs">
-        <% Object.keys(menuItems).forEach(function(category, index) { %>
+        <!-- Loop through menu categories and create a tab for each category -->
+        <% Object.keys(menuItems).forEach(function(category) { %>
             <div class="tab" data-tab="<%= category %>">
-                <%= category %>
+                <%= category %> <!-- Display the category name as the tab -->
             </div>
         <% }); %>
     </div>
 
+    <!-- Menu items displayed below each tab -->
     <div id="menu">
-        <% Object.keys(menuItems).forEach(function(category, index) { %>
-            <div class="menu-container" id="<%= category %>">
-                <h2><%= category %></h2>
+        <!-- Loop through menu categories and display corresponding items -->
+        <% Object.keys(menuItems).forEach(function(category) { %>
+            <div class="menu-container" data-content="<%= category %>">
+                <h2><%= category %></h2> <!-- Display category name -->
                 <div class="menu-items">
+                    <!-- Loop through items in each category and display them -->
                     <% menuItems[category].forEach(function(item) { %>
                         <div class="menu-item">
-                            <h3><%= item.ProductName %></h3>
+                            <h3><%= item.ProductName %></h3> <!-- Display product name -->
+                            <!-- Display product image with a fallback to a default image if none exists -->
                             <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.ProductName %>" class="menu-image">
+                            <!-- Display product description -->
                             <p><strong>Description:</strong> <%= item.ProductDescription %></p>
+                            <!-- Display product price -->
                             <p><strong>Price:</strong> $<%= item.ProductPrice %></p>
+                            <!-- Display product size with a fallback value -->
                             <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p>
                         </div>
                     <% }); %>
@@ -42,10 +106,112 @@
         <% }); %>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer (included from a partial template) -->
     <%- include('../partials/footer') %>
 
     <!-- Link to external JavaScript file -->
     <script src="../js/menu.js"></script>
+
+    <!-- Script to handle form submission and tab functionality -->
+    <script>
+        // Function to toggle the visibility of the update form
+        function toggleUpdateForm() {
+            var form = document.getElementById("updateFormContainer");
+            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
+        }
+
+        // Keep the selected tab active even after a page refresh
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabs = document.querySelectorAll(".tab");
+            const contents = document.querySelectorAll(".menu-container");
+            const storedTab = localStorage.getItem("activeTab"); // Get the stored active tab from localStorage
+
+            // If a stored tab exists, set it as the active tab
+            if (storedTab) {
+                setActiveTab(storedTab);
+            } else {
+                setActiveTab(tabs[0].getAttribute("data-tab")); // Default to the first tab if no stored tab
+            }
+
+            // Add click event listeners to all tabs
+            tabs.forEach(tab => {
+                tab.addEventListener("click", function () {
+                    const selectedTab = this.getAttribute("data-tab");
+                    localStorage.setItem("activeTab", selectedTab); // Store the selected tab in localStorage
+                    setActiveTab(selectedTab); // Set the selected tab as active
+                });
+            });
+
+            // Function to set the active tab and show corresponding content
+            function setActiveTab(tabName) {
+                tabs.forEach(tab => {
+                    tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName); // Add 'active' class to the selected tab
+                });
+
+                contents.forEach(content => {
+                    content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none"; // Show the content for the selected tab
+                });
+            }
+        });
+
+        // Function to handle form submission using the fetch API
+        async function submitForm(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Check if a product is selected from the dropdown
+            const productSelect = document.getElementById("menu-item-select");
+            if (!productSelect.value) {
+                // If no product is selected, show an error message
+                const messageDiv = document.getElementById("updateMessage");
+                messageDiv.innerHTML = `<p style="color: red;">You must select a product to update from the dropdown.</p>`;
+                return; // Stop further execution if no product is selected
+            }
+
+            // Check if at least one field has been updated (Name, Description, Price, Size)
+            const newName = document.getElementById("newName").value.trim();
+            const newDescription = document.getElementById("newDescription").value.trim();
+            const newPrice = document.getElementById("newPrice").value.trim();
+            const newSize = document.getElementById("newSize").value.trim();
+
+            // If no fields are updated, show an error message
+            if (!newName && !newDescription && !newPrice && !newSize) {
+                const messageDiv = document.getElementById("updateMessage");
+                messageDiv.innerHTML = `<p style="color: red;">Please type what you want to update.</p>`;
+                return; // Stop further execution if no fields are filled
+            }
+
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            try {
+                // Send the form data to the server using the fetch API
+                const response = await fetch('/update-product', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+                const messageDiv = document.getElementById("updateMessage");
+
+                // Show the success or error message based on the response
+                if (response.ok) {
+                    messageDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
+                } else {
+                    messageDiv.innerHTML = `<p style="color: red;">${result.message}</p>`;
+                }
+
+                // Reload the page to reflect the updates
+                window.location.reload();
+            } catch (error) {
+                console.error('Error updating product:', error);
+                // Display a generic error message if something goes wrong
+                document.getElementById("updateMessage").innerHTML = `<p style="color: red;">Error updating product</p>`;
+            }
+        }
+    </script>
 </body>
 </html>
