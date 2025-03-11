@@ -429,3 +429,8 @@ h1 {
         font-size: 1em; /* Smaller button text on mobile */
     }
 }
+
+.menu-item .price {
+    font-size: 20px;
+    color: #000000;
+}

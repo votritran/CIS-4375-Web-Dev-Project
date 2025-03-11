@@ -26,20 +26,52 @@ router.get('/adminmenu', (req, res) => {
             return res.status(500).send('Error fetching menu items');
         }
 
-        // Group menu items by category
+        // Group menu items by category and product name
         const menuItems = results.reduce((categories, item) => {
             const category = item.CategoryName || 'Uncategorized';
+            const productName = item.ProductName;
+
+            // If category doesn't exist, create it
             if (!categories[category]) {
-                categories[category] = [];
+                categories[category] = {};
             }
-            categories[category].push(item);
+
+            // If product name doesn't exist in this category, create it
+            if (!categories[category][productName]) {
+                categories[category][productName] = {
+                    ProductID: item.ProductID,
+                    ProductDescription: item.ProductDescription,
+                    ProductImage: item.ProductImage,
+                    ProductPrice: item.ProductPrice,
+                    Sizes: []  // Array to store sizes and prices
+                };
+            }
+
+            // Add the size and price to the product (if size exists)
+            if (item.ProductSize) {
+                categories[category][productName].Sizes.push({
+                    size: item.ProductSize,
+                    price: item.ProductPrice
+                });
+            }
+
             return categories;
         }, {});
 
-        // Render 'menu' view and pass grouped menu items
-        res.render(path.join(__dirname, '../../views', 'adminview', 'adminmenu'), { menuItems });
+        // Convert the grouped data back into an array of categories and products
+        const groupedMenuItems = Object.keys(menuItems).map(category => ({
+            categoryName: category,
+            products: Object.keys(menuItems[category]).map(productName => ({
+                productName: productName,
+                ...menuItems[category][productName]
+            }))
+        }));
+
+        // Render the 'adminmenu' view and pass grouped menu items
+        res.render(path.join(__dirname, '../../views', 'adminview', 'adminmenu'), { menuItems: groupedMenuItems });
     });
 });
+
 
 router.post('/adminmenu/add', upload.single('productImage'), (req, res) => {
     const { productName, productDescription, productPrice, productSize, categoryName } = req.body;
@@ -81,4 +113,57 @@ router.post('/adminmenu/add', upload.single('productImage'), (req, res) => {
         });
     });
 });
+
+router.post('/adminmenu/delete/:productId', (req, res) => {
+    const productId = req.params.productId;
+
+    // Fetch product image URL from the database
+    connection.query('SELECT ProductImage FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+        if (err) {
+            console.error('Error fetching product image:', err);
+            return res.status(500).send('Error fetching product image');
+        }
+
+        if (result.length === 0) {
+            return res.status(404).send('Product not found');
+        }
+
+        const imageUrl = result[0].ProductImage;
+
+        // Extract the S3 object key (path after 'amazonaws.com/')
+        const imageKey = imageUrl.split('amazonaws.com/')[1];
+
+        // Ensure the image key is extracted correctly
+        if (!imageKey) {
+            console.error('No valid image key found in URL:', imageUrl);
+            return res.status(500).send('Error: Invalid image URL');
+        }
+
+        // Delete the image from S3
+        const s3Params = {
+            Bucket: 'cis4375tv', // Your S3 bucket name
+            Key: imageKey // Extracted key from image URL
+        };
+
+        s3.deleteObject(s3Params, (err, data) => {
+            if (err) {
+                console.error('Error deleting image from S3:', err);
+                return res.status(500).send('Error deleting image from S3');
+            }
+
+            // After successfully deleting the image, delete the product from the database
+            connection.query('DELETE FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+                if (err) {
+                    console.error('Error deleting product from database:', err);
+                    return res.status(500).send('Error deleting product from database');
+                }
+
+                // Redirect back to the menu page after successful deletion
+                res.redirect('/adminmenu');
+            });
+        });
+    });
+});
+
+
 module.exports = router;  // Export the router to be used in server.js
