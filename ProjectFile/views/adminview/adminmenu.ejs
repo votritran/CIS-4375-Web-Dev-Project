@@ -4,16 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paris Sweet Patisserie - Menu</title>
-    <link rel="stylesheet" href="../css/menustyles.css">
+    <link rel="stylesheet" href="../css/adminmenustyles.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation bar -->
     <%- include('../partials/loginnavbar') %>
+    <div>
+        <h1 class = "header"> Add Menu Item</h1>
+    </div>
+    
 
-    <!-- Main header -->
-    <h1 class="header">Our Delicious Menu</h1>
+    <!-- Add Menu Item Form -->
+    <div class="add-menu-item">
+        <form action="/adminmenu/add" method="POST" enctype="multipart/form-data">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName" required><br>
 
+            <label for="productDescription">Description:</label>
+            <textarea id="productDescription" name="productDescription" required></textarea><br>
+
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" name="productPrice" step="0.01" required><br>
+
+            <label for="productSize">Size:</label>
+            <input type="text" id="productSize" name="productSize"><br>
+
+            <label for="categoryName">Category:</label>
+            <input type="text" id="categoryName" name="categoryName" required><br>
+
+            <label for="productImage">Product Image:</label>
+            <input type="file" id="productImage" name="productImage" accept="image/*" required><br>
+
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
+
+
+    <h1 class="header">Current Menu View</h1>
     <!-- Menu Section -->
     <div class="tabs">
         <% Object.keys(menuItems).forEach(function(category, index) { %>
