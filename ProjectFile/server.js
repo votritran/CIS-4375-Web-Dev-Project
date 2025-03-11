@@ -9,6 +9,7 @@ const cakeorderRoutes = require('./routes/frontend_route/cakeorderRoutes');
 const eventRoutes = require('./routes/frontend_route/eventRoutes');
 const contactusRoutes = require('./routes/frontend_route/contactusRoutes');
 const loginRoutes = require('./routes/frontend_route/loginRoutes');
+const forgotPasswordRoutes = require('./routes/frontend_route/forgotpasswordRoutes');
 
 
 //backend routes
@@ -28,6 +29,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware for parsing JSON request bodies
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // Required for handling POST requests
 
 // Use imported routes
@@ -39,6 +41,7 @@ app.use(contactusRoutes);
 app.use(loginRoutes);
 app.use(emailRoutes); //Added email routes
 app.use(adminmenuRoutes);
+app.use(forgotPasswordRoutes);
 
 // Add a catch-all route for undefined routes
 app.use((req, res) => {
