@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Home</title>
+    <link rel="stylesheet" href="../css/homestyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <!-- Include the Navbar -->
+    <%- include('../partials/navbar') %>
+
+    <!-- Home Section with Slideshow -->
+    <section class="home-intro">
+        <h1>Welcome to Paris Sweet Patisserie</h1>
+        <p>"Experience the Flavors of Paris, Right Here in Houston."</p>
+
+        <!-- Slideshow Section -->
+        <div class="slideshow-container">
+            <% for (let i = 0; i < slideshowImages.length; i++) { %>
+                <div class="slide">
+                    <img src="<%= slideshowImages[i] %>" alt="Delicious Pastries" class="slide-image">
+                </div>
+            <% } %>
+            <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
+            <button class="next" onclick="plusSlides(1)">&#10095;</button>
+         </div>
+         
+
+        <!-- Dots for navigation -->
+        <div class="dot-container">
+            <% for (let i = 0; i < slideshowImages.length; i++) { %>
+                <span class="dot"></span>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Featured Items Section -->
+    <section class="our-history">
+        <h1>Our History</h1>
+        <div class="history-container">
+            <div class="history-image">
+                <img src="../photo/chef/paris sweet.jpg" alt="Our History Image">
+            </div>
+            <div class="history-text">
+                <p>Paris Sweet Patisserie was founded in 2011 with the goal of bringing authentic French pastries to the heart of the city. Our journey began with a small bakery in Paris, and now we are proud to share our passion for fine pastries with the world. Every item we create is made with the finest ingredients, love, and dedication to the art of baking.</p>
+                <p>From croissants to custom cakes, we aim to offer an unforgettable experience with every bite. Join us on this sweet journey and experience the taste of Paris!</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="our-history">
+        <h1>Our Team</h1>
+        <div class="history-container">
+            <div class="history-text">
+                <h2>Head Pastry Chef</h2>
+                <p>Camile Nguyen is a pastry chef with over 45 years of experience, specialized in mousse cake, birthday cake, and custom wedding cake. He was born in Toulouse, France, to a French father and a Vietnamese mother, both of whom were also bakers. His family used to own a bakery in Paris, where he developed his love for French pastries from a young age. In 2005, he moved to the U.S. and opened his first bakery, Le Bec Fin, with his brother, earning praise for their authentic French creations. In 2008, Camile had the honor of serving as the pastry chef for President George W. Bush Jr. He later opened Paris Sweet in 2011, bringing a taste of Paris to Houston through his delicious pastries.</p>
+            </div>
+            <div class="history-image">
+                <img src="../photo/chef/Camile.jpeg" alt="Camile image">
+            </div>
+        </div>
+        <div class="history-container">
+            <div class="history-image">
+                <img src="../photo/chef/Irene.jpeg" alt="Irene image">
+            </div>
+            <div class="history-text">
+                <h2>Assistant Pastry Chef</h2>
+                <p>Irene Tran is a talented Vietnamese pastry chef specializing in French macarons and coffee crafting. She is a migrant from Vietnam, moved to the U.S. in 2009 and has since honed her skills with over 20 years of experience in coffee crafting. Irene’s bakery journey began in 2010 when she met Camile while working at the same pastry catering company. This encounter sparked her passion for pastries, particularly French macarons, and led her to pursue a successful career in the baking world.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer') %>
+
+    <script src="../js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f4e5;
+    padding: 20px;
+    margin-top: 160px;
+    margin-bottom: 100px;
+}
+
+h2 {
+    text-align: center;
+    color: #8b4513;
+}
+label {
+    font-weight: bold;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    background-color: #8b4513;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+button:hover {
+    background-color: #6a2c0f;
+}
+.disclaimer {
+    text-align: center;
+    font-size: 14px;
+    color: red;
+    margin-top: 15px;
+}
+
+h1 {
+    color: #8b4513;
+}
+
+.header {
+
+    text-align: center;
+    
+}
+.loginbutton {
+    margin-bottom: 10px;
+}
+
+
+
+.contact-us{
+font-family: 'Dancing Script', cursive;
+text-align:center;
+padding-bottom: 40px;
+}
+
+.contact-us h1{
+color: #8b4513;
+font-size: 40px;
+}
+.contact-us p {
+font-size: 25px;
+}
+
+.contact-us .container {
+max-width: 600px;
+margin: auto;
+text-align: left;
+background: white;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.footer {
+    background-color: #8b4513;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0; /* Ensure it starts from the very left of the screen */
+    width: 100%; /* Full width */
+    height: 50px;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    z-index: 100; /* Ensure footer is above other content */
+}

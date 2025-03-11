@@ -1,0 +1,144 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f4e5;
+    padding: 20px;
+    margin-top: 160px;
+    margin-bottom: 100px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h2 {
+    text-align: center;
+    color: #8b4513;
+}
+label {
+    font-weight: bold;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    background-color: #8b4513;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+button:hover {
+    background-color: #6a2c0f;
+}
+.disclaimer {
+    text-align: center;
+    font-size: 14px;
+    color: red;
+    margin-top: 15px;
+}
+
+h1 {
+    color: #8b4513;
+}
+
+.header {
+
+    font-family: 'Dancing Script', cursive;
+    text-align: center;
+    font-size: 40px;
+    
+}
+.loginbutton {
+    margin-bottom: 10px;
+}
+
+.event-container {
+    display: flex;               /* Enable flexbox for the container */
+    width: 1000px; 
+    background: #8b4513;
+    margin: auto;
+    padding: 20px;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex-wrap: wrap;             /* Allow items to wrap when needed */
+    justify-content: center;     /* Center the items horizontally */
+    gap: 20px;                   /* Space between event items */
+}
+
+.event-container .event-item {
+    display: flex;               /* Enable flexbox for event-item */
+    width: 100%;                 
+    height: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f4e5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-radius: 40px;
+    flex-direction: column;      /* Stack content vertically */
+    justify-content: center;     /* Center the content vertically */
+    align-items: center;         /* Center the content horizontally */
+}
+
+
+/* Event image styling */
+.event-container .event-item img {
+
+    width: 100%;                 /* Ensure the image takes the full width of the event item */
+    height: 400px;               /* Maintain aspect ratio of the image */
+    max-width: 1160px;           /* Limit the maximum width of the image */
+    border-radius: 40px;
+    object-fit: cover;
+
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    .event-container .event-item {
+        width: 95%;               /* For tablets, set the item width to 45% */
+    }
+}
+
+@media (max-width: 480px) {
+    .event-container .event-item {
+        width: 95%;              /* For small screens, set the item width to 100% */
+    }
+}
+
+
+
+@media (max-width: 480px) {
+.event-container .event-item {
+    width: 95%;              /* For small screens, set the item width to 100% */
+}
+}
+
+
+.footer {
+    background-color: #8b4513;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0; /* Ensure it starts from the very left of the screen */
+    width: 100%; /* Full width */
+    height: 50px;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    z-index: 100; /* Ensure footer is above other content */
+}
+
+
