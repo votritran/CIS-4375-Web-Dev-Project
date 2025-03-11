@@ -105,13 +105,13 @@ h1 {
 }
 
 .menu-item p {
-    font-size: 16px;
+    font-size: 18px;
     color: #555;
 }
 
-.price {
-    font-size: 18px;
-    color: #e74c3c;
+.menu-item .price {
+    font-size: 20px;
+    color: #000000;
     font-weight: bold;
     margin-top: 10px;
 }
@@ -430,7 +430,3 @@ h1 {
     }
 }
 
-.menu-item .price {
-    font-size: 20px;
-    color: #000000;
-}

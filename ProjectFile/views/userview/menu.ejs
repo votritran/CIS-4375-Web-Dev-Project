@@ -32,7 +32,7 @@
                         <div class="menu-item">
                             <h3><%= item.productName %></h3>
                             <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.productName %>" class="menu-image">
-                            <p><strong>Description:</strong> <%= item.ProductDescription %></p>
+                            <p> <%= item.ProductDescription %></p>
 
                             <% if (item.Sizes.length > 0) { %>
                                 <% item.Sizes.forEach(function(size) { %>
