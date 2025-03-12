@@ -30,7 +30,7 @@ router.get('/adminmenu', (req, res) => {
 // POST route to handle updating menu items
 router.post('/update-product', (req, res) => {
     // Destructure the required fields from the request body
-    const { productID, newName, newPrice, newDescription, newSize } = req.body;
+    const { productID, newName, newPrice, newDescription, newSize, newCategory } = req.body;
 
     // Check if productID is provided, which is necessary to update a product
     if (!productID) {
@@ -65,6 +65,12 @@ router.post('/update-product', (req, res) => {
         updates.push('ProductSize = ?');  // Add the SQL field to be updated
         values.push(newSize);  // Add the new value for the field
     }
+
+ // Check if the new category is provided and add it to the update query
+ if (newCategory) {
+    updates.push('CategoryName = ?');  // Add the SQL field to be updated
+    values.push(newCategory);  // Add the new value for the category
+}
 
     // If no fields are provided for updating, return a 400 error with a message
     if (updates.length === 0) {

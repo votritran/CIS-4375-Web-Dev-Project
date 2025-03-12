@@ -60,6 +60,16 @@
                 <input type="text" id="newSize" name="newSize" placeholder="Leave blank to keep current size">
                 <br><br>
 
+                <!-- Dropdown to change the category -->
+                <label for="newCategory">Updated Category:</label>
+                <select id="newCategory" name="newCategory">
+                    <option value="" disabled selected>Select a new category</option>
+                    <% Object.keys(menuItems).forEach(function(category) { %>
+                        <option value="<%= category %>"><%= category %></option>
+                        <% }); %>
+                    </select>
+                    <br><br>
+
                 <!-- Submit button for the form -->
                 <button type="submit">Submit Updates</button>
             </form>
@@ -167,18 +177,20 @@
                 return; // Stop further execution if no product is selected
             }
 
-            // Check if at least one field has been updated (Name, Description, Price, Size)
+            // Check if at least one field has been updated (Name, Description, Price, Size, CategoryName)
             const newName = document.getElementById("newName").value.trim();
             const newDescription = document.getElementById("newDescription").value.trim();
             const newPrice = document.getElementById("newPrice").value.trim();
             const newSize = document.getElementById("newSize").value.trim();
+            const newCategory = document.getElementById("newCategory") ? document.getElementById("newCategory").value.trim() : '';
+
 
             // If no fields are updated, show an error message
-            if (!newName && !newDescription && !newPrice && !newSize) {
-                const messageDiv = document.getElementById("updateMessage");
-                messageDiv.innerHTML = `<p style="color: red;">Please type what you want to update.</p>`;
-                return; // Stop further execution if no fields are filled
-            }
+    if (!newName && !newDescription && !newPrice && !newSize && !newCategory) {
+        const messageDiv = document.getElementById("updateMessage");
+        messageDiv.innerHTML = `<p style="color: red;">Please type what you want to update.</p>`;
+        return; // Stop further execution if no fields are filled
+    }
 
             const formData = new FormData(event.target);
             const data = {};
