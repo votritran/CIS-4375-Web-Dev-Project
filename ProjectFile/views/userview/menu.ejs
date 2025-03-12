@@ -16,25 +16,32 @@
 
     <!-- Menu Section -->
     <div class="tabs">
-        <% Object.keys(menuItems).forEach(function(category, index) { %>
-            <div class="tab" data-tab="<%= category %>">
-                <%= category %>
+        <% menuItems.forEach(function(category) { %>
+            <div class="tab" data-tab="<%= category.categoryName %>">
+                <%= category.categoryName %>
             </div>
         <% }); %>
     </div>
 
     <div id="menu">
-        <% Object.keys(menuItems).forEach(function(category, index) { %>
-            <div class="menu-container" id="<%= category %>">
-                <h2><%= category %></h2>
+        <% menuItems.forEach(function(category) { %>
+            <div class="menu-container" id="<%= category.categoryName %>">
+                <h2><%= category.categoryName %></h2>
                 <div class="menu-items">
-                    <% menuItems[category].forEach(function(item) { %>
+                    <% category.products.forEach(function(item) { %>
                         <div class="menu-item">
-                            <h3><%= item.ProductName %></h3>
-                            <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.ProductName %>" class="menu-image">
-                            <p><strong>Description:</strong> <%= item.ProductDescription %></p>
-                            <p><strong>Price:</strong> $<%= item.ProductPrice %></p>
-                            <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p>
+                            <h3><%= item.productName %></h3>
+                            <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.productName %>" class="menu-image">
+                            <p> <%= item.ProductDescription %></p>
+
+                            <% if (item.Sizes.length > 0) { %>
+                                <% item.Sizes.forEach(function(size) { %>
+                                    <p class="price"><strong></strong><%= size.size %>: $<%= size.price.toFixed(2) %></strong></p>
+                                <% }); %>
+                            <% } else { %>
+                                <!-- Display the product price if no sizes are available -->
+                                <p class="price"><strong>$<%= item.ProductPrice.toFixed(2) %></strong></p>
+                            <% } %> 
                         </div>
                     <% }); %>
                 </div>
