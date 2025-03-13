@@ -14,6 +14,11 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
+// Set up multer for file upload
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
 // Route to fetch menu items from the database and render them in 'adminmenu.ejs'
 router.get('/adminmenu', (req, res) => {
     // Fetch menu items from the database
