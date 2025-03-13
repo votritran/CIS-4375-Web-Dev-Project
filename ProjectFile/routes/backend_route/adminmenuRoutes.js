@@ -88,5 +88,47 @@ router.post('/update-product', upload.single('productImage'), (req, res) => {
     }
 });
 
+function updateProductInDatabase() {
+    if (imageUrl) {
+        connection.query('SELECT ProductImage FROM Products WHERE ProductID = ?', [productID], (err, result) => {
+            if (err) {
+                console.error('Error fetching product image:', err);
+                return res.status(500).send('Error fetching product image');
+            }
+
+            if (result.length === 0) {
+                return res.status(404).send('Product not found');
+            }
+
+            const oldImageUrl = result[0].ProductImage;
+            if (oldImageUrl) {
+                const imageKey = oldImageUrl.split('amazonaws.com/')[1];
+                const s3Params = { Bucket: 'cis4375tv', Key: imageKey };
+
+                s3.deleteObject(s3Params, (err, data) => {
+                    if (err) {
+                        console.error('Error deleting image from S3:', err);
+                    } else {
+                        console.log('Old image deleted successfully');
+                    }
+                });
+            }
+        });
+    }
+
+    let query = `UPDATE Products SET ${updates.join(', ')} WHERE ProductID = ?`;
+    values.push(productID);
+
+    connection.query(query, values, (err, result) => {
+        if (err) {
+            console.error('Error updating product:', err);
+            return res.status(500).json({ message: 'Error updating product' });
+        }
+
+        res.json({ message: 'Product updated successfully' });
+    });
+}
+
+
 
 module.exports = router;  // Export the router to be used in server.js
