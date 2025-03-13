@@ -18,7 +18,6 @@ const s3 = new AWS.S3();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-
 // Route to fetch menu items from the database and render them in 'adminmenu.ejs'
 router.get('/adminmenu', (req, res) => {
     // Fetch menu items from the database
@@ -43,6 +42,8 @@ router.get('/adminmenu', (req, res) => {
     });
 });
 
+// Upload image to S3 and insert new product into database
+// POST route to handle updating menu items
 // POST route to handle updating menu items
 router.post('/update-product', upload.single('productImage'), (req, res) => {
     // Destructure the required fields from the request body
@@ -117,7 +118,6 @@ router.post('/update-product', upload.single('productImage'), (req, res) => {
         updateProductInDatabase();
     }
 
-    
     function updateProductInDatabase() {
         // If the product has an image, fetch and delete the old image from S3
         if (imageUrl) {
@@ -166,10 +166,6 @@ router.post('/update-product', upload.single('productImage'), (req, res) => {
         });
     }
 });
-
-module.exports = router;  // Export the router to be used in server.js
-
-
 
 
 module.exports = router;  // Export the router to be used in server.js
