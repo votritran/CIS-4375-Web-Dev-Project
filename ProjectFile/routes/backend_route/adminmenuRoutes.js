@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();  // Use Express Router for modular routes
 const connection = require('../../config/dbconnection');  // Import the DB connection
 const path = require('path');
+const AWS = require('aws-sdk');
+const multer = require('multer');  // For handling file uploads
+
+// AWS S3 setup
+AWS.config.update({
+    accessKeyId: 'AKIAXFG5L4NB7TWHTIMP',
+    secretAccessKey: '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',
+    region: 'us-east-1',
+});
+
+const s3 = new AWS.S3();
 
 // Route to fetch menu items from the database and render them in 'adminmenu.ejs'
 router.get('/adminmenu', (req, res) => {
