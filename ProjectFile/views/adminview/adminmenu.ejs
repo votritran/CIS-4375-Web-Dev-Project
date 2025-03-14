@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paris Sweet Patisserie - Admin Menu</title>
-    <link rel="stylesheet" href="../css/admin_menu_styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <meta charset="UTF-8"> <!-- Defines character encoding for proper text rendering -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures responsiveness for different screen sizes -->
+    <title>Paris Sweet Patisserie - Admin Menu</title> <!-- Page title displayed in browser tab -->
+    <link rel="stylesheet" href="../css/admin_menu_styles.css"> <!-- Links external CSS file for styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet"> <!-- Imports a Google Font for styling -->
 </head>
 <body>
-    <%- include('../partials/loginnavbar') %>
 
-    <h1 class="header">Admin Menu Management</h1>
+    <%- include('../partials/loginnavbar') %> <!-- Includes a login navigation bar (likely using EJS for templating) -->
 
+    <h1 class="header">Admin Menu Management</h1> <!-- Page heading -->
+
+    <!-- Section for updating a menu item -->
     <div class="admin-update-section">
-        <button class="update-btn" onclick="toggleUpdateForm()">Update Menu Item</button>
+        <button class="update-btn" onclick="toggleUpdateForm()">Update Menu Item</button> <!-- Button to toggle the update form -->
 
-        <div id="updateFormContainer" style="display: none; margin-top: 20px;">
-            <form id="updateForm" enctype="multipart/form-data">
+        <div id="updateFormContainer" style="display: none; margin-top: 20px;"> <!-- Initially hidden container for update form -->
+            <form id="updateForm" enctype="multipart/form-data"> <!-- Form to update a menu item with file upload support -->
+                
+                <!-- Dropdown to select the menu item for updating -->
                 <label for="menu-item-select">Select Item to Update:</label>
                 <select id="menu-item-select" name="productID" required>
                     <option value="" disabled selected>Select a product to update</option>
-                    <% Object.keys(menuItems).forEach(function(category) { %>
-                        <optgroup label="<%= category %>">
+                    <% Object.keys(menuItems).forEach(function(category) { %> <!-- Loop through categories -->
+                        <optgroup label="<%= category %>"> <!-- Group items by category -->
                             <% menuItems[category].forEach(function(item) { %>
-                                <option value="<%= item.ProductID %>"><%= item.ProductName %></option>
+                                <option value="<%= item.ProductID %>"><%= item.ProductName %></option> <!-- Populate dropdown options -->
                             <% }); %>
                         </optgroup>
                     <% }); %>
                 </select>
                 <br><br>
 
+                <!-- Input fields for updating various product details -->
                 <label for="newName">Updated Name:</label>
                 <input type="text" id="newName" name="newName" placeholder="Leave blank to keep current name">
                 <br><br>
@@ -46,6 +51,7 @@
                 <input type="text" id="newSize" name="newSize" placeholder="Leave blank to keep current size">
                 <br><br>
 
+                <!-- Dropdown for selecting a new category -->
                 <label for="newCategory">Updated Category:</label>
                 <select id="newCategory" name="newCategory">
                     <option value="" disabled selected>Select a new category</option>
@@ -55,26 +61,27 @@
                 </select>
                 <br><br>
 
+                <!-- File input for updating the product image -->
                 <label for="newImage">Upload New Image:</label>
                 <input type="file" id="newImage" name="productImage">
                 <br><br>
 
-                <button type="submit">Submit Updates</button>
+                <button type="submit">Submit Updates</button> <!-- Submit button for form -->
             </form>
 
-            <div id="updateMessage" style="margin-top: 10px;"></div>
+            <div id="updateMessage" style="margin-top: 10px;"></div> <!-- Area to display update messages -->
         </div>
     </div>
     <br>
 
-    <!-- Menu Tabs Section -->
+    <!-- Menu Tabs Section, also ensure the order does not change -->
     <div class="tabs">
         <% 
-            const categoryOrder = ["Breakfast", "Appetizers", "Soups", "Salads", "Sandwiches", "asdsad"];
+            const categoryOrder = ["Breakfast", "Appetizers", "Soups", "Salads", "Sandwiches", "asdsad"]; // List of menu categories, "asdsad" seems like a typo?
             categoryOrder.forEach(function(category) {
-                if (menuItems[category]) { %>
+                if (menuItems[category]) { %> <!-- Only create tabs for existing categories -->
                     <div class="tab" data-tab="<%= category %>">
-                        <%= category %>
+                        <%= category %> <!-- Tab name displayed -->
                     </div>
         <%      }
             });
@@ -84,17 +91,17 @@
     <!-- Menu Items Section -->
     <div id="menu">
         <% categoryOrder.forEach(function(category) {
-            if (menuItems[category]) { %>
-                <div class="menu-container" data-content="<%= category %>">
-                    <h2><%= category %></h2>
+            if (menuItems[category]) { %> <!-- Check if category exists -->
+                <div class="menu-container" data-content="<%= category %>"> <!-- Container for menu items in each category -->
+                    <h2><%= category %></h2> <!-- Category heading -->
                     <div class="menu-items">
-                        <% menuItems[category].forEach(function(item) { %>
+                        <% menuItems[category].forEach(function(item) { %> <!-- Loop through menu items -->
                             <div class="menu-item" data-id="<%= item.ProductID %>">
-                                <h3><%= item.ProductName %></h3>
-                                <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.ProductName %>" class="menu-image">
-                                <p><strong>Description:</strong> <%= item.ProductDescription %></p>
-                                <p><strong>Price:</strong> $<%= item.ProductPrice %></p>
-                                <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p>
+                                <h3><%= item.ProductName %></h3> <!-- Product name -->
+                                <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.ProductName %>" class="menu-image"> <!-- Display product image -->
+                                <p><strong>Description:</strong> <%= item.ProductDescription %></p> <!-- Product description -->
+                                <p><strong>Price:</strong> $<%= item.ProductPrice %></p> <!-- Product price -->
+                                <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p> <!-- Product size, defaulting to N/A if not available -->
                             </div>
                         <% }); %>
                     </div>
@@ -103,49 +110,50 @@
         }); %>
     </div>
 
-    <%- include('../partials/footer') %>
+    <%- include('../partials/footer') %> <!-- Footer section -->
 
-    <script src="../js/menu.js"></script>
+    <script src="../js/menu.js"></script> <!-- External JavaScript file -->
 
     <script>
         function toggleUpdateForm() {
             var form = document.getElementById("updateFormContainer");
-            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
+            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none"; // Toggles form visibility
         }
 
         document.addEventListener("DOMContentLoaded", function () {
             const tabs = document.querySelectorAll(".tab");
             const contents = document.querySelectorAll(".menu-container");
-            const storedTab = localStorage.getItem("activeTab");
+            const storedTab = localStorage.getItem("activeTab"); // Retrieve stored active tab from local storage
 
             if (storedTab) {
                 setActiveTab(storedTab);
             } else {
-                setActiveTab(tabs[0]?.getAttribute("data-tab"));
+                setActiveTab(tabs[0]?.getAttribute("data-tab")); // Set the first tab as active if none is stored
             }
 
             tabs.forEach(tab => {
                 tab.addEventListener("click", function () {
                     const selectedTab = this.getAttribute("data-tab");
-                    localStorage.setItem("activeTab", selectedTab);
+                    localStorage.setItem("activeTab", selectedTab); // Store selected tab in local storage
                     setActiveTab(selectedTab);
                 });
             });
 
             function setActiveTab(tabName) {
                 tabs.forEach(tab => {
-                    tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName);
+                    tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName); // Highlight active tab
                 });
 
                 contents.forEach(content => {
-                    content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none";
+                    content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none"; // Show only the active tab's content
                 });
             }
         });
 
         async function submitForm(event) {
-            event.preventDefault();
+            event.preventDefault(); // Prevent default form submission
 
+            // Get input values and check if any field is filled
             const productSelect = document.getElementById("menu-item-select");
             const newName = document.getElementById("newName").value.trim();
             const newDescription = document.getElementById("newDescription").value.trim();
@@ -154,16 +162,19 @@
             const newCategory = document.getElementById("newCategory").value;
             const newImage = document.getElementById("newImage").files.length > 0;
 
+            // Ensure a product is selected
             if (!productSelect.value) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>You must select a product to update.</p>";
                 return;
             }
 
+            // Ensure at least one field is being updated
             if (!newName && !newDescription && !newPrice && !newSize && !newCategory && !newImage) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>Please type what you want to update.</p>";
                 return;
             }
 
+            // Submit form data
             const formData = new FormData(document.getElementById("updateForm"));
             const response = await fetch('/update-product', {
                 method: 'POST',
@@ -171,22 +182,10 @@
             });
 
             const result = await response.json();
-            const messageDiv = document.getElementById("updateMessage");
-
-            if (response.ok) {
-                messageDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
-
-                const activeTab = localStorage.getItem("activeTab");
-                setTimeout(() => {
-                    location.reload();
-                    localStorage.setItem("activeTab", activeTab);
-                }, 1000);
-            } else {
-                messageDiv.innerHTML = `<p style="color: red;">${result.message}</p>`;
-            }
+            document.getElementById("updateMessage").innerHTML = `<p style="color: ${response.ok ? 'green' : 'red'};">${result.message}</p>`;
         }
 
-        document.getElementById("updateForm").addEventListener("submit", submitForm);
+        document.getElementById("updateForm").addEventListener("submit", submitForm); // Attach submit event listener
     </script>
 </body>
 </html>
