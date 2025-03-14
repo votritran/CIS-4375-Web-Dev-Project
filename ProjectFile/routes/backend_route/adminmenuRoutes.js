@@ -165,5 +165,97 @@ router.post('/adminmenu/delete/:productId', (req, res) => {
     });
 });
 
+router.post('/adminmenu/update/:productId', upload.single('newImage'), (req, res) => {
+    const { productId } = req.params;
+    const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
+    const newImage = req.file;
+
+    // Get the current product details before update
+    connection.query('SELECT * FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+        if (err) {
+            console.error('Error fetching product details:', err);
+            return res.status(500).send('Error fetching product details');
+        }
+
+        if (result.length === 0) {
+            return res.status(404).send('Product not found');
+        }
+
+        const currentProduct = result[0];
+        const updatedName = newName || currentProduct.ProductName;
+        const updatedDescription = newDescription || currentProduct.ProductDescription;
+        const updatedPrice = newPrice || currentProduct.ProductPrice;
+        const updatedSize = newSize || currentProduct.ProductSize;
+        const updatedCategory = newCategory || currentProduct.CategoryName;
+        let updatedImageUrl = currentProduct.ProductImage;  // Keep the existing image URL by default
+
+        // If a new image is uploaded, upload it to S3 and delete the old one
+        if (newImage) {
+            // Upload the new image to S3
+            const params = {
+                Bucket: 'cis4375tv',
+                Key: `menu-items/${Date.now()}-${newImage.originalname}`,
+                Body: newImage.buffer,
+                ContentType: newImage.mimetype,
+                ACL: 'public-read'
+            };
+
+            s3.upload(params, (err, data) => {
+                if (err) {
+                    console.error('Error uploading image to S3:', err);
+                    return res.status(500).send('Error uploading image to S3');
+                }
+
+                updatedImageUrl = data.Location;
+
+                // Delete the old image from S3
+                const imageKey = currentProduct.ProductImage.split('amazonaws.com/')[1];
+                const s3Params = {
+                    Bucket: 'cis4375tv',
+                    Key: imageKey
+                };
+
+                s3.deleteObject(s3Params, (err) => {
+                    if (err) {
+                        console.error('Error deleting old image from S3:', err);
+                        return res.status(500).send('Error deleting old image');
+                    }
+
+                    // Proceed to update product details in the database
+                    const updateQuery = `
+                        UPDATE Products
+                        SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                        WHERE ProductID = ?
+                    `;
+                    connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                        if (err) {
+                            console.error('Error updating product:', err);
+                            return res.status(500).send('Error updating product');
+                        }
+
+                        res.redirect('/adminmenu');
+                    });
+                });
+            });
+        } else {
+            // No new image, just update the other fields
+            const updateQuery = `
+                UPDATE Products
+                SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?
+                WHERE ProductID = ?
+            `;
+            connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, productId], (err, result) => {
+                if (err) {
+                    console.error('Error updating product:', err);
+                    return res.status(500).send('Error updating product');
+                }
+
+                res.redirect('/adminmenu');
+            });
+        }
+    });
+});
+
+
 
 module.exports = router;  // Export the router to be used in server.js
