@@ -115,77 +115,107 @@
     <script src="../js/menu.js"></script> <!-- External JavaScript file -->
 
     <script>
+        // Function to toggle the visibility of the update form when called
         function toggleUpdateForm() {
             var form = document.getElementById("updateFormContainer");
-            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none"; // Toggles form visibility
+
+            // Check the current display status of the form:
+            // - If it's "none" or empty (not set), display it as "block"
+            // - Otherwise, hide it by setting display to "none"
+            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none"; 
         }
 
+        // Event listener that waits until the DOM is fully loaded before executing the function
         document.addEventListener("DOMContentLoaded", function () {
+            // Select all elements with the class "tab" (these represent navigation tabs)
             const tabs = document.querySelectorAll(".tab");
-            const contents = document.querySelectorAll(".menu-container");
-            const storedTab = localStorage.getItem("activeTab"); // Retrieve stored active tab from local storage
 
+            // Select all elements with the class "menu-container" (these represent tab contents)
+            const contents = document.querySelectorAll(".menu-container");
+
+            // Retrieve the last active tab from local storage (if any), to persist the user's tab selection
+            const storedTab = localStorage.getItem("activeTab");
+
+            // If a previously selected tab is stored, activate that tab; otherwise, default to the first tab
             if (storedTab) {
                 setActiveTab(storedTab);
             } else {
-                setActiveTab(tabs[0]?.getAttribute("data-tab")); // Set the first tab as active if none is stored
+                // Use optional chaining to ensure it doesn't error out if no tabs exist
+                setActiveTab(tabs[0]?.getAttribute("data-tab")); 
             }
 
+            // Add click event listeners to each tab to handle tab switching
             tabs.forEach(tab => {
                 tab.addEventListener("click", function () {
+                    // Get the "data-tab" attribute value of the clicked tab (used to identify the tab)
                     const selectedTab = this.getAttribute("data-tab");
-                    localStorage.setItem("activeTab", selectedTab); // Store selected tab in local storage
+
+                    // Store the selected tab in local storage so it remains active on page reload
+                    localStorage.setItem("activeTab", selectedTab);
+
+                    // Call function to update the UI to reflect the selected tab
                     setActiveTab(selectedTab);
                 });
             });
 
+            // Function to activate a given tab and display the corresponding content
             function setActiveTab(tabName) {
+                // Iterate over all tabs and mark only the selected tab as active
                 tabs.forEach(tab => {
-                    tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName); // Highlight active tab
+                    tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName);
                 });
 
+                // Iterate over all content sections and display only the one matching the active tab
                 contents.forEach(content => {
-                    content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none"; // Show only the active tab's content
+                    content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none";
                 });
             }
         });
 
+        // Function to handle form submission asynchronously
         async function submitForm(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault(); // Prevents default form submission to avoid page reload
 
-            // Get input values and check if any field is filled
-            const productSelect = document.getElementById("menu-item-select");
-            const newName = document.getElementById("newName").value.trim();
-            const newDescription = document.getElementById("newDescription").value.trim();
-            const newPrice = document.getElementById("newPrice").value.trim();
-            const newSize = document.getElementById("newSize").value.trim();
-            const newCategory = document.getElementById("newCategory").value;
-            const newImage = document.getElementById("newImage").files.length > 0;
+            // Retrieve form input values and trim any whitespace where applicable
+            const productSelect = document.getElementById("menu-item-select"); // Dropdown selection for products
+            const newName = document.getElementById("newName").value.trim(); // Input field for new product name
+            const newDescription = document.getElementById("newDescription").value.trim(); // Input field for new product description
+            const newPrice = document.getElementById("newPrice").value.trim(); // Input field for new product price
+            const newSize = document.getElementById("newSize").value.trim(); // Input field for new product size
+            const newCategory = document.getElementById("newCategory").value; // Dropdown selection for new product category
+            const newImage = document.getElementById("newImage").files.length > 0; // Check if a new image is selected
 
-            // Ensure a product is selected
+            // Validate that a product is selected before proceeding
             if (!productSelect.value) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>You must select a product to update.</p>";
                 return;
             }
 
-            // Ensure at least one field is being updated
+            // Ensure at least one field (name, description, price, size, category, or image) is being updated
             if (!newName && !newDescription && !newPrice && !newSize && !newCategory && !newImage) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>Please type what you want to update.</p>";
                 return;
             }
 
-            // Submit form data
+            // Create a FormData object to capture the form inputs, including file uploads
             const formData = new FormData(document.getElementById("updateForm"));
+
+            // Send an asynchronous POST request to the server with form data
             const response = await fetch('/update-product', {
                 method: 'POST',
-                body: formData,
+                body: formData, // Attach the form data (including selected image, if any)
             });
 
+            // Parse the server's JSON response
             const result = await response.json();
+
+            // Display a success message in green if the update was successful, otherwise show an error in red
             document.getElementById("updateMessage").innerHTML = `<p style="color: ${response.ok ? 'green' : 'red'};">${result.message}</p>`;
         }
 
-        document.getElementById("updateForm").addEventListener("submit", submitForm); // Attach submit event listener
-    </script>
+        // Attach the submitForm function to the form's submit event to handle updates asynchronously
+        document.getElementById("updateForm").addEventListener("submit", submitForm);
+</script>
+
 </body>
 </html>
