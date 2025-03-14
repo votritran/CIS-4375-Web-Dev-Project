@@ -147,88 +147,107 @@
     <!-- Includes the footer partial template using EJS -->
     <%- include('../partials/footer') %>
 
-    <script src="../js/menu.js"></script>
+    <script src="../js/menu.js"></script> <!-- Link to an external JavaScript file (menu.js) that may contain additional functionality for the page. -->
 
     <script>
+        // Function to toggle the visibility of the update form.
         function toggleUpdateForm() {
-            var form = document.getElementById("updateFormContainer");
-            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
+            var form = document.getElementById("updateFormContainer"); // Get the element with ID 'updateFormContainer'.
+            // Check the current display style of the form and toggle it between 'none' and 'block'.
+            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none"; 
         }
-
+    
+        // Wait for the DOM to be fully loaded before executing the script.
         document.addEventListener("DOMContentLoaded", function () {
-            const tabs = document.querySelectorAll(".tab");
-            const contents = document.querySelectorAll(".menu-container");
-            const storedTab = localStorage.getItem("activeTab");
-
+            const tabs = document.querySelectorAll(".tab"); // Select all elements with the 'tab' class.
+            const contents = document.querySelectorAll(".menu-container"); // Select all elements with the 'menu-container' class.
+            const storedTab = localStorage.getItem("activeTab"); // Retrieve the stored active tab from localStorage.
+    
+            // If a stored tab exists in localStorage, set it as the active tab, else default to the first tab.
             if (storedTab) {
                 setActiveTab(storedTab);
             } else {
                 setActiveTab(tabs[0]?.getAttribute("data-tab"));
             }
-
+    
+            // Add event listeners to each tab element to handle tab switching.
             tabs.forEach(tab => {
                 tab.addEventListener("click", function () {
-                    const selectedTab = this.getAttribute("data-tab");
-                    localStorage.setItem("activeTab", selectedTab);
-                    setActiveTab(selectedTab);
+                    const selectedTab = this.getAttribute("data-tab"); // Get the 'data-tab' attribute of the clicked tab.
+                    localStorage.setItem("activeTab", selectedTab); // Store the selected tab in localStorage.
+                    setActiveTab(selectedTab); // Set the clicked tab as the active tab.
                 });
             });
-
+    
+            // Function to update the active tab and the visibility of corresponding content.
             function setActiveTab(tabName) {
                 tabs.forEach(tab => {
-                    tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName);
+                    // Add the 'active' class to the tab that matches the 'data-tab' attribute with the tabName.
+                    tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName); 
                 });
-
+    
                 contents.forEach(content => {
-                    content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none";
+                    // Show the content that matches the 'data-content' attribute with the tabName and hide the others.
+                    content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none"; 
                 });
             }
         });
-
+    
+        // Async function to handle form submission.
         async function submitForm(event) {
-            event.preventDefault();
-
-            const productSelect = document.getElementById("menu-item-select");
-            const newName = document.getElementById("newName").value.trim();
-            const newDescription = document.getElementById("newDescription").value.trim();
-            const newPrice = document.getElementById("newPrice").value.trim();
-            const newSize = document.getElementById("newSize").value.trim();
+            event.preventDefault(); // Prevent the default form submission behavior.
+    
+            // Get form field values and trim them to remove unnecessary spaces.
+            const productSelect = document.getElementById("menu-item-select"); 
+            const newName = document.getElementById("newName").value.trim(); 
+            const newDescription = document.getElementById("newDescription").value.trim(); 
+            const newPrice = document.getElementById("newPrice").value.trim(); 
+            const newSize = document.getElementById("newSize").value.trim(); 
             const newCategory = document.getElementById("newCategory").value;
-            const newImage = document.getElementById("newImage").files.length > 0;
-
+            const newImage = document.getElementById("newImage").files.length > 0; // Check if an image file is selected.
+    
+            // Check if a product is selected, if not, show an error message.
             if (!productSelect.value) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>You must select a product to update.</p>";
-                return;
+                return; // Exit the function if no product is selected.
             }
-
+    
+            // Check if at least one field is provided to update, if not, show an error message.
             if (!newName && !newDescription && !newPrice && !newSize && !newCategory && !newImage) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>Please type what you want to update.</p>";
-                return;
+                return; // Exit the function if no fields are filled to update.
             }
-
+    
+            // Create a FormData object from the form element to easily send form data, including files.
             const formData = new FormData(document.getElementById("updateForm"));
+            
+            // Use the Fetch API to send the form data via a POST request to the server.
             const response = await fetch('/update-product', {
-                method: 'POST',
-                body: formData,
+                method: 'POST', // HTTP method POST.
+                body: formData, // Send the form data as the body of the request.
             });
-
-            const result = await response.json();
-            const messageDiv = document.getElementById("updateMessage");
-
+    
+            // Parse the response from the server.
+            const result = await response.json(); 
+            const messageDiv = document.getElementById("updateMessage"); // Get the element where messages will be displayed.
+    
+            // If the response is OK, display a success message and reload the page after a short delay.
             if (response.ok) {
                 messageDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
-
-                const activeTab = localStorage.getItem("activeTab");
+                const activeTab = localStorage.getItem("activeTab"); // Retrieve the active tab from localStorage.
                 setTimeout(() => {
-                    location.reload();
-                    localStorage.setItem("activeTab", activeTab);
+                    location.reload(); // Reload the page after 1 second.
+                    localStorage.setItem("activeTab", activeTab); // Restore the active tab in localStorage.
                 }, 1000);
             } else {
+                // If the response is not OK, display an error message.
                 messageDiv.innerHTML = `<p style="color: red;">${result.message}</p>`;
             }
         }
-
+    
+        // Add an event listener to the form to trigger the submitForm function when the form is submitted.
         document.getElementById("updateForm").addEventListener("submit", submitForm);
     </script>
+    
 </body>
 </html>
