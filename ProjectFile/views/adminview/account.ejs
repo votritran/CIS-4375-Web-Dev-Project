@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link rel="stylesheet" href="../css/style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/loginnavbar') %>
+    <div class="container">
+    
+    <h1>Account</h1>
+    <% if (timeLeft > 0) { %>
+        <p>Your password will expire in <strong><%= timeLeft %></strong> days.</p>
+    <% } else { %>
+        <p style="color: red;">Your password has expired! Please change it now.</p>
+    <% } %>
+    
+    <a href="/change-password">Change Password</a>
+
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>
