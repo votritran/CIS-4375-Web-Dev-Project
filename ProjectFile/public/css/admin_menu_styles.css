@@ -260,12 +260,14 @@ h1 {
 .menu-image {
     width: 100%; /* Makes the image take up the full width of the div */
     max-width: 300px; /* Limit the maximum width of the image */
-    height: 250px; /* Maintain the aspect ratio of the image */
+    width:200px;
+    height: 200px; /* Maintain the aspect ratio of the image */
     object-fit: cover; /* Ensures the image covers the available area without distortion */
     margin-bottom: 10px; /* Adds some space below the image */
     border-radius: 15px; /* Curves the corners of the image */
 
 }
+
 
 /* Optional: Style for the product container to make it look nicer */
 .product {
@@ -410,12 +412,12 @@ h1 {
 .menu-item {
     margin-bottom: 20px;
 }
-
+/*
 .menu-image {
     width: 200px;
     height: 200px;
     object-fit: cover;
-}
+}*/
 
 /* Style for input fields */
 input[type="text"], 
