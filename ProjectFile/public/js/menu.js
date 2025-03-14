@@ -23,3 +23,17 @@ document.addEventListener('DOMContentLoaded', function () {
         menuContainers[0].classList.add('active');
     }
 });
+
+
+ // JavaScript to toggle the update form
+function toggleUpdateForm(productId) {
+    var form = document.getElementById('update-form-' + productId);
+    form.classList.toggle('show');
+}
+
+// JavaScript to toggle the "Add Menu Item" form
+function toggleAddMenuItem() {
+    var form = document.getElementById('addMenuForm');
+    form.classList.toggle('show');
+}
+

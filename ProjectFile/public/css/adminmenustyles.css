@@ -15,19 +15,14 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-
 h2 {
     text-align: center;
     color: #8b4513;
 }
 
-
-
 label {
     font-weight: bold;
 }
-
-
 
 button {
     background-color: #8b4513;
@@ -39,11 +34,9 @@ button {
     font-size: 16px;
 }
 
-
 button:hover {
     background-color: #6a2c0f;
 }
-
 
 .disclaimer {
     text-align: center;
@@ -56,18 +49,17 @@ h1 {
     color: #8b4513;
 }
 
-
-
 .menu-container {
     font-family: 'Dancing Script', cursive;
     font-size: 25px;
-    width: 80%;                  /* Set the width of the container */
-    max-width: 800px;  
-    margin: 0 auto;              /* Center it horizontally */
+    width: 80%;
+    max-width: 800px;
+    min-width: 450px;
+    margin: 0 auto;
     padding: 20px;
     background-color: #f8f8f8;
     border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     margin-bottom: 40px;
 }
@@ -88,6 +80,34 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     border-radius: 40px;
+}
+
+.deletebutton {
+    background-color: rgb(199, 0, 0);
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 40%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.deletebutton:hover {
+    background-color: rgb(100, 1, 1);
+}
+
+.updatebutton {
+    background-color: rgb(0, 119, 199);
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-top: 10px;
+    width: 40%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.updatebutton:hover {
+    background-color: rgb(1, 45, 82);
 }
 
 .menu-item img {
@@ -117,76 +137,11 @@ h1 {
 }
 
 .header {
-
     text-align: center;
     font-family: 'Dancing Script', cursive;
     font-size: 40px;
-    
 }
 
-/*NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
-/*Menu style  for new Database connected Menu*/
-/* Menu Styles */
-#menu {
-    display: flex; /* Aligns the menu items vertically */
-    flex-direction: column; /* Stacks menu categories vertically */
-    gap: 20px; /* Adds space between categories */
-    padding: 20px; /* Adds padding around the menu */
-}
-
-.category {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-bottom: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-}
-
-.category-title {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.product {
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.product h3 {
-    font-size: 1.2em;
-    margin: 0;
-}
-
-.product p {
-    margin: 5px 0;
-    color: #555;
-}
-
-.product strong {
-    color: #333;
-}
-
-/* Optional: Add media query for responsive menu layout */
-@media (max-width: 600px) {
-    #menu {
-        padding: 10px;
-    }
-
-    .category {
-        padding: 10px;
-    }
-
-    .product {
-        padding: 8px;
-    }
-}
-
-/* Menu style for new Database connected Menu */
 #menu {
     display: flex;
     flex-direction: column;
@@ -200,9 +155,9 @@ h1 {
     margin-bottom: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    display: flex; /* Use flexbox to display products side by side */
-    flex-wrap: wrap; /* Allow wrapping to new rows if needed */
-    gap: 20px; /* Space between products */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .category-title {
@@ -210,16 +165,17 @@ h1 {
     font-weight: bold;
     margin-bottom: 10px;
     color: #333;
-    width: 100%; /* Ensure title spans the entire width */
+    width: 100%;
+    text-align: center;
 }
 
 .product {
-    width: 200px; /* Set a fixed width for each product */
+    width: 200px;
     padding: 10px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
-    flex: 1 1 200px; /* Allow flexibility while ensuring they stay in the same row */
+    flex: 1 1 200px;
     text-align: center;
 }
 
@@ -244,54 +200,27 @@ h1 {
     }
 
     .category {
-        flex-direction: column; /* Stack products vertically on smaller screens */
+        flex-direction: column;
         padding: 10px;
     }
 
     .product {
-        width: 100%; /* Make products take up full width on mobile */
+        width: 100%;
         padding: 8px;
     }
 }
-/* For the category title on dbmenu.html */
-.category-title {
-    text-align: center;      /* Centers the text */
-    color: #8b4513;          /* Applies the brown color */
-    font-size: 1.5em;        /* Adjusts the font size */
-    font-weight: bold;       /* Makes the text bold */
-    margin-bottom: 15px;     /* Adds space below the category title */
-}
-
 
 /* Style for the product images */
 .menu-image {
-    width: 100%; /* Makes the image take up the full width of the div */
-    max-width: 300px; /* Limit the maximum width of the image */
-    height: auto; /* Maintain the aspect ratio of the image */
-    object-fit: cover; /* Ensures the image covers the available area without distortion */
-    margin-bottom: 10px; /* Adds some space below the image */
-    border-radius: 15px; /* Curves the corners of the image */
-
+    width: 100%;
+    min-width: 200px;
+    max-width: 200px;
+    max-height: 200px;
+    min-height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 15px;
 }
-
-/* Optional: Style for the product container to make it look nicer */
-.product {
-    border: 1px solid #ddd; /* Light border around the product */
-    padding: 10px; /* Space inside each product div */
-    margin-bottom: 20px; /* Space between product items */
-    text-align: center; /* Centers the text */
-}
-
-
-
-.category-title {
-    text-align: center;      /* Centers the text */
-    color: #8b4513;          /* Applies the brown color */
-    font-size: 1.5em;        /* Adjusts the font size */
-    font-weight: bold;       /* Makes the text bold */
-    margin-bottom: 15px;     /* Adds space below the category title */
-}
-
 
 .footer {
     background-color: #8b4513;
@@ -299,13 +228,13 @@ h1 {
     text-align: center;
     position: fixed;
     bottom: 0;
-    left: 0; /* Ensure it starts from the very left of the screen */
-    width: 100%; /* Full width */
+    left: 0;
+    width: 100%;
     height: 50px;
     display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    z-index: 100; /* Ensure footer is above other content */
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
 }
 
 .tabs {
@@ -340,17 +269,6 @@ h1 {
     display: block;
 }
 
-/* Menu Item styling */
-.menu-item {
-    margin-bottom: 20px;
-}
-
-.menu-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-}
-
 /* Add Menu Item Form - Adjusted for Smaller Size */
 .add-menu-item {
     margin: 20px auto;
@@ -358,29 +276,29 @@ h1 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 80%; /* Reduce the width */
-    max-width: 600px; /* Set a maximum width for larger screens */
+    width: 80%;
+    max-width: 600px;
 }
 
 .add-menu-item h2 {
-    font-size: 1.5em; /* Slightly smaller header */
+    font-size: 1.5em;
     margin-bottom: 15px;
     color: #333;
 }
 
 .add-menu-item label {
     display: block;
-    font-size: 1em; /* Smaller font size for labels */
-    margin-bottom: 6px; /* Reduce spacing between label and input */
+    font-size: 1em;
+    margin-bottom: 6px;
     color: #555;
 }
 
 .add-menu-item input,
 .add-menu-item textarea {
     width: 100%;
-    padding: 8px; /* Smaller padding */
-    margin-bottom: 12px; /* Reduced margin between fields */
-    font-size: 1em; /* Smaller font size for inputs */
+    padding: 8px;
+    margin-bottom: 12px;
+    font-size: 1em;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
@@ -390,10 +308,10 @@ h1 {
 }
 
 .add-menu-item button {
-    padding: 10px 18px; /* Smaller button padding */
+    padding: 10px 18px;
     background-color: #4CAF50;
     color: white;
-    font-size: 1.1em; /* Slightly smaller font size */
+    font-size: 1.1em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -407,26 +325,135 @@ h1 {
 /* Responsive Design - Ensure the form is still usable on smaller screens */
 @media (max-width: 768px) {
     .add-menu-item {
-        width: 90%; /* Ensure the form takes more space on small screens */
-        padding: 15px; /* Less padding for mobile */
+        width: 90%;
+        padding: 15px;
     }
 
     .add-menu-item h2 {
-        font-size: 1.3em; /* Smaller header on mobile */
+        font-size: 1.3em;
     }
 
     .add-menu-item label {
-        font-size: 0.9em; /* Smaller label font on mobile */
+        font-size: 0.9em;
     }
 
     .add-menu-item input,
     .add-menu-item textarea {
-        padding: 6px; /* Smaller input padding on mobile */
+        padding: 6px;
     }
 
     .add-menu-item button {
-        padding: 8px 15px; /* Smaller button padding on mobile */
-        font-size: 1em; /* Smaller button text on mobile */
+        padding: 8px 15px;
+        font-size: 1em;
     }
 }
 
+.update-form-container {
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.update-form-container h4 {
+    font-size: 1em;
+    margin-bottom: 20px;
+    color: #8b4513; /* You can adjust this color */
+    text-align: center;
+}
+
+.update-form-container label {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    margin-top: 15px;
+}
+
+.update-form-container input,
+.update-form-container textarea {
+    width: 85%;
+    padding: 5px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 0.5em;
+    color: #333;
+    background-color: #fff;
+}
+
+.update-form-container textarea {
+    resize: vertical; /* Allow users to resize textarea vertically */
+    height: 100px; /* Set a default height for the textarea */
+}
+.update-form-container.show {
+    display: block;
+    max-height: 1000px;
+}
+
+/* Styles for the add menu item dropdown button */
+.dropdown-btn {
+    background-color: #4CAF50;
+    color: white;
+    width: 400px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.dropdown-btn:hover {
+    background-color: #16bb1e;
+}
+
+.add-menu-item {
+    display: none; /* Hide the form initially */
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-menu-item.show {
+    display: block; /* Show the form when toggled */
+}
+
+.add-menu-item form {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-menu-item label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.add-menu-item input,
+.add-menu-item textarea {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.add-menu-item button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.add-menu-item button:hover {
+    background-color: #45a049;
+}
+
+.centered {
+    text-align: center; /* Horizontally center text */
+    height: 200px; /* Make sure the container has a height */
+}

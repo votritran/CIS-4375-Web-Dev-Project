@@ -170,37 +170,41 @@
 @media (max-width: 900px) {
 
 .navbar-background{
-    background-color: #00000000;
+    background-color: #f8f4e5;
+    height: 50px;
 }
 
 .navbar {
-    flex-direction: column; /* Stack the items vertically */
-    align-items: left;     /* Center the items horizontally */
-    margin-top: 20px;       /* Adjust top margin */
-    width: 130px;
-    margin-left:10px;
+    flex-direction: row; /* Stack the items vertically */
+    align-items: left;     /* Center the items horizontally */      /* Adjust top margin */
+    width: 80%;
+    margin-left:95px;
     margin-right: auto;
     z-index: 15;
+    border-radius: 5px;
 }
 
 .navbar ul {
-    display: block; /* Change the navbar links to block-level for vertical stacking */
+    display: flex; /* Change the navbar links to block-level for vertical stacking */
     margin: 0;
     padding: 0;
 }
 
 .navbar li {
-    margin: 20px 0; /* Add spacing between items */
+    margin: 0 0; /* Add spacing between items */
     text-align: center; /* Center the text inside each link */
 }
 
 .navbar .logo {
     margin-top: 5px;  /* Provide some space between the logo and navbar items */
-    width: 150px;  /* Reduce logo size on smaller screens */
+    width: 150px; 
+    margin-left: -10px;
+    top: -45px;
+    left: 0;    /* Reduce logo size on smaller screens */
 }
 
 .navbar a {
-    font-size: 16px; /* Adjust font size for readability */
+    font-size: 20px; /* Adjust font size for readability */
 }
 
 /* Optional: Adjust button style for smaller screens */
