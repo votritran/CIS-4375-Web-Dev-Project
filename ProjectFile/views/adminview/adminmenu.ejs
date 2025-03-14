@@ -1,57 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> 
+<html lang="en"> 
 <head>
-    <meta charset="UTF-8"> <!-- Defines character encoding for proper text rendering -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures responsiveness for different screen sizes -->
-    <title>Paris Sweet Patisserie - Admin Menu</title> <!-- Page title displayed in browser tab -->
-    <link rel="stylesheet" href="../css/admin_menu_styles.css"> <!-- Links external CSS file for styling -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet"> <!-- Imports a Google Font for styling -->
+    <meta charset="UTF-8"> <!-- Sets character encoding to UTF-8 to support all characters -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures proper scaling for responsive design -->
+    <title>Paris Sweet Patisserie - Admin Menu</title> <!-- Sets the page title displayed on the browser tab -->
+    
+    <!-- Links to an external CSS file for styling the admin menu page -->
+    <link rel="stylesheet" href="../css/admin_menu_styles.css">
+    
+    <!-- Imports the Dancing Script font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Includes the login navbar partial template using EJS templating -->
+    <%- include('../partials/loginnavbar') %>
 
-    <%- include('../partials/loginnavbar') %> <!-- Includes a login navigation bar (likely using EJS for templating) -->
+    <!-- Main heading of the admin menu management page -->
+    <h1 class="header">Admin Menu Management</h1>
 
-    <h1 class="header">Admin Menu Management</h1> <!-- Page heading -->
-
-    <!-- Section for updating a menu item -->
+    <!-- Section containing the update menu item button and form -->
     <div class="admin-update-section">
-        <button class="update-btn" onclick="toggleUpdateForm()">Update Menu Item</button> <!-- Button to toggle the update form -->
+        <!-- Button to toggle the visibility of the update form -->
+        <button class="update-btn" onclick="toggleUpdateForm()">Update Menu Item</button>
 
-        <div id="updateFormContainer" style="display: none; margin-top: 20px;"> <!-- Initially hidden container for update form -->
-            <form id="updateForm" enctype="multipart/form-data"> <!-- Form to update a menu item with file upload support -->
+        <!-- Container for the update form, initially hidden -->
+        <div id="updateFormContainer" style="display: none; margin-top: 20px;">
+            <!-- Form for updating menu items, allowing file uploads -->
+            <form id="updateForm" enctype="multipart/form-data">
                 
-                <!-- Dropdown to select the menu item for updating -->
+                <!-- Dropdown to select which menu item to update -->
                 <label for="menu-item-select">Select Item to Update:</label>
                 <select id="menu-item-select" name="productID" required>
                     <option value="" disabled selected>Select a product to update</option>
-                    <% Object.keys(menuItems).forEach(function(category) { %> <!-- Loop through categories -->
-                        <optgroup label="<%= category %>"> <!-- Group items by category -->
+                    
+                    <!-- Iterates over the menu items, grouping them by category -->
+                    <% Object.keys(menuItems).forEach(function(category) { %>
+                        <optgroup label="<%= category %>"> <!-- Creates a category group -->
                             <% menuItems[category].forEach(function(item) { %>
-                                <option value="<%= item.ProductID %>"><%= item.ProductName %></option> <!-- Populate dropdown options -->
+                                <!-- Option for each product, showing the name and storing the ID -->
+                                <option value="<%= item.ProductID %>"><%= item.ProductName %></option>
                             <% }); %>
                         </optgroup>
                     <% }); %>
                 </select>
                 <br><br>
 
-                <!-- Input fields for updating various product details -->
+                <!-- Input field for updating the product name -->
                 <label for="newName">Updated Name:</label>
                 <input type="text" id="newName" name="newName" placeholder="Leave blank to keep current name">
                 <br><br>
 
+                <!-- Input field for updating the product description -->
                 <label for="newDescription">Updated Description:</label>
                 <input type="text" id="newDescription" name="newDescription" placeholder="Leave blank to keep current description">
                 <br><br>
 
+                <!-- Input field for updating the product price -->
                 <label for="newPrice">Updated Price:</label>
                 <input type="number" step="0.01" id="newPrice" name="newPrice" placeholder="Leave blank to keep current price">
                 <br><br>
 
+                <!-- Input field for updating the product size -->
                 <label for="newSize">Updated Size:</label>
                 <input type="text" id="newSize" name="newSize" placeholder="Leave blank to keep current size">
                 <br><br>
 
-                <!-- Dropdown for selecting a new category -->
+                <!-- Dropdown to select a new category for the product -->
                 <label for="newCategory">Updated Category:</label>
                 <select id="newCategory" name="newCategory">
                     <option value="" disabled selected>Select a new category</option>
@@ -61,161 +75,160 @@
                 </select>
                 <br><br>
 
-                <!-- File input for updating the product image -->
+                <!-- Input field for uploading a new product image -->
                 <label for="newImage">Upload New Image:</label>
                 <input type="file" id="newImage" name="productImage">
                 <br><br>
 
-                <button type="submit">Submit Updates</button> <!-- Submit button for form -->
+                <!-- Button to submit the update form -->
+                <button type="submit">Submit Updates</button>
             </form>
 
-            <div id="updateMessage" style="margin-top: 10px;"></div> <!-- Area to display update messages -->
+            <!-- Message display area for update form feedback -->
+            <div id="updateMessage" style="margin-top: 10px;"></div>
         </div>
     </div>
     <br>
 
-    <!-- Menu Tabs Section, also ensure the order does not change -->
+    <!-- Section for menu category tabs -->
     <div class="tabs">
         <% 
-            const categoryOrder = ["Breakfast", "Appetizers", "Soups", "Salads", "Sandwiches", "asdsad"]; // List of menu categories, "asdsad" seems like a typo?
+            // Defines the order in which categories should be displayed
+            const categoryOrder = ["Breakfast", "Appetizers", "Soups", "Salads", "Sandwiches", "asdsad"];
+
+            // Loops through each category and creates a tab if it exists in menuItems
             categoryOrder.forEach(function(category) {
-                if (menuItems[category]) { %> <!-- Only create tabs for existing categories -->
+                if (menuItems[category]) { %>
                     <div class="tab" data-tab="<%= category %>">
-                        <%= category %> <!-- Tab name displayed -->
+                        <%= category %> <!-- Displays the category name -->
                     </div>
         <%      }
             });
         %>
     </div>
 
-    <!-- Menu Items Section -->
+    <!-- Section for displaying menu items -->
     <div id="menu">
-        <% categoryOrder.forEach(function(category) {
-            if (menuItems[category]) { %> <!-- Check if category exists -->
-                <div class="menu-container" data-content="<%= category %>"> <!-- Container for menu items in each category -->
-                    <h2><%= category %></h2> <!-- Category heading -->
-                    <div class="menu-items">
-                        <% menuItems[category].forEach(function(item) { %> <!-- Loop through menu items -->
-                            <div class="menu-item" data-id="<%= item.ProductID %>">
-                                <h3><%= item.ProductName %></h3> <!-- Product name -->
-                                <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.ProductName %>" class="menu-image"> <!-- Display product image -->
-                                <p><strong>Description:</strong> <%= item.ProductDescription %></p> <!-- Product description -->
-                                <p><strong>Price:</strong> $<%= item.ProductPrice %></p> <!-- Product price -->
-                                <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p> <!-- Product size, defaulting to N/A if not available -->
-                            </div>
-                        <% }); %>
+        <% 
+            // Loops through each category and displays menu items within it
+            categoryOrder.forEach(function(category) {
+                if (menuItems[category]) { %>
+                    <div class="menu-container" data-content="<%= category %>">
+                        <h2><%= category %></h2> <!-- Displays the category title -->
+                        <div class="menu-items">
+                            <% 
+                                // Loops through each item in the category and creates an entry
+                                menuItems[category].forEach(function(item) { %>
+                                    <div class="menu-item" data-id="<%= item.ProductID %>">
+                                        <h3><%= item.ProductName %></h3> <!-- Displays the product name -->
+                                        
+                                        <!-- Displays the product image, using a default if none exists -->
+                                        <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" 
+                                             alt="<%= item.ProductName %>" 
+                                             class="menu-image">
+                                        
+                                        <!-- Displays the product description -->
+                                        <p><strong>Description:</strong> <%= item.ProductDescription %></p>
+                                        
+                                        <!-- Displays the product price -->
+                                        <p><strong>Price:</strong> $<%= item.ProductPrice %></p>
+                                        
+                                        <!-- Displays the product size or 'N/A' if not provided -->
+                                        <p><strong>Size:</strong> <%= item.ProductSize || 'N/A' %></p>
+                                    </div>
+                            <% }); %>
+                        </div>
                     </div>
-                </div>
-        <%  }
-        }); %>
+        <%      }
+            });
+        %>
     </div>
 
-    <%- include('../partials/footer') %> <!-- Footer section -->
+    <!-- Includes the footer partial template using EJS -->
+    <%- include('../partials/footer') %>
 
-    <script src="../js/menu.js"></script> <!-- External JavaScript file -->
+    <script src="../js/menu.js"></script>
 
     <script>
-        // Function to toggle the visibility of the update form when called
         function toggleUpdateForm() {
             var form = document.getElementById("updateFormContainer");
-
-            // Check the current display status of the form:
-            // - If it's "none" or empty (not set), display it as "block"
-            // - Otherwise, hide it by setting display to "none"
-            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none"; 
+            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
         }
 
-        // Event listener that waits until the DOM is fully loaded before executing the function
         document.addEventListener("DOMContentLoaded", function () {
-            // Select all elements with the class "tab" (these represent navigation tabs)
             const tabs = document.querySelectorAll(".tab");
-
-            // Select all elements with the class "menu-container" (these represent tab contents)
             const contents = document.querySelectorAll(".menu-container");
-
-            // Retrieve the last active tab from local storage (if any), to persist the user's tab selection
             const storedTab = localStorage.getItem("activeTab");
 
-            // If a previously selected tab is stored, activate that tab; otherwise, default to the first tab
             if (storedTab) {
                 setActiveTab(storedTab);
             } else {
-                // Use optional chaining to ensure it doesn't error out if no tabs exist
-                setActiveTab(tabs[0]?.getAttribute("data-tab")); 
+                setActiveTab(tabs[0]?.getAttribute("data-tab"));
             }
 
-            // Add click event listeners to each tab to handle tab switching
             tabs.forEach(tab => {
                 tab.addEventListener("click", function () {
-                    // Get the "data-tab" attribute value of the clicked tab (used to identify the tab)
                     const selectedTab = this.getAttribute("data-tab");
-
-                    // Store the selected tab in local storage so it remains active on page reload
                     localStorage.setItem("activeTab", selectedTab);
-
-                    // Call function to update the UI to reflect the selected tab
                     setActiveTab(selectedTab);
                 });
             });
 
-            // Function to activate a given tab and display the corresponding content
             function setActiveTab(tabName) {
-                // Iterate over all tabs and mark only the selected tab as active
                 tabs.forEach(tab => {
                     tab.classList.toggle("active", tab.getAttribute("data-tab") === tabName);
                 });
 
-                // Iterate over all content sections and display only the one matching the active tab
                 contents.forEach(content => {
                     content.style.display = content.getAttribute("data-content") === tabName ? "block" : "none";
                 });
             }
         });
 
-        // Function to handle form submission asynchronously
         async function submitForm(event) {
-            event.preventDefault(); // Prevents default form submission to avoid page reload
+            event.preventDefault();
 
-            // Retrieve form input values and trim any whitespace where applicable
-            const productSelect = document.getElementById("menu-item-select"); // Dropdown selection for products
-            const newName = document.getElementById("newName").value.trim(); // Input field for new product name
-            const newDescription = document.getElementById("newDescription").value.trim(); // Input field for new product description
-            const newPrice = document.getElementById("newPrice").value.trim(); // Input field for new product price
-            const newSize = document.getElementById("newSize").value.trim(); // Input field for new product size
-            const newCategory = document.getElementById("newCategory").value; // Dropdown selection for new product category
-            const newImage = document.getElementById("newImage").files.length > 0; // Check if a new image is selected
+            const productSelect = document.getElementById("menu-item-select");
+            const newName = document.getElementById("newName").value.trim();
+            const newDescription = document.getElementById("newDescription").value.trim();
+            const newPrice = document.getElementById("newPrice").value.trim();
+            const newSize = document.getElementById("newSize").value.trim();
+            const newCategory = document.getElementById("newCategory").value;
+            const newImage = document.getElementById("newImage").files.length > 0;
 
-            // Validate that a product is selected before proceeding
             if (!productSelect.value) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>You must select a product to update.</p>";
                 return;
             }
 
-            // Ensure at least one field (name, description, price, size, category, or image) is being updated
             if (!newName && !newDescription && !newPrice && !newSize && !newCategory && !newImage) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>Please type what you want to update.</p>";
                 return;
             }
 
-            // Create a FormData object to capture the form inputs, including file uploads
             const formData = new FormData(document.getElementById("updateForm"));
-
-            // Send an asynchronous POST request to the server with form data
             const response = await fetch('/update-product', {
                 method: 'POST',
-                body: formData, // Attach the form data (including selected image, if any)
+                body: formData,
             });
 
-            // Parse the server's JSON response
             const result = await response.json();
+            const messageDiv = document.getElementById("updateMessage");
 
-            // Display a success message in green if the update was successful, otherwise show an error in red
-            document.getElementById("updateMessage").innerHTML = `<p style="color: ${response.ok ? 'green' : 'red'};">${result.message}</p>`;
+            if (response.ok) {
+                messageDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
+
+                const activeTab = localStorage.getItem("activeTab");
+                setTimeout(() => {
+                    location.reload();
+                    localStorage.setItem("activeTab", activeTab);
+                }, 1000);
+            } else {
+                messageDiv.innerHTML = `<p style="color: red;">${result.message}</p>`;
+            }
         }
 
-        // Attach the submitForm function to the form's submit event to handle updates asynchronously
         document.getElementById("updateForm").addEventListener("submit", submitForm);
-</script>
-
+    </script>
 </body>
 </html>
