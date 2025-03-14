@@ -15,14 +15,19 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+
 h2 {
     text-align: center;
     color: #8b4513;
 }
 
+
+
 label {
     font-weight: bold;
 }
+
+
 
 button {
     background-color: #8b4513;
@@ -34,9 +39,11 @@ button {
     font-size: 16px;
 }
 
+
 button:hover {
     background-color: #6a2c0f;
 }
+
 
 .disclaimer {
     text-align: center;
@@ -49,16 +56,18 @@ h1 {
     color: #8b4513;
 }
 
+
+
 .menu-container {
     font-family: 'Dancing Script', cursive;
     font-size: 25px;
-    width: 80%;
-    max-width: 800px;
-    margin: 0 auto;
+    width: 80%;                  /* Set the width of the container */
+    max-width: 800px;  
+    margin: 0 auto;              /* Center it horizontally */
     padding: 20px;
     background-color: #f8f8f8;
     border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
     text-align: center;
     margin-bottom: 40px;
 }
@@ -94,7 +103,6 @@ h1 {
     font-size: 24px;
     margin: 10px 0;
 }
-
 .size-item {
     font-family: 'Dancing Script', cursive;
     font-size: 24px;
@@ -119,12 +127,76 @@ h1 {
 }
 
 .header {
+
     text-align: center;
     font-family: 'Dancing Script', cursive;
     font-size: 40px;
+    
 }
 
+/*NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
+/*Menu style  for new Database connected Menu*/
 /* Menu Styles */
+#menu {
+    display: flex; /* Aligns the menu items vertically */
+    flex-direction: column; /* Stacks menu categories vertically */
+    gap: 20px; /* Adds space between categories */
+    padding: 20px; /* Adds padding around the menu */
+}
+
+.category {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.category-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.product {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.product h3 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.product p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.product strong {
+    color: #333;
+}
+
+/* Optional: Add media query for responsive menu layout */
+@media (max-width: 600px) {
+    #menu {
+        padding: 10px;
+    }
+
+    .category {
+        padding: 10px;
+    }
+
+    .product {
+        padding: 8px;
+    }
+}
+
+/* Menu style for new Database connected Menu */
 #menu {
     display: flex;
     flex-direction: column;
@@ -138,9 +210,9 @@ h1 {
     margin-bottom: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: flex; /* Use flexbox to display products side by side */
+    flex-wrap: wrap; /* Allow wrapping to new rows if needed */
+    gap: 20px; /* Space between products */
 }
 
 .category-title {
@@ -148,17 +220,16 @@ h1 {
     font-weight: bold;
     margin-bottom: 10px;
     color: #333;
-    width: 100%;
-    text-align: center;
+    width: 100%; /* Ensure title spans the entire width */
 }
 
 .product {
-    width: 200px;
+    width: 200px; /* Set a fixed width for each product */
     padding: 10px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
-    flex: 1 1 200px;
+    flex: 1 1 200px; /* Allow flexibility while ensuring they stay in the same row */
     text-align: center;
 }
 
@@ -176,42 +247,70 @@ h1 {
     color: #333;
 }
 
-/* Media Queries */
+/* Optional: Add media query for responsive menu layout */
 @media (max-width: 600px) {
     #menu {
         padding: 10px;
     }
 
     .category {
-        flex-direction: column;
+        flex-direction: column; /* Stack products vertically on smaller screens */
         padding: 10px;
     }
 
     .product {
-        width: 100%;
+        width: 100%; /* Make products take up full width on mobile */
         padding: 8px;
     }
-
-    #add-product-form-container {
-        max-width: 100%;
-        padding: 1rem;
-    }
-
-    .menu-container {
-        max-width: 250px;
-    }
-
-    #product-form {
-        gap: 0.5rem;
-    }
+}
+/* For the category title on dbmenu.html */
+.category-title {
+    text-align: center;      /* Centers the text */
+    color: #8b4513;          /* Applies the brown color */
+    font-size: 1.5em;        /* Adjusts the font size */
+    font-weight: bold;       /* Makes the text bold */
+    margin-bottom: 15px;     /* Adds space below the category title */
 }
 
-/* Add Product Form Styles */
+
+/* Style for the product images */
+.menu-image {
+    width: 100%; /* Makes the image take up the full width of the div */
+    max-width: 200px; /* Limit the maximum width of the image */
+    max-height: 200px;
+    min-width: 200px;
+    min-height:200px; /* Maintain the aspect ratio of the image */
+    object-fit: cover; /* Ensures the image covers the available area without distortion */
+    margin-bottom: 10px; /* Adds some space below the image */
+    border-radius: 15px; /* Curves the corners of the image */
+
+}
+
+/* Optional: Style for the product container to make it look nicer */
+.product {
+    border: 1px solid #ddd; /* Light border around the product */
+    padding: 10px; /* Space inside each product div */
+    margin-bottom: 20px; /* Space between product items */
+    text-align: center; /* Centers the text */
+}
+
+
+
+.category-title {
+    text-align: center;      /* Centers the text */
+    color: #8b4513;          /* Applies the brown color */
+    font-size: 1.5em;        /* Adjusts the font size */
+    font-weight: bold;       /* Makes the text bold */
+    margin-bottom: 15px;     /* Adds space below the category title */
+}
+
+
+/* Style for the Add Product Form */
 #add-product-form-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 500px; /* Reduced the width for a smaller form */
     margin: 2rem auto;
-    padding: 1.5rem;
+    padding: 1.5rem; /* Reduced padding */
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -222,13 +321,13 @@ h1 {
     font-family: 'Dancing Script', cursive;
     color: #8b4513;
     margin-bottom: 1rem;
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Slightly smaller title */
 }
 
 #product-form {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.8rem; /* Reduced the gap between elements */
 }
 
 #product-form label {
@@ -238,15 +337,15 @@ h1 {
 
 #product-form input,
 #product-form textarea {
-    padding: 0.6rem;
-    font-size: 0.95rem;
+    padding: 0.6rem; /* Smaller padding */
+    font-size: 0.95rem; /* Slightly smaller font size */
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
 }
 
 #product-form textarea {
-    height: 80px;
+    height: 80px; /* Reduced the height of the textarea */
 }
 
 #product-form button {
@@ -254,7 +353,7 @@ h1 {
     background-color: #8b4513;
     border: none;
     color: white;
-    font-size: 1rem;
+    font-size: 1rem; /* Reduced font size */
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -264,23 +363,36 @@ h1 {
     background-color: #ff6347;
 }
 
-/* Footer Styles */
+@media (max-width: 600px) {
+    #add-product-form-container {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    .menu-container {
+        max-width: 250px; /* Even smaller menu cards on smaller screens */
+    }
+
+    #product-form {
+        gap: 0.5rem; /* Even smaller gap for smaller screens */
+    }
+}
+
 .footer {
     background-color: #8b4513;
     color: white;
     text-align: center;
     position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
+    left: 0; /* Ensure it starts from the very left of the screen */
+    width: 100%; /* Full width */
     height: 50px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    z-index: 100; /* Ensure footer is above other content */
 }
 
-/* Tabs Styles */
 .tabs {
     display: flex;
     justify-content: center;
@@ -305,19 +417,15 @@ h1 {
     background-color: #5a2d05;
 }
 
-/* Menu Item Styling */
-.menu-item {
-    margin-bottom: 20px;
+.menu-container {
+    display: none;
 }
 
-/* Product Image Styling */
-.menu-image {
-    width: 100%;
-    max-width: 200px;
-    min-width: 200px;
-    min-height: 200px;
-    max-height: 200px;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border-radius: 15px;
+.menu-container.active {
+    display: block;
+}
+
+/* Menu Item styling */
+.menu-item {
+    margin-bottom: 20px;
 }
