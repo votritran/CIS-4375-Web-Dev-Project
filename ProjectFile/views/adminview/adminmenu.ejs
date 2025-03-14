@@ -147,8 +147,20 @@
             event.preventDefault();
 
             const productSelect = document.getElementById("menu-item-select");
+            const newName = document.getElementById("newName").value.trim();
+            const newDescription = document.getElementById("newDescription").value.trim();
+            const newPrice = document.getElementById("newPrice").value.trim();
+            const newSize = document.getElementById("newSize").value.trim();
+            const newCategory = document.getElementById("newCategory").value;
+            const newImage = document.getElementById("newImage").files.length > 0;
+
             if (!productSelect.value) {
                 document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>You must select a product to update.</p>";
+                return;
+            }
+
+            if (!newName && !newDescription && !newPrice && !newSize && !newCategory && !newImage) {
+                document.getElementById("updateMessage").innerHTML = "<p style='color: red;'>Please type what you want to update.</p>";
                 return;
             }
 
