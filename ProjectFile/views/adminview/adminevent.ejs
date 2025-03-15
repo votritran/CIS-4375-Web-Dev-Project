@@ -25,8 +25,8 @@
     <div class ="centered">
     <!-- Dropdown Button for Add New Event -->
     <button class="dropdown-btn" onclick="toggleForm()">Add New Event</button>
-    <!-- Add New Event Form (Hidden initially) -->
     </div>
+
     <div class="dropdown-form">
         <form action="/adminevent/add" method="POST" enctype="multipart/form-data">
             <label for="eventName">Event Name:</label>
@@ -48,9 +48,40 @@
         </form>
     </div>
 
-    
+    <div class="centered">
+        <button class="event-dropdown-btn" onclick="toggleUpdateForm()">Update Event</button>
+    </div>
 
+    <!-- Update Event Form (Initially Hidden) -->
+    <div class="dropdown-form" id="updateEventDropdown" style="display: none;">
+        <label for="eventSelect">Select Event to Update:</label>
+        <select id="eventSelect" onchange="populateUpdateForm()">
+            <option value="">--Select Event--</option>
+            <% events.forEach(event => { %>
+                <option value="<%= event.EventID %>"><%= event.EventName %> - <%= event.EventDate %></option>
+            <% }); %>
+        </select>
+        
+        <form id="updateEventForm" action="/adminevent/update" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="eventId" id="eventId">
+            <label for="eventName">Event Name:</label>
+            <input type="text" name="eventName"><br>
 
+            <label for="eventDescription">Event Description:</label>
+            <textarea name="eventDescription"></textarea><br>
+
+            <label for="eventDate">Event Date:</label>
+            <input type="date" name="eventDate" ><br>
+
+            <label for="eventTime">Event Time:</label>
+            <input type="time" name="eventTime" ><br>
+
+            <label for="eventImage">Event Image (Leave empty to keep current image):</label>
+            <input type="file" name="eventImage" accept="image/*"><br>
+
+            <button type="submit">Update Event</button>
+        </form>
+    </div>
 
 
     <!-- Slider Container -->

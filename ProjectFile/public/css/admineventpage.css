@@ -268,6 +268,28 @@ h1 {
     width: 200px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.dropdown-btn:hover {
+    background-color: #052e07;
+}
+
+.event-dropdown-btn {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.event-dropdown-btn:hover{
+    background-color: #0c2d67;
 }
 
 /* Dropdown Form Style */

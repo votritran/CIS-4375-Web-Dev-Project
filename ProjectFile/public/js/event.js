@@ -45,3 +45,39 @@ setInterval(() => {
     // Toggle the active state of the button
     button.classList.toggle('active');
 }
+
+  // Populate the update form with the selected event's data
+// Populate the update form with the selected event's data
+function populateUpdateForm() {
+    const eventId = document.getElementById("eventSelect").value;
+
+    if (eventId) {
+        // Show the update form
+        document.getElementById("updateEventDropdown").style.display = "block";
+
+        // Fetch the event data
+        fetch(`/adminevent/getEvent/${eventId}`)
+            .then(response => response.json())
+            .then(event => {
+                // Populate the form fields with the event data
+                document.getElementById("eventId").value = event.EventID;
+                document.getElementById("eventName").value = event.EventName;
+                document.getElementById("eventDescription").value = event.EventDescription;
+                document.getElementById("eventDate").value = event.EventDate;
+                document.getElementById("eventTime").value = event.EventTime;
+            })
+            .catch(err => console.error("Error fetching event data:", err));
+    } else {
+        // Hide the form if no event is selected
+        document.getElementById("updateEventDropdown").style.display = "none";
+    }
+}
+
+
+function toggleUpdateForm() {
+    const form = document.getElementById('updateEventDropdown');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+
+
