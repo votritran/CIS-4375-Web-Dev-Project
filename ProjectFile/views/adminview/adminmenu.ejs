@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Menu</title>
+    <link rel="stylesheet" href="../css/adminmenustyles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <%- include('../partials/loginnavbar') %>
+
+    <div class ="centered">
+        <h1 class="header">Menu Management</h1>
+         <!-- Add Menu Item Button (Dropdown) -->
+        <button class="dropdown-btn" onclick="toggleAddMenuItem()">Add Menu Item + </button>
+    </div>
+
+   
+
+    <!-- Add Menu Item Form (Initially Hidden) -->
+    <div class="add-menu-item" id="addMenuForm">
+        <form action="/adminmenu/add" method="POST" enctype="multipart/form-data">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName" required><br>
+
+            <label for="productDescription">Description:</label>
+            <textarea id="productDescription" name="productDescription" required></textarea><br>
+
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" name="productPrice" step="0.01" required><br>
+
+            <label for="productSize">Size:</label>
+            <input type="text" id="productSize" name="productSize"><br>
+
+            <label for="categoryName">Category:</label>
+            <input type="text" id="categoryName" name="categoryName" required><br>
+
+            <label for="productImage">Product Image:</label>
+            <input type="file" id="productImage" name="productImage" accept="image/*" required><br>
+
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
+
+    <h1 class="header">Current Menu View</h1>
+    <!-- Menu Section -->
+    <div class="tabs">
+        <% menuItems.forEach(function(category) { %>
+            <div class="tab" data-tab="<%= category.categoryName %>">
+                <%= category.categoryName %>
+            </div>
+        <% }); %>
+    </div>
+
+    <div id="menu">
+        <% menuItems.forEach(function(category) { %>
+            <div class="menu-container" id="<%= category.categoryName %>">
+                <h2><%= category.categoryName %></h2>
+                <div class="menu-items">
+                    <% category.products.forEach(function(item) { %>
+                        <div class="menu-item">
+                            <h3><%= item.productName %></h3>
+                            <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.productName %>" class="menu-image">
+                            <p> <%= item.ProductDescription %></p>
+
+                            <% if (item.Sizes.length > 0) { %>
+                                <% item.Sizes.forEach(function(size) { %>
+                                    <p class="price"><strong><%= size.size %>: $<%= size.price.toFixed(2) %></strong></p>
+                                <% }); %>
+                            <% } else { %>
+                                <!-- Display the product price if no sizes are available -->
+                                <p class="price"><strong>$<%= item.ProductPrice.toFixed(2) %></strong></p>
+                            <% } %> 
+                            
+
+                            <form action="/adminmenu/delete/<%= item.ProductID %>" method="POST" style="display:inline;">
+                                <button class ="deletebutton" type="submit" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
+                            </form>
+
+                            <!-- Update Form -->
+                            <button class="updatebutton" onclick="toggleUpdateForm('<%= item.ProductID %>')">Update Item</button>
+                            <div class="update-form-container" id="update-form-<%= item.ProductID %>">
+                                <form action="/adminmenu/update/<%= item.ProductID %>" method="POST" enctype="multipart/form-data">
+                                    <h4>Update Item</h4>
+                                    <label for="newName<%= item.ProductID %>">Product Name:</label>
+                                    <input type="text" id="newName<%= item.ProductID %>" name="newName" value="<%= item.productName %>"><br>
+
+                                    <label for="newDescription<%= item.ProductID %>">Description:</label>
+                                    <textarea id="newDescription<%= item.ProductID %>" name="newDescription"><%= item.ProductDescription %></textarea><br>
+
+                                    <label for="newPrice<%= item.ProductID %>">Price:</label>
+                                    <input type="number" id="newPrice<%= item.ProductID %>" name="newPrice" step="0.01" value="<%= item.ProductPrice %>"><br>
+
+                                    <label for="newSize<%= item.ProductID %>">Size:</label>
+                                    <input type="text" id="newSize<%= item.ProductID %>" name="newSize" value="<%= item.Sizes.length > 0 ? item.Sizes[0].size : '' %>"><br>
+
+                                    <label for="newCategory<%= item.ProductID %>">Category:</label>
+                                    <input type="text" id="newCategory<%= item.ProductID %>" name="newCategory" value="<%= item.categoryName %>"><br>
+
+                                    <label for="newImage<%= item.ProductID %>">Product Image:</label>
+                                    <input type="file" id="newImage<%= item.ProductID %>" name="newImage" accept="image/*"><br>
+
+                                    <button class = "updatebutton" type="submit" onclick="return confirm('Are you sure you want to UPDATE this item?');">Update Item</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+
+    <!-- Link to external JavaScript file -->
+    <script src="../js/menu.js"></script>
+
+</body>
+</html>
