@@ -1,5 +1,6 @@
 const express = require('express'); 
 const path = require('path');
+const session = require('express-session');
 require('dotenv').config(); // Load environment variables from .env file
 
 // Import routes
@@ -11,10 +12,13 @@ const contactusRoutes = require('./routes/frontend_route/contactusRoutes');
 const loginRoutes = require('./routes/frontend_route/loginRoutes');
 const forgotPasswordRoutes = require('./routes/frontend_route/forgotpasswordRoutes');
 
-
 //backend routes
 const adminmenuRoutes = require('./routes/backend_route/adminmenuRoutes');
 const emailRoutes = require('./routes/backend_route/emailRoutes')
+const logoutRoutes = require('./routes/backend_route/logoutRoutes');
+const accountRoutes = require('./routes/backend_route/accountRoutes');
+const changepasswordRoutes = require('./routes/backend_route/changepasswordRoutes');
+
 // Initialize Express app
 const app = express();
 
@@ -30,7 +34,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware for parsing JSON request bodies
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); // Required for handling POST requests
+app.use(express.json()); 
+
+// Middleware for sessions 
+app.use(session({
+    secret: process.env.SECRET_KEY || 'default_secret', 
+    resave: false,
+    saveUninitialized: false,  
+    cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1-hour session
+}));
+
 
 // Use imported routes
 app.use(homeRoutes);
@@ -42,6 +55,9 @@ app.use(loginRoutes);
 app.use(emailRoutes); //Added email routes
 app.use(adminmenuRoutes);
 app.use(forgotPasswordRoutes);
+app.use(logoutRoutes);
+app.use(accountRoutes);
+app.use(changepasswordRoutes);
 
 // Add a catch-all route for undefined routes
 app.use((req, res) => {

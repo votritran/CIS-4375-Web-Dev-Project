@@ -4,19 +4,19 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const connection = require('../../config/dbconnection');
 
-// Setup Nodemailer transporter
+// Nodemailer transporter for sending emails
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_SENDER,  // Your email from .env
-        pass: process.env.EMAIL_PASSWORD // App password from .env
+        user: process.env.EMAIL_SENDER,  
+        pass: process.env.EMAIL_PASSWORD 
     }
 });
 
-// Render the email input page
+// Render email input page
 router.get('/forgot-password-email', (req, res) => {
     const emailSent = req.query.emailSent || false;
-    res.render('forgot_password_email', { emailSent });  // Pass emailSent to the view
+    res.render('forgot_password_email', { emailSent });  
 });
 
 
@@ -50,7 +50,7 @@ router.post('/forgot-password-email', (req, res) => {
                 console.error(error);
                 return res.status(500).json({ message: "Error sending email" });
             }
-            // Redirect with success message
+            
             return res.redirect(`/forgot-password-email?emailSent=true`);
         });
     });
@@ -58,13 +58,13 @@ router.post('/forgot-password-email', (req, res) => {
 
 // Render the forgot password page where the user can enter a new password
 router.get('/forgot-password', (req, res) => {
-    res.render('forgotpassword', { email: req.query.email }); // Pass email to EJS
+    res.render('forgotpassword', { email: req.query.email }); 
 });
 
 const bcrypt = require('bcrypt');
 
 router.post('/forgot-password', (req, res) => {
-    const { email, newPassword } = req.body;  // Get email and new password from the body
+    const { email, newPassword } = req.body;  
 
     // Hash the new password
     bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
@@ -73,9 +73,9 @@ router.post('/forgot-password', (req, res) => {
             return res.status(500).json({ message: 'Error hashing password' });
         }
 
-        // Update the password in the database
+        // Update the password and password_last_changed in the database
         connection.query(
-            'UPDATE Owner SET OwnerPassword = ? WHERE OwnerEmail = ?',
+            'UPDATE Owner SET OwnerPassword = ?, password_last_changed = NOW() WHERE OwnerEmail = ?',
             [hashedPassword, email],
             (err, results) => {
                 if (err) {
@@ -87,7 +87,7 @@ router.post('/forgot-password', (req, res) => {
                     return res.status(404).json({ message: 'Email not found' });
                 }
 
-                // Password updated successfully
+                
                 res.json({ message: 'Password updated successfully!' });
             }
         );
