@@ -191,7 +191,8 @@ h1 {
 
 .event-image {
     width: 100%;
-    height: auto;
+    height: 500px;
+    object-fit: cover;
     border-radius: 10px;
 }
 

@@ -32,3 +32,16 @@ function currentSlide(index) {
 setInterval(() => {
     changeSlide(1); // Move to next slide automatically
 }, 10000);
+
+
+ // Function to toggle the visibility of the dropdown form
+ function toggleForm() {
+    const form = document.querySelector('.dropdown-form');
+    const button = document.querySelector('.dropdown-btn');
+    
+    // Toggle the visibility of the form
+    form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+    
+    // Toggle the active state of the button
+    button.classList.toggle('active');
+}

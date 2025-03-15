@@ -13,14 +13,52 @@
     <%- include('../partials/navbar') %>
 
     <!-- Event Section -->
+</head>
+<body>
+    
+    <!-- Include the Navbar -->
+    <%- include('../partials/navbar') %>
+
+    <!-- Event Section -->
     <h1 class="header">Upcoming Events</h1>
+
+    <div class ="centered">
+    <!-- Dropdown Button for Add New Event -->
+    <button class="dropdown-btn" onclick="toggleForm()">Add New Event</button>
+    <!-- Add New Event Form (Hidden initially) -->
+    </div>
+    <div class="dropdown-form">
+        <form action="/adminevent/add" method="POST" enctype="multipart/form-data">
+            <label for="eventName">Event Name:</label>
+            <input type="text" name="eventName" required><br>
+
+            <label for="eventDescription">Event Description:</label>
+            <textarea name="eventDescription" required></textarea><br>
+
+            <label for="eventDate">Event Date:</label>
+            <input type="date" name="eventDate" required><br>
+
+            <label for="eventTime">Event Time:</label>
+            <input type="time" name="eventTime" required><br>
+
+            <label for="eventImage">Event Image:</label>
+            <input type="file" name="eventImage" accept="image/*" required><br>
+
+            <button type="submit">Add Event</button>
+        </form>
+    </div>
+
+    
+
+
+
 
     <!-- Slider Container -->
     <div class="slider-container">
         <% events.forEach(function(event, index) { %>
             <div class="event-slide <% if (index === 0) { %>active<% } %>">
                 <div class="event-item">
-                    <img src="<%= event.Eventimage %>" alt="<%= event.EventName %>" class="event-image">
+                    <img src="<%= event.EventImage %>" alt="<%= event.EventName %>" class="event-image">
                     <h3><%= event.EventName %></h3>
                     <p><strong>Date:</strong> <%= event.EventDate %></p>
                     <p><strong>Time:</strong> <%= event.EventTime %></p>
@@ -37,7 +75,8 @@
 
         <div class="dot-container">
             <% for (let i = 0; i < events.length; i++) { %>
-                <span class="dot" onclick="currentSlide(<%= i %>)"></span>
+                <span class="dot" onclick="currentSlide('<%= i %>')"></span>
+
             <% } %>
         </div>
     </div>
