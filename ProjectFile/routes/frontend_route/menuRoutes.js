@@ -5,6 +5,10 @@ const connection = require('../../config/dbconnection');  // Import the DB conne
 
 // Route to fetch menu items from the database and render them in 'menu.ejs'
 router.get('/menu', (req, res) => {
+    if (req.session && req.session.owner) {
+        // If the user is logged in, redirect to the admin home page
+        return res.redirect('/adminmenu');  // Redirect to the admin menu (admin home page)
+    }
     // Fetch menu items from the database
     connection.query('SELECT * FROM Products', (err, results) => {
         if (err) {
