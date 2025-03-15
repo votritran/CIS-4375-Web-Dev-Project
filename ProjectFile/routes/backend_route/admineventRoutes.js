@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const connection = require('../../config/dbconnection');
-router.get('/event', (req, res) => {
-
-    if (req.session && req.session.owner) {
-        // If the user is logged in, redirect to the admin event page
-        return res.redirect('/adminevent');  // Redirect to the admin event (admin event page)
-    }
+const isAuthenticated = require('../../middleware/auth');
+const path = require('path');
+router.get('/adminevent', isAuthenticated, (req, res) => {
     
     connection.query('SELECT * FROM Events', (err, results) => {
         if (err) {
@@ -16,7 +13,7 @@ router.get('/event', (req, res) => {
 
     
 
-    res.render('event', { events: results });
+    res.render(path.join(__dirname, '../../views', 'adminview', 'adminevent'), { events: results });
 
     });
 });

@@ -5,7 +5,7 @@ router.get('/', (req, res) => {
 
     if (req.session && req.session.owner) {
         // If the user is logged in, redirect to the admin home page
-        return res.redirect('/adminhome');  // Redirect to the admin menu (admin home page)
+        return res.redirect('/adminhome');  // Redirect to the admin (admin home page)
     }
     // Corrected slideshow images array
     const slideshowImages = [
