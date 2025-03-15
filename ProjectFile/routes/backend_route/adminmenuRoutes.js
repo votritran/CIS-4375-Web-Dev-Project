@@ -4,6 +4,7 @@ const connection = require('../../config/dbconnection');  // Import the DB conne
 const path = require('path');
 const multer = require('multer');  // For handling file uploads
 const AWS = require('aws-sdk');    // For AWS S3
+const isAuthenticated = require('../../middleware/auth');
 
 AWS.config.update({
     accessKeyId: 'AKIAXFG5L4NB7TWHTIMP',
@@ -18,7 +19,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Route to fetch menu items from the database and render them in 'menu.ejs'
-router.get('/adminmenu', (req, res) => {
+router.get('/adminmenu', isAuthenticated, (req, res) => {
     // Fetch menu items from the database
     connection.query('SELECT * FROM Products', (err, results) => {
         if (err) {
@@ -73,7 +74,7 @@ router.get('/adminmenu', (req, res) => {
 });
 
 
-router.post('/adminmenu/add', upload.single('productImage'), (req, res) => {
+router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (req, res) => {
     const { productName, productDescription, productPrice, productSize, categoryName } = req.body;
     const file = req.file;
 
@@ -114,7 +115,7 @@ router.post('/adminmenu/add', upload.single('productImage'), (req, res) => {
     });
 });
 
-router.post('/adminmenu/delete/:productId', (req, res) => {
+router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
     const productId = req.params.productId;
 
     // Fetch product image URL from the database
@@ -165,7 +166,7 @@ router.post('/adminmenu/delete/:productId', (req, res) => {
     });
 });
 
-router.post('/adminmenu/update/:productId', upload.single('newImage'), (req, res) => {
+router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => {
     const { productId } = req.params;
     const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
     const newImage = req.file;

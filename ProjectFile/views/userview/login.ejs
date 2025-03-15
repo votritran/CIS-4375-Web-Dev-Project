@@ -11,7 +11,7 @@
 </head>
 <body>
      <!-- Include the Navbar -->
-     <%- include('../partials/navbar') %>
+    <%- include('../partials/navbar') %>
 
     <!-- Login Form Container -->
     <div class="container">
@@ -52,14 +52,21 @@
     
             const result = await response.json();
             if (response.ok) {
-                localStorage.setItem("userRole", result.role);
-                window.location.href = result.redirect;
+                if (result.redirect) {
+                    // If the password has expired, notify the user and redirect to /account
+                    if (result.message && result.redirect === "/account") {
+                        alert(result.message); // Show expiration message
+                    }
+    
+                    localStorage.setItem("userRole", result.role);
+                    window.location.href = result.redirect;
+                }
             } else {
                 document.getElementById("errorMsg").textContent = result.message;
                 document.getElementById("errorMsg").style.display = "block";
             }
         });
-
+    
         document.addEventListener("DOMContentLoaded", function() {
             const userRole = localStorage.getItem("userRole");
             if (userRole === "admin") {
@@ -68,6 +75,7 @@
             }
         });
     </script>
+    
 
     <!-- Footer -->
     <%- include('../partials/footer') %>
