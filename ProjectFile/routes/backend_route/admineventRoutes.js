@@ -8,9 +8,10 @@ const path = require('path');
 
 //AWS S3
 AWS.config.update({
-    accessKeyId: 'AKIAXFG5L4NB7TWHTIMP',
-    secretAccessKey: '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',
-    region: 'us-east-1',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,  
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,  
+    region: process.env.AWS_REGION
+
 });
 
 const s3 = new AWS.S3();
@@ -38,7 +39,7 @@ router.get('/adminevent', isAuthenticated, (req, res) => {
 });
 
 // Route to handle adding a new event
-router.post('/adminevent/add', upload.single('eventImage'), (req, res) => {
+router.post('/adminevent/add', isAuthenticated, upload.single('eventImage'), (req, res) => {
     const { eventName, eventDescription, eventDate, eventTime } = req.body;
     const file = req.file;
 
@@ -81,7 +82,7 @@ router.post('/adminevent/add', upload.single('eventImage'), (req, res) => {
 
 
 // Get event data for updating
-router.get('/adminevent/getEvent/:id', async (req, res) => {
+router.get('/adminevent/getEvent/:id', isAuthenticated, async (req, res) => {
     const eventId = req.params.id;
     const query = 'SELECT * FROM Events WHERE EventID = ?';
 
@@ -100,7 +101,7 @@ router.get('/adminevent/getEvent/:id', async (req, res) => {
 });
 
 
-router.post('/adminevent/update', upload.single('eventImage'), async (req, res) => {
+router.post('/adminevent/update', isAuthenticated, upload.single('eventImage'), async (req, res) => {
     const { eventId, eventName, eventDescription, eventDate, eventTime } = req.body;
     let updatedData = {};
 
@@ -173,6 +174,54 @@ router.post('/adminevent/update', upload.single('eventImage'), async (req, res) 
         console.error(error);
         res.status(500).send('Error updating event');
     }
+});
+
+// Delete Event Route
+router.post('/adminevent/delete/:eventId', isAuthenticated, (req, res) => {
+    const eventId = req.params.eventId;
+
+    // Query to get the image URL of the event
+    const query = 'SELECT EventImage FROM Events WHERE EventID = ?';
+    connection.query(query, [eventId], (err, results) => {
+        if (err) {
+            console.error('Error retrieving event image:', err);
+            return res.status(500).send('Error retrieving event image');
+        }
+
+        if (results.length === 0) {
+            return res.status(404).send('Event not found');
+        }
+
+        // Get the S3 key (image name) from the result
+        const imageUrl = results[0].EventImage;
+        const s3Key = imageUrl.split('/').pop(); // Assuming the S3 key is the image filename
+
+        // Set up parameters for deleting the image from S3
+        const deleteParams = {
+            Bucket: 'cis4375tv',  
+            Key: s3Key  // The key (filename) of the image you want to delete
+        };
+
+        // Delete the image from S3
+        s3.deleteObject(deleteParams, (err, data) => {
+            if (err) {
+                console.error('Error deleting image from S3:', err);
+                return res.status(500).send('Error deleting image from S3');
+            }
+
+            // Proceed to delete the event from the database
+            const deleteEventQuery = 'DELETE FROM Events WHERE EventID = ?';
+            connection.query(deleteEventQuery, [eventId], (err, result) => {
+                if (err) {
+                    console.error('Error deleting event:', err);
+                    return res.status(500).send('Error deleting event');
+                }
+
+                // Redirect to the event page after deletion
+                res.redirect('/adminevent');
+            });
+        });
+    });
 });
 
 

@@ -303,14 +303,46 @@ h1 {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
 }
 
-/* Add an arrow for the dropdown button */
-.dropdown-btn:after {
-    content: '\25BC'; /* Downwards arrow */
-    
+.dropdown-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
 }
 
-.dropdown-btn.active:after {
-    content: '\25B2'; /* Upwards arrow */
+.dropdown-form button:hover {
+    background-color: rgb(6, 80, 6);
+}
+.dropdown-form .eventbutton {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-form .eventbutton:hover {
+    background-color: #0c2d67;
+}
+.delete-btn {
+    background-color: #d8010c;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    width: 300px;
+}
+
+.delete-btn:hover {
+    background-color: #800205;
 }

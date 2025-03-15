@@ -2,8 +2,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const connection = require('../../config/dbconnection'); 
+const isAuthenticated = require('../../middleware/auth');
 
-router.get('/account', (req, res) => {
+router.get('/account', isAuthenticated, (req, res) => {
     if (!req.session.owner) {
         return res.redirect('/login'); 
     }
@@ -24,7 +25,7 @@ router.get('/account', (req, res) => {
 
 
 
-router.get('/change-password', (req, res) => {
+router.get('/change-password', isAuthenticated, (req, res) => {
     if (!req.session.owner || !req.session.owner.OwnerID) {  
         console.log("No valid session, redirecting...");
         return res.redirect('/login'); 
@@ -34,7 +35,7 @@ router.get('/change-password', (req, res) => {
 
 
 // Route to handle password update
-router.post('/update-password', async (req, res) => {
+router.post('/update-password', isAuthenticated, async (req, res) => {
     if (!req.session.ownerID) {
         return res.redirect('/login'); 
     }
