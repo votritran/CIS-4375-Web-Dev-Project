@@ -222,3 +222,10 @@ h1 {
 .active-dot {
     background-color: #71717148;
 }
+
+.no-events {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1.5em;
+    color: #555;
+}

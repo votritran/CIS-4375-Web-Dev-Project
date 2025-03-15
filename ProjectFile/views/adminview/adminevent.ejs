@@ -76,10 +76,13 @@
         </form>
     </div>
 
+    <div class="no-events">
     <!-- Check if there are no events -->
     <% if (events.length === 0) { %>
         <p>No events available at the moment.</p>
+        <p>Come back later for more event information.</p>
     <% } else { %>
+    </div>
         <!-- Slider Container for Events -->
         <div class="slider-container">
             <% events.forEach(function(event, index) { %>
