@@ -38,16 +38,18 @@ router.post('/login', async (req, res) => {
                     const now = new Date();
                     
                     if (now > passwordExpiration) {
+                        res.cookie('userRole', 'admin', { httpOnly: true, maxAge: 86400000 })
                         return res.status(200).json({
                             role: 'admin',
                             message: 'Your password has expired. Please update it.',
                             redirect: '/account'
                         });
                     }
+                    res.cookie('userRole', 'admin', { httpOnly: true, maxAge: 86400000 });
                 
                     return res.status(200).json({
                         role: 'admin',
-                        redirect: '/adminmenu'
+                        redirect: '/adminhome'
                     });
                 }
                 

@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 require('dotenv').config(); // Load environment variables from .env file
-
+const cookieParser = require('cookie-parser');
 // Import routes
 const homeRoutes = require('./routes/frontend_route/homeRoutes');
 const menuRoutes = require('./routes/frontend_route/menuRoutes');
@@ -18,10 +18,12 @@ const emailRoutes = require('./routes/backend_route/emailRoutes')
 const logoutRoutes = require('./routes/backend_route/logoutRoutes');
 const accountRoutes = require('./routes/backend_route/accountRoutes');
 const changepasswordRoutes = require('./routes/backend_route/changepasswordRoutes');
+const adminhomeRoutes = require('./routes/backend_route/adminhomeRoutes');
 
 // Initialize Express app
 const app = express();
-
+// Use cookie-parser middleware to parse cookies
+app.use(cookieParser());
 // Set the port from environment variables or default to 3000
 const port = process.env.PORT || 3000;
 
@@ -46,19 +48,21 @@ app.use(session({
 
 
 // Use imported routes
+//Frontend routes
 app.use(homeRoutes);
 app.use(menuRoutes);
 app.use(cakeorderRoutes);
 app.use(eventRoutes);
 app.use(contactusRoutes);
 app.use(loginRoutes);
+//Backend
 app.use(emailRoutes); //Added email routes
 app.use(adminmenuRoutes);
 app.use(forgotPasswordRoutes);
 app.use(logoutRoutes);
 app.use(accountRoutes);
 app.use(changepasswordRoutes);
-
+app.use(adminhomeRoutes)
 // Add a catch-all route for undefined routes
 app.use((req, res) => {
     res.status(404).send('Page Not Found');
