@@ -15,5 +15,44 @@
 
     <h2>HELLO, welcome to Cake Requests</h2>
 
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Need By Date</th>
+                <th>Cake Type</th>
+                <th>Frosting</th>
+                <th>Size</th>
+                <th>Shape</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (cakeOrders.length > 0) { %>
+                <% cakeOrders.forEach(order => { %>
+                    <tr>
+                        <td><%= order.OrderID %></td>
+                        <td><%= order.name %></td>
+                        <td><%= order.email %></td>
+                        <td><%= order.phone %></td>
+                        <td><%= order.needByDate %></td>
+                        <td><%= order.cakeType %></td>
+                        <td><%= order.frosting %></td>
+                        <td><%= order.size %></td>
+                        <td><%= order.shape %></td>
+                        <td><%= order.description %></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="10">No cake orders found.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
 </body>
 </html>
