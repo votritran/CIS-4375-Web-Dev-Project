@@ -88,6 +88,7 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     border-radius: 40px;
+    vertical-align: top;
 }
 
 .menu-item img {
@@ -103,10 +104,20 @@ h1 {
     font-size: 24px;
     margin: 10px 0;
 }
+.size-item {
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    margin: 10px 0;
+}
 
 .menu-item p {
-    font-size: 16px;
+    font-size: 20px;
     color: #555;
+}
+
+.menu-item .price {
+    font-size: 20px;
+    color: #000000;
 }
 
 .price {
@@ -266,8 +277,10 @@ h1 {
 /* Style for the product images */
 .menu-image {
     width: 100%; /* Makes the image take up the full width of the div */
-    max-width: 300px; /* Limit the maximum width of the image */
-    height: auto; /* Maintain the aspect ratio of the image */
+    max-width: 200px; /* Limit the maximum width of the image */
+    max-height: 200px;
+    min-width: 200px;
+    min-height:200px; /* Maintain the aspect ratio of the image */
     object-fit: cover; /* Ensures the image covers the available area without distortion */
     margin-bottom: 10px; /* Adds some space below the image */
     border-radius: 15px; /* Curves the corners of the image */
@@ -416,10 +429,4 @@ h1 {
 /* Menu Item styling */
 .menu-item {
     margin-bottom: 20px;
-}
-
-.menu-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
 }

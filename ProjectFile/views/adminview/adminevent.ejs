@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Events</title>
+    <link rel="stylesheet" href="../css/admineventpage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Include the Navbar -->
+    <%- include('../partials/loginnavbar') %>
+
+    <!-- Event Section -->
+    <h1 class="header">Events Management</h1>
+
+    <div class="centered">
+        <!-- Dropdown Button for Add New Event -->
+        <button class="dropdown-btn" onclick="toggleForm()">Add New Event</button>
+    </div>
+
+    <div class="dropdown-form">
+        <form action="/adminevent/add" method="POST" enctype="multipart/form-data">
+            <label for="eventName">Event Name:</label>
+            <input type="text" name="eventName" required><br>
+
+            <label for="eventDescription">Event Description:</label>
+            <textarea name="eventDescription" required></textarea><br>
+
+            <label for="eventDate">Event Date:</label>
+            <input type="date" name="eventDate" required><br>
+
+            <label for="eventTime">Event Time:</label>
+            <input type="time" name="eventTime" required><br>
+
+            <label for="eventImage">Event Image:</label>
+            <input type="file" name="eventImage" accept="image/*" required><br>
+
+            <button type="submit">Add Event</button>
+        </form>
+    </div>
+
+    <div class="centered">
+        <button class="event-dropdown-btn" onclick="toggleUpdateForm()">Update Event</button>
+    </div>
+
+    <!-- Update Event Form (Initially Hidden) -->
+    <div class="dropdown-form" id="updateEventDropdown" style="display: none;">
+        <label for="eventSelect">Select Event to Update:</label>
+        <select id="eventSelect" onchange="populateUpdateForm()">
+            <option value="">--Select Event--</option>
+            <% events.forEach(event => { %>
+                <option value="<%= event.EventID %>"><%= event.EventName %> - <%= event.EventDate %></option>
+            <% }); %>
+        </select>
+        
+        <form id="updateEventForm" action="/adminevent/update" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="eventId" id="eventId">
+            <label for="eventName">Event Name:</label>
+            <input type="text" name="eventName"><br>
+
+            <label for="eventDescription">Event Description:</label>
+            <textarea name="eventDescription"></textarea><br>
+
+            <label for="eventDate">Event Date:</label>
+            <input type="date" name="eventDate" ><br>
+
+            <label for="eventTime">Event Time:</label>
+            <input type="time" name="eventTime" ><br>
+
+            <label for="eventImage">Event Image (Leave empty to keep current image):</label>
+            <input type="file" name="eventImage" accept="image/*"><br>
+
+            <button class = "eventbutton" type="submit">Update Event</button>
+        </form>
+    </div>
+
+    <div class="no-events">
+    <!-- Check if there are no events -->
+    <% if (events.length === 0) { %>
+        <p>No events available at the moment.</p>
+        <p>Come back later for more event information.</p>
+    <% } else { %>
+    </div>
+        <!-- Slider Container for Events -->
+        <div class="slider-container">
+            <% events.forEach(function(event, index) { %>
+                <div class="event-slide <% if (index === 0) { %>active<% } %>">
+                    <div class="event-item">
+                        <img src="<%= event.EventImage %>" alt="<%= event.EventName %>" class="event-image">
+                        <h3><%= event.EventName %></h3>
+                        <p><strong>Date:</strong> <%= event.EventDate %></p>
+                        <p><strong>Time:</strong> <%= event.EventTime %></p>
+                        <p class="event-description"><strong>Description:</strong> <%= event.EventDescription %></p>
+
+                        <!-- Delete Button for Each Event -->
+                        <form action="/adminevent/delete/<%= event.EventID %>" method="POST" style="display: inline;">
+                            <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this event?')">Delete Event</button>
+                        </form>
+                    </div>
+                </div>
+            <% }); %>
+
+            <!-- Prev and Next Buttons -->
+            <div class="slider-buttons">
+                <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+                <button class="next" onclick="changeSlide(1)">&#10095;</button>
+            </div>
+
+            <div class="dot-container">
+                <% for (let i = 0; i < events.length; i++) { %>
+                    <span class="dot" onclick="currentSlide('<%= i %>')"></span>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer') %>
+
+    <script src="../js/event.js"></script>
+
+</body>
+</html>

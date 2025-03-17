@@ -143,11 +143,15 @@ h1 {
 
 /* CSS for the Slider */
 .slider-container {
+    
     position: relative;
     background-color: #d3c8c3;
     width: 100%;
     max-width: 1000px;
-    margin: auto;
+    min-width: 500px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
 }
 
@@ -191,7 +195,7 @@ h1 {
 
 .event-image {
     width: 100%;
-    height: 500px;
+    height: 400px;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -221,6 +225,127 @@ h1 {
 
 .active-dot {
     background-color: #71717148;
+}
+
+.add-event-form {
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+}
+
+.add-event-form label {
+    display: block;
+    font-size: 1em;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.add-event-form input,
+.add-event-form textarea {
+    width: 95%;
+    padding: 8px;
+    margin-bottom: 12px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.centered {
+    text-align: center; /* Horizontally center text */
+}
+
+/* Dropdown Button Style */
+.dropdown-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.dropdown-btn:hover {
+    background-color: #052e07;
+}
+
+.event-dropdown-btn {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.event-dropdown-btn:hover{
+    background-color: #0c2d67;
+}
+
+/* Dropdown Form Style */
+.dropdown-form {
+    display: none;
+    padding: 20px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    width: 80%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.dropdown-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-form button:hover {
+    background-color: rgb(6, 80, 6);
+}
+.dropdown-form .eventbutton {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-form .eventbutton:hover {
+    background-color: #0c2d67;
+}
+.delete-btn {
+    background-color: #d8010c;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    width: 300px;
+}
+
+.delete-btn:hover {
+    background-color: #800205;
 }
 
 .no-events {

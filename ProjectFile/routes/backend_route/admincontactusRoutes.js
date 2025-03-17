@@ -1,29 +1,12 @@
 
-/*
-const express = require('express');
-const path = require('path');
-const router = express.Router();
-const connection = require('../../config/dbconnection');
-
-// Fetch Contact Requests
-router.get('/admincontact', (req, res) => {
-    connection.query('SELECT * FROM contact_requests ORDER BY id DESC', (err, results) => {
-        if (err) {
-            console.error('Error fetching contact requests:', err);
-            return res.status(500).json({ error: "Database error" });
-        }
-        res.render(path.join(__dirname, '../../views', 'adminview', 'admincontact'), { events: results });
-    });
-});
-
-module.exports = router; */
 const express = require('express');
 const router = express.Router();
 const path = require('path'); // ✅ Ensure path is imported
 const connection = require('../../config/dbconnection');
+const isAuthenticated = require('../../middleware/auth');
 
 // Admin Contact Page Route
-router.get('/admincontact', (req, res) => {
+router.get('/admincontact', isAuthenticated, (req, res) => {
     connection.query('SELECT * FROM contact_requests ORDER BY id DESC', (err, results) => {
         if (err) {
             console.error('Error fetching contact requests:', err);
