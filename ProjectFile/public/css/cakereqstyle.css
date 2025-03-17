@@ -1,0 +1,17 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f4e5;
+    padding: 20px;
+    margin-top: 160px;
+    margin-bottom: 100px;
+}
+
+h2 {
+    font-size: 30px !important;
+    color: red !important;
+    text-align: center;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: yellow;
+}
