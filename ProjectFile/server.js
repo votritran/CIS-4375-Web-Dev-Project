@@ -31,7 +31,10 @@ app.use(cookieParser());
 const port = process.env.PORT || 3000;
 
 // Set view engine to EJS
-app.set('views', path.join(__dirname, 'views', 'userview'));
+app.set('views', [
+    path.join(__dirname, 'views', 'userview'),
+    path.join(__dirname, 'views', 'adminview')
+]);
 app.set('view engine', 'ejs');
 
 // Define static folder for serving CSS, images, and JS files
@@ -68,7 +71,7 @@ app.use(changepasswordRoutes);
 app.use(adminhomeRoutes)
 app.use(admineventRoutes); 
 app.use(cakeorderBackendRoutes);
-app.use('/', cakereqRoutes);
+app.use(cakereqRoutes);
 
 // Add a catch-all route for undefined routes
 app.use((req, res) => {
