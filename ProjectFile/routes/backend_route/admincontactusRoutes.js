@@ -17,7 +17,7 @@ router.get('/admincontact', isAuthenticated, (req, res) => {
 });
 
 // Delete Contact Request
-router.delete('/delete_contact/:id', (req, res) => {
+router.delete('/delete_contact/:id',isAuthenticated, (req, res) => {
     const contactId = req.params.id;
     
     connection.query('DELETE FROM contact_requests WHERE id = ?', [contactId], (err, result) => {
@@ -30,7 +30,7 @@ router.delete('/delete_contact/:id', (req, res) => {
 });
 
 // Mark Contact as Seen
-router.put('/toggle_seen/:id', (req, res) => {
+router.put('/toggle_seen/:id',isAuthenticated, (req, res) => {
     const contactId = req.params.id;
 
     // Get current seen status
