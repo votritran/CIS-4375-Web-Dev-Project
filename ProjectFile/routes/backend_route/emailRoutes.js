@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
+const connection = require('../../config/dbconnection');
 require('dotenv').config();
 
 // Email Configuration
@@ -44,7 +45,16 @@ router.post('/send_email', async (req, res) => {
 
         // Send email
         await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: "Your message has been sent successfully!" });
+        // Save to Database
+        const sql = `INSERT INTO contact_requests (name, email, phone, contactType, Language, Subject, message) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        connection.query(sql, [name, email, phone, contactType, Language, Subject, message], (err, result) => {
+            if (err) {
+                console.error('Error saving contact request:', err);
+                return res.status(500).json({ error: "Database error" });
+            }
+            res.status(200).json({ message: "Your message has been sent and saved successfully!" });
+        });
+
 
     } catch (error) {
         res.status(500).json({ error: error.message });

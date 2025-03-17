@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Contact Us Requests</title>
+    <link rel="stylesheet" href="/css/admincontact.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Include the Navbar -->
+    <%- include('../partials/navbar') %>
+
+    <h1>Contact Requests</h1>
+
+    <div class="contact-container">
+        <% if (contacts.length === 0) { %>
+            <p class="no-messages">No messages available.</p>
+        <% } else { %>
+            <% contacts.forEach(contact => { %>
+                <div class="contact-box <%= contact.seen ? 'seen' : 'unseen' %>" data-id="<%= contact.id %>">
+                    <h2><%= contact.name %></h2>
+                    <p>Email: <%= contact.email %></p>
+                    <p>Phone: <%= contact.phone %></p>
+                    <p>Contact Type: <%= contact.contactType %></p>
+                    <p>Language: <%= contact.Language %></p>
+                    <p class="subject">Subject: <%= contact.Subject %></p>
+                    <p class="message"><%= contact.message %></p>
+                    
+                    <!-- Toggle Seen/Unseen Button -->
+                    <button class="seen-btn" data-id="<%= contact.id %>">
+                        <%= contact.seen ? 'Mark as Unseen' : 'Mark as Seen' %>
+                    </button>
+                    
+                    <button class="delete-btn" data-id="<%= contact.id %>">Delete</button>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+    
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer') %>
+
+    <!--External Script Link-->
+    <script src="/js/admincontact.js"></script>
+</body>
+</html>

@@ -13,7 +13,9 @@ const loginRoutes = require('./routes/frontend_route/loginRoutes');
 
 //backend routes
 const adminmenuRoutes = require('./routes/backend_route/adminmenuRoutes');
-const emailRoutes = require('./routes/backend_route/emailRoutes')
+const admincontactusRoutes = require('./routes/backend_route/admincontactusRoutes');
+const emailRoutes = require('./routes/backend_route/emailRoutes') 
+
 // Initialize Express app
 const app = express();
 
@@ -39,6 +41,7 @@ app.use(contactusRoutes);
 app.use(loginRoutes);
 app.use(emailRoutes); //Added email routes
 app.use(adminmenuRoutes);
+app.use(admincontactusRoutes);
 
 // Add a catch-all route for undefined routes
 app.use((req, res) => {
