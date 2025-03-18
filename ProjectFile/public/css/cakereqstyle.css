@@ -1,17 +1,79 @@
 body {
+    padding-top: 160px;
     font-family: Arial, sans-serif;
     background-color: #f8f4e5;
+    margin: 0;
     padding: 20px;
+}
+
+.orders-container {
     margin-top: 160px;
-    margin-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.orders-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.order-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px !important;
+    max-width: 90%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 h2 {
-    font-size: 30px !important;
-    color: red !important;
+    font-size: 24px;
+    color: #8b4513;
     text-align: center;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    background: yellow;
+    margin-bottom: 10px;
+}
+
+.section-divider {
+    border: 3px solid #8b4513;
+    width: 80%;
+    margin: 20px auto;
+}
+/* Ensure the dropdown is positioned at the top-right */
+.dropdown-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Style the dropdown */
+.order-status {
+    background-color: #8b4513; /* Brown background */
+    color: white; /* White text */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Ensure dropdown text is white */
+.order-status option {
+    background-color: #8b4513; /* Brown */
+    color: white; /* White text */
+}
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Allows dropdown positioning */
+    padding-bottom: 10px;
 }

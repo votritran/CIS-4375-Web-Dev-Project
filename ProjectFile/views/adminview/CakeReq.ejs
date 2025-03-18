@@ -1,11 +1,9 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cake Requests</title>
-
-    <!-- Link to External CSS -->
     <link rel="stylesheet" href="/css/cakereqstyle.css">
 </head>
 <body>
@@ -13,46 +11,89 @@
     <!-- Include the Navbar -->
     <%- include('../partials/loginnavbar') %>
 
-    <h2>HELLO, welcome to Cake Requests</h2>
+    <!-- Orders Container -->
+    <div class="orders-container" id="ordersContainer">
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Need By Date</th>
-                <th>Cake Type</th>
-                <th>Frosting</th>
-                <th>Size</th>
-                <th>Shape</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if (cakeOrders.length > 0) { %>
-                <% cakeOrders.forEach(order => { %>
-                    <tr>
-                        <td><%= order.OrderID %></td>
-                        <td><%= order.name %></td>
-                        <td><%= order.email %></td>
-                        <td><%= order.phone %></td>
-                        <td><%= order.needByDate %></td>
-                        <td><%= order.cakeType %></td>
-                        <td><%= order.frosting %></td>
-                        <td><%= order.size %></td>
-                        <td><%= order.shape %></td>
-                        <td><%= order.description %></td>
-                    </tr>
-                <% }) %>
-            <% } else { %>
-                <tr>
-                    <td colspan="10">No cake orders found.</td>
-                </tr>
+        <% const statuses = ["New", "Pending", "Completed"]; %>
+        <% statuses.forEach(status => { %>
+            <div id="<%= status.toLowerCase() %>Orders">
+                <h2><%= status %> Orders</h2>
+                <div class="orders-grid" id="<%= status.toLowerCase() %>Grid">
+                    <% cakeOrders.forEach(order => { %>
+                        <% if (order.status === status) { %>
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <div class="order-title"><strong>Order ID:</strong> <%= order.OrderID %></div>
+                                    <div class="dropdown-container">
+                                        <select class="order-status" data-orderid="<%= order.OrderID %>">
+                                            <% statuses.forEach(opt => { %>
+                                                <option value="<%= opt %>" <%= order.status === opt ? "selected" : "" %>><%= opt %></option>
+                                            <% }) %>
+                                        </select>                                    
+                                    </div>
+                                </div>                            
+                                <div class="customer-name"><strong>Customer:</strong> <%= order.name %></div>
+                                <div class="order-details">
+                                    <p><strong>Email:</strong> <%= order.email %></p>
+                                    <p><strong>Phone:</strong> <%= order.phone %></p>
+                                    <p><strong>Needed By:</strong> <%= new Date(order.needByDate).toLocaleDateString('en-US') %></p>
+                                    <p><strong>Cake Type:</strong> <%= order.cakeType %></p>
+                                    <p><strong>Frosting:</strong> <%= order.frosting %></p>
+                                    <p><strong>Size:</strong> <%= order.size %></p>
+                                    <p><strong>Shape:</strong> <%= order.shape %></p>
+                                    <p><strong>Details:</strong> <%= order.description %></p>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% }) %>
+                </div>
+            </div>
+            <% if (status !== "Completed") { %>
+                <hr class="section-divider">
             <% } %>
-        </tbody>
-    </table>
+        <% }) %>
 
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".order-status").forEach(select => {
+                select.addEventListener("change", function () {
+                    const orderID = this.dataset.orderid;
+                    const newStatus = this.value;
+                    const orderCard = this.closest(".order-card");
+    
+                    // Send status update to backend
+                    fetch("/update_order_status", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ orderID, status: newStatus })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log(`Order ${orderID} status updated to ${newStatus}`);
+                            moveOrder(orderCard, newStatus);
+                        } else {
+                            alert("Failed to update order status.");
+                        }
+                    })
+                    .catch(error => console.error("Error updating order:", error));
+                });
+            });
+    
+            function moveOrder(orderCard, status) {
+                // Remove the order card from its current section
+                orderCard.remove();
+    
+                // Append it to the correct section based on the new status
+                const targetGrid = document.getElementById(status.toLowerCase() + "Grid");
+                if (targetGrid) {
+                    targetGrid.appendChild(orderCard);
+                }
+            }
+        });
+    </script>
+    
 </body>
 </html>
