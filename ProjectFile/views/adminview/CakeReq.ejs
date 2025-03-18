@@ -73,6 +73,10 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("descriptionModal");
+            const modalContent = document.querySelector(".modal-content");
+            const descriptionText = document.getElementById("descriptionText");
+
             // Handle Order Status Change
             document.querySelectorAll(".order-status").forEach(select => {
                 select.addEventListener("change", function () {
@@ -110,38 +114,29 @@
                 }
             }
     
+            // Ensure modal is hidden on page load
+            modal.style.display = "none";
+
             // Attach event listener to "View More" buttons
             document.querySelectorAll(".view-more-btn").forEach(button => {
                 button.addEventListener("click", function () {
                     // Get description from the button's data attribute
-                    const description = this.getAttribute("data-description");
+                    const description = this.getAttribute("data-description") || "No description provided.";
     
                     // Set the modal content
-                    document.getElementById("descriptionText").innerText = description || "No description provided.";
-    
+                    descriptionText.innerText = description;
+
                     // Show the modal
-                    document.getElementById("descriptionModal").style.display = "block";
+                    modal.style.display = "flex";
                 });
             });
     
-            // Function to close the modal
-            document.getElementById("descriptionModal").addEventListener("click", function (event) {
-                if (event.target.classList.contains("modal") || event.target.classList.contains("close-btn")) {
-                    this.style.display = "none";
-                }
-            });
-    
-            function closeDescription() {
-                document.getElementById("descriptionModal").style.display = "none";
-            }
-    
-            // Close modal when clicking outside of it
-            window.onclick = function(event) {
-                let modal = document.getElementById("descriptionModal");
-                if (event.target === modal) {
+            // Close modal when clicking outside of it or on the close button
+            modal.addEventListener("click", function (event) {
+                if (event.target === modal || event.target.classList.contains("close-btn")) {
                     modal.style.display = "none";
                 }
-            };
+            });
         });
     </script>
     
