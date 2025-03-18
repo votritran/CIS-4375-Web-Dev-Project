@@ -1,0 +1,356 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f4e5;
+    padding: 20px;
+    margin-top: 160px;
+    margin-bottom: 100px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h2 {
+    text-align: center;
+    color: #8b4513;
+}
+label {
+    font-weight: bold;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    background-color: #8b4513;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+button:hover {
+    background-color: #6a2c0f;
+}
+.disclaimer {
+    text-align: center;
+    font-size: 14px;
+    color: red;
+    margin-top: 15px;
+}
+
+h1 {
+    color: #8b4513;
+}
+
+.header {
+
+    font-family: 'Dancing Script', cursive;
+    text-align: center;
+    font-size: 40px;
+    
+}
+.loginbutton {
+    margin-bottom: 10px;
+}
+
+.event-container {
+    display: flex;               /* Enable flexbox for the container */
+    width: 1000px; 
+    background: #8b4513;
+    margin: auto;
+    padding: 20px;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex-wrap: wrap;             /* Allow items to wrap when needed */
+    justify-content: center;     /* Center the items horizontally */
+    gap: 20px;                   /* Space between event items */
+}
+
+.event-container .event-item {
+    display: flex;               /* Enable flexbox for event-item */
+    width: 100%;                 
+    height: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f4e5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-radius: 40px;
+    flex-direction: column;      /* Stack content vertically */
+    justify-content: center;     /* Center the content vertically */
+    align-items: center;         /* Center the content horizontally */
+}
+
+
+/* Event image styling */
+.event-container .event-item img {
+
+    width: 100%;                 /* Ensure the image takes the full width of the event item */
+    height: 400px;               /* Maintain aspect ratio of the image */
+    max-width: 1160px;           /* Limit the maximum width of the image */
+    border-radius: 40px;
+    object-fit: cover;
+
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    .event-container .event-item {
+        width: 95%;               /* For tablets, set the item width to 45% */
+    }
+}
+
+@media (max-width: 480px) {
+    .event-container .event-item {
+        width: 95%;              /* For small screens, set the item width to 100% */
+    }
+}
+
+
+
+@media (max-width: 480px) {
+.event-container .event-item {
+    width: 95%;              /* For small screens, set the item width to 100% */
+}
+}
+
+
+.footer {
+    background-color: #8b4513;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0; /* Ensure it starts from the very left of the screen */
+    width: 100%; /* Full width */
+    height: 50px;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    z-index: 100; /* Ensure footer is above other content */
+}
+
+/* CSS for the Slider */
+.slider-container {
+    
+    position: relative;
+    background-color: #d3c8c3;
+    width: 100%;
+    max-width: 1000px;
+    min-width: 500px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+}
+
+.event-slide {
+    display: none;
+    width: 100%;
+}
+
+.active {
+    display: block;
+}
+
+.slider-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.prev, .next {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 18px;
+    padding: 10px;
+    width: 40px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.event-item {
+    text-align: center;
+    padding: 20px;
+}
+
+.event-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.event-description {
+    margin-top: 15px;
+}
+
+.dot-container {
+    text-align: center;
+    padding-top: 10px;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    margin: 0 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+.dot:hover{
+    background-color: #71717148;
+}
+
+.active-dot {
+    background-color: #71717148;
+}
+
+.add-event-form {
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+}
+
+.add-event-form label {
+    display: block;
+    font-size: 1em;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.add-event-form input,
+.add-event-form textarea {
+    width: 95%;
+    padding: 8px;
+    margin-bottom: 12px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.centered {
+    text-align: center; /* Horizontally center text */
+}
+
+/* Dropdown Button Style */
+.dropdown-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.dropdown-btn:hover {
+    background-color: #052e07;
+}
+
+.event-dropdown-btn {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.event-dropdown-btn:hover{
+    background-color: #0c2d67;
+}
+
+/* Dropdown Form Style */
+.dropdown-form {
+    display: none;
+    padding: 20px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    width: 80%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.dropdown-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-form button:hover {
+    background-color: rgb(6, 80, 6);
+}
+.dropdown-form .eventbutton {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-form .eventbutton:hover {
+    background-color: #0c2d67;
+}
+.delete-btn {
+    background-color: #d8010c;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    width: 300px;
+}
+
+.delete-btn:hover {
+    background-color: #800205;
+}
+
+.no-events {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1.5em;
+    color: #555;
+}

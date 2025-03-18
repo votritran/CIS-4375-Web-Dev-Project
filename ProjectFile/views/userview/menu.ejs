@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Sweet Patisserie - Menu</title>
+    <link rel="stylesheet" href="../css/menustyles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <%- include('../partials/navbar') %>
+
+    <!-- Main header -->
+    <h1 class="header">Our Delicious Menu</h1>
+
+    <!-- Menu Section -->
+    <div class="tabs">
+        <% menuItems.forEach(function(category) { %>
+            <div class="tab" data-tab="<%= category.categoryName %>">
+                <%= category.categoryName %>
+            </div>
+        <% }); %>
+    </div>
+
+    <div id="menu">
+        <% menuItems.forEach(function(category) { %>
+            <div class="menu-container" id="<%= category.categoryName %>">
+                <h2><%= category.categoryName %></h2>
+                <div class="menu-items">
+                    <% category.products.forEach(function(item) { %>
+                        <div class="menu-item">
+                            <h3><%= item.productName %></h3>
+                            <img src="<%= item.ProductImage || '/photo/default-image.jpg' %>" alt="<%= item.productName %>" class="menu-image">
+                            <p> <%= item.ProductDescription %></p>
+
+                            <% if (item.Sizes.length > 0) { %>
+                                <% item.Sizes.forEach(function(size) { %>
+                                    <p class="price"><strong></strong><%= size.size %>: $<%= size.price.toFixed(2) %></strong></p>
+                                <% }); %>
+                            <% } else { %>
+                                <!-- Display the product price if no sizes are available -->
+                                <p class="price"><strong>$<%= item.ProductPrice.toFixed(2) %></strong></p>
+                            <% } %> 
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+
+    <!-- Link to external JavaScript file -->
+    <script src="../js/menu.js"></script>
+</body>
+</html>
