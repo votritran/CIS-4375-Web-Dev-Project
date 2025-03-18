@@ -233,7 +233,7 @@ def update_menuitem():
 
 # Route to serve the update-menu.html and update the menu after deleting a menu item
 @app.route('/delete_menuitem/update', methods=['GET', 'DELETE'])
-def update_menu():
+def delete_menuitem():
     connection = create_connection()
     
     if request.method == 'GET':
