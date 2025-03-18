@@ -1,5 +1,5 @@
 body {
-    padding-top: 160px;
+    padding-top: 20px; 
     font-family: Arial, sans-serif;
     background-color: #f8f4e5;
     margin: 0;
@@ -36,7 +36,9 @@ body {
 }
 
 h2 {
-    font-size: 30px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 36px;
+    font-weight: bold;
     color: #8b4513;
     text-align: center;
     margin-bottom: 10px;
@@ -128,4 +130,12 @@ h2 {
 
 .view-more-btn:hover {
     background-color: #5a2d0c;
+}
+
+/* Prevent CakeReq styles from overriding the navbar font */
+/* Ensure navbar keeps its original font */
+.navbar, .navbar * {
+    font-family: 'Dancing Script', cursive !important;
+    font-size: 20px !important;
+    font-weight: normal !important;
 }
