@@ -41,7 +41,14 @@
                                     <p><strong>Frosting:</strong> <%= order.frosting %></p>
                                     <p><strong>Size:</strong> <%= order.size %></p>
                                     <p><strong>Shape:</strong> <%= order.shape %></p>
-                                    <p><strong>Details:</strong> <%= order.description %></p>
+                                    
+                                    <% if (order.description && order.description.trim() !== "") { %>
+                                        <button class="view-more-btn" data-description="<%= order.description.replace(/"/g, '&quot;').replace(/'/g, "\\'") %>">
+                                            View More
+                                        </button>
+                                    <% } else { %>
+                                        <p><strong>Description:</strong> No description provided.</p>
+                                    <% } %>
                                 </div>
                             </div>
                         <% } %>
@@ -55,8 +62,18 @@
 
     </div>
 
+    <!-- Description Popup Modal -->
+    <div id="descriptionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeDescription()">&times;</span>
+            <h3>Order Description</h3>
+            <p id="descriptionText"></p>
+        </div>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Handle Order Status Change
             document.querySelectorAll(".order-status").forEach(select => {
                 select.addEventListener("change", function () {
                     const orderID = this.dataset.orderid;
@@ -92,8 +109,42 @@
                     targetGrid.appendChild(orderCard);
                 }
             }
+    
+            // Attach event listener to "View More" buttons
+            document.querySelectorAll(".view-more-btn").forEach(button => {
+                button.addEventListener("click", function () {
+                    // Get description from the button's data attribute
+                    const description = this.getAttribute("data-description");
+    
+                    // Set the modal content
+                    document.getElementById("descriptionText").innerText = description || "No description provided.";
+    
+                    // Show the modal
+                    document.getElementById("descriptionModal").style.display = "block";
+                });
+            });
+    
+            // Function to close the modal
+            document.getElementById("descriptionModal").addEventListener("click", function (event) {
+                if (event.target.classList.contains("modal") || event.target.classList.contains("close-btn")) {
+                    this.style.display = "none";
+                }
+            });
+    
+            function closeDescription() {
+                document.getElementById("descriptionModal").style.display = "none";
+            }
+    
+            // Close modal when clicking outside of it
+            window.onclick = function(event) {
+                let modal = document.getElementById("descriptionModal");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
         });
     </script>
+    
     
 </body>
 </html>

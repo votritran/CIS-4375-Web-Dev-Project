@@ -36,7 +36,7 @@ body {
 }
 
 h2 {
-    font-size: 24px;
+    font-size: 30px;
     color: #8b4513;
     text-align: center;
     margin-bottom: 10px;
@@ -76,4 +76,55 @@ h2 {
     align-items: center;
     position: relative; /* Allows dropdown positioning */
     padding-bottom: 10px;
+}
+
+/* Modal Background */
+.modal {
+    display: none; /* Ensures it is hidden on page load */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Content */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    
+}
+
+
+/* Close Button */
+.close-btn {
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* "View More" Button */
+.view-more-btn {
+    background-color: #8b4513;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.view-more-btn:hover {
+    background-color: #5a2d0c;
 }
