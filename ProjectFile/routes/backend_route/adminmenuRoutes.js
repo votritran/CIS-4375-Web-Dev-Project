@@ -74,7 +74,7 @@ router.get('/adminmenu', isAuthenticated, (req, res) => {
 });
 
 
-router.post('/adminmenu/add', upload.single('productImage'), (req, res) => {
+router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (req, res) => {
     const { productName, productDescription, productPrice, productSize, categoryName } = req.body;
     const file = req.file;
 
@@ -115,7 +115,7 @@ router.post('/adminmenu/add', upload.single('productImage'), (req, res) => {
     });
 });
 
-router.post('/adminmenu/delete/:productId', (req, res) => {
+router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
     const productId = req.params.productId;
 
     // Fetch product image URL from the database
@@ -166,7 +166,7 @@ router.post('/adminmenu/delete/:productId', (req, res) => {
     });
 });
 
-router.post('/adminmenu/update/:productId', upload.single('newImage'), (req, res) => {
+router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => {
     const { productId } = req.params;
     const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
     const newImage = req.file;

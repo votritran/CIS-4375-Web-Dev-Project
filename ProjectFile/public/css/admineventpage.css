@@ -148,6 +148,7 @@ h1 {
     background-color: #d3c8c3;
     width: 100%;
     max-width: 1000px;
+    min-width: 500px;
     margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
@@ -194,7 +195,7 @@ h1 {
 
 .event-image {
     width: 100%;
-    height: 500px;
+    height: 400px;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -268,6 +269,28 @@ h1 {
     width: 200px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.dropdown-btn:hover {
+    background-color: #052e07;
+}
+
+.event-dropdown-btn {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.event-dropdown-btn:hover{
+    background-color: #0c2d67;
 }
 
 /* Dropdown Form Style */
@@ -281,14 +304,53 @@ h1 {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
 }
 
-/* Add an arrow for the dropdown button */
-.dropdown-btn:after {
-    content: '\25BC'; /* Downwards arrow */
-    
+.dropdown-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
 }
 
-.dropdown-btn.active:after {
-    content: '\25B2'; /* Upwards arrow */
+.dropdown-form button:hover {
+    background-color: rgb(6, 80, 6);
+}
+.dropdown-form .eventbutton {
+    background-color: #0e40c9;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-form .eventbutton:hover {
+    background-color: #0c2d67;
+}
+.delete-btn {
+    background-color: #d8010c;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    width: 300px;
+}
+
+.delete-btn:hover {
+    background-color: #800205;
+}
+
+.no-events {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1.5em;
+    color: #555;
 }
