@@ -82,35 +82,49 @@ router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (r
         return res.status(400).send('No file uploaded.');
     }
 
-    // Upload image to S3
-    const params = {
-        Bucket: 'cis4375tv', // Your S3 bucket name
-        Key: `menu-items/${Date.now()}-${file.originalname}`, // Unique file name
-        Body: file.buffer,
-        ContentType: file.mimetype,
-        ACL: 'public-read' // Make it publicly readable
-    };
-
-    s3.upload(params, (err, data) => {
+    // Query to get the latest OwnerID from the Owner table and put it into the OwnerID column of the Products table
+    connection.query('SELECT OwnerID FROM Owner ORDER BY OwnerID DESC LIMIT 1', (err, result) => {
         if (err) {
-            console.error('Error uploading image to S3:', err);
-            return res.status(500).send('Error uploading image to S3');
+            console.error('Error fetching latest OwnerID:', err);
+            return res.status(500).send('Error fetching latest OwnerID');
         }
 
-        // Image URL from S3
-        const imageUrl = data.Location;
+        const ownerID = result[0]?.OwnerID;
 
-        // Save the menu item to the database
-        const query = `
-            INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-        connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl], (err, result) => {
+        if (!ownerID) {
+            return res.status(500).send('No Owner found in the Owner table');
+        }
+
+        // Upload image to S3
+        const params = {
+            Bucket: 'cis4375tv', // Your S3 bucket name
+            Key: `menu-items/${Date.now()}-${file.originalname}`, // Unique file name
+            Body: file.buffer,
+            ContentType: file.mimetype,
+            ACL: 'public-read' // Make it publicly readable
+        };
+
+        s3.upload(params, (err, data) => {
             if (err) {
-                console.error('Error adding menu item:', err);
-                return res.status(500).send('Error adding menu item');
+                console.error('Error uploading image to S3:', err);
+                return res.status(500).send('Error uploading image to S3');
             }
-            res.redirect('/adminmenu');
+
+            // Image URL from S3
+            const imageUrl = data.Location;
+
+            // Save the menu item to the database, now including OwnerID
+            const query = `
+                INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage, OwnerID)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl, ownerID], (err, result) => {
+                if (err) {
+                    console.error('Error adding menu item:', err);
+                    return res.status(500).send('Error adding menu item');
+                }
+                res.redirect('/adminmenu');
+            });
         });
     });
 });
