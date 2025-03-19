@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
+    <link rel="stylesheet" href="/css/thankyou.css"> <!-- Correct CSS path -->
+</head>
+<body>
+
+    <!-- Include Navbar -->
+    <%- include('../partials/navbar') %>
+
+    <div class="thank-you-content">
+        <h1>Thank you for submitting your custom cake request!</h1>
+        <p style="font-family: Arial, sans-serif;">We have received your cake details and will be reaching out soon.</p>
+        <p style="font-family: Arial, sans-serif;">Feel free to resubmit another Custom Cake Request form at <a href="/cakeorder">Custom Cakes</a></p>
+    </div>
+
+    <!-- Include Footer -->
+    <%- include('../partials/footer') %>
+
+    <!-- Confetti Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="/js/confetti.js"></script> <!-- Custom confetti script -->
+</body>
+</html>
