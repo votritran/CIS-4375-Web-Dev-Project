@@ -1,9 +1,7 @@
 const express = require('express');
-const router = express.Router(); // This was 'route' in your code, change it to 'router'
-
-// Assuming you have bcrypt and connection set up already
+const router = express.Router();
 const bcrypt = require('bcrypt');
-const connection = require('../../config/dbconnection'); // Import your database connection
+const connection = require('../../config/dbconnection');
 
 router.get('/login', (req, res) => {
     res.render('login');
@@ -27,39 +25,41 @@ router.post('/login', async (req, res) => {
                 const validPassword = await bcrypt.compare(password, owner.OwnerPassword);
 
                 if (validPassword) {
+                    req.session.owner = { 
+                        OwnerID: owner.OwnerID, 
+                        passwordLastChanged: owner.password_last_changed 
+                    };
+                    req.session.role = 'admin';
+                
+                    const passwordLastChanged = new Date(owner.password_last_changed);
+                    const passwordExpiration = new Date(passwordLastChanged);
+                    passwordExpiration.setDate(passwordExpiration.getDate() + 90);
+                
+                    const now = new Date();
+                    
+                    if (now > passwordExpiration) {
+                        res.cookie('userRole', 'admin', { httpOnly: true, maxAge: 86400000 })
+                        return res.status(200).json({
+                            role: 'admin',
+                            message: 'Your password has expired. Please update it.',
+                            redirect: '/account'
+                        });
+                    }
+                    res.cookie('userRole', 'admin', { httpOnly: true, maxAge: 86400000 });
+                
                     return res.status(200).json({
                         role: 'admin',
-                        redirect: '/'
+                        redirect: '/adminhome'
                     });
                 }
+                
             }
 
-            connection.query(
-                'SELECT * FROM Customer WHERE CustomerEmail = ?',
-                [email_or_username],
-                async (err, results) => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).json({ message: "Database error" });
-                    }
-
-                    if (results.length > 0) {
-                        const customer = results[0];
-                        const validPassword = await bcrypt.compare(password, customer.CustomerPassword);
-
-                        if (validPassword) {
-                            return res.status(200).json({
-                                role: 'customer',
-                                redirect: '/menu'
-                            });
-                        }
-                    }
-
-                    res.status(401).json({ message: "Invalid credentials" });
-                }
-            ); 
+            res.status(401).json({ message: "Invalid credentials" });
         }
     );
 });
 
 module.exports = router;
+
+

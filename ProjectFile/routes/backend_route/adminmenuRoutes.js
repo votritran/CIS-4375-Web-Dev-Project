@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();  // Use Express Router for modular routes
 const connection = require('../../config/dbconnection');  // Import the DB connection
 const path = require('path');
-const AWS = require('aws-sdk');
 const multer = require('multer');  // For handling file uploads
+const AWS = require('aws-sdk');    // For AWS S3
+const isAuthenticated = require('../../middleware/auth');
 
-// AWS S3 setup
 AWS.config.update({
     accessKeyId: 'AKIAXFG5L4NB7TWHTIMP',
     secretAccessKey: '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',
@@ -18,8 +18,8 @@ const s3 = new AWS.S3();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Route to fetch menu items from the database and render them in 'adminmenu.ejs'
-router.get('/adminmenu', (req, res) => {
+// Route to fetch menu items from the database and render them in 'menu.ejs'
+router.get('/adminmenu', isAuthenticated, (req, res) => {
     // Fetch menu items from the database
     connection.query('SELECT * FROM Products', (err, results) => {
         if (err) {
@@ -27,154 +27,236 @@ router.get('/adminmenu', (req, res) => {
             return res.status(500).send('Error fetching menu items');
         }
 
-        // Group menu items by category
+        // Group menu items by category and product name
         const menuItems = results.reduce((categories, item) => {
             const category = item.CategoryName || 'Uncategorized';
+            const productName = item.ProductName;
+
+            // If category doesn't exist, create it
             if (!categories[category]) {
-                categories[category] = [];
+                categories[category] = {};
             }
-            categories[category].push(item);
+
+            // If product name doesn't exist in this category, create it
+            if (!categories[category][productName]) {
+                categories[category][productName] = {
+                    ProductID: item.ProductID,
+                    ProductDescription: item.ProductDescription,
+                    ProductImage: item.ProductImage,
+                    ProductPrice: item.ProductPrice,
+                    Sizes: []  // Array to store sizes and prices
+                };
+            }
+
+            // Add the size and price to the product (if size exists)
+            if (item.ProductSize) {
+                categories[category][productName].Sizes.push({
+                    size: item.ProductSize,
+                    price: item.ProductPrice
+                });
+            }
+
             return categories;
         }, {});
 
-        // Render 'menu' view and pass grouped menu items
-        res.render(path.join(__dirname, '../../views', 'adminview', 'adminmenu'), { menuItems });
+        // Convert the grouped data back into an array of categories and products
+        const groupedMenuItems = Object.keys(menuItems).map(category => ({
+            categoryName: category,
+            products: Object.keys(menuItems[category]).map(productName => ({
+                productName: productName,
+                ...menuItems[category][productName]
+            }))
+        }));
+
+        // Render the 'adminmenu' view and pass grouped menu items
+        res.render(path.join(__dirname, '../../views', 'adminview', 'adminmenu'), { menuItems: groupedMenuItems });
     });
 });
 
-// Upload image to S3 and insert new product into the database
-// POST route to handle updating menu items
-router.post('/update-product', upload.single('productImage'), (req, res) => {
-    // Extract the required fields from the request body, including the product ID and new values
-    const { productID, newName, newPrice, newDescription, newSize, newCategory } = req.body;
-    const file = req.file;  // Extract the uploaded file from the request
 
-    // Ensure that the request includes a product ID; otherwise, return a 400 Bad Request error
-    if (!productID) {
-        return res.status(400).json({ message: 'Product ID is required' });
+router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (req, res) => {
+    const { productName, productDescription, productPrice, productSize, categoryName } = req.body;
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).send('No file uploaded.');
     }
 
-    // Initialize an array to store update queries and their corresponding values
-    let updates = [];
-    let values = [];
-    let imageUrl = null;  // Variable to store the new image URL if an image is uploaded
+    // Upload image to S3
+    const params = {
+        Bucket: 'cis4375tv', // Your S3 bucket name
+        Key: `menu-items/${Date.now()}-${file.originalname}`, // Unique file name
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: 'public-read' // Make it publicly readable
+    };
 
-    // If a new product name is provided, add it to the update query and values array
-    if (newName) {
-        updates.push('ProductName = ?');
-        values.push(newName);
-    }
-
-    // If a new price is provided, add it to the update query and values array
-    if (newPrice) {
-        updates.push('ProductPrice = ?');
-        values.push(newPrice);
-    }
-
-    // If a new description is provided, add it to the update query and values array
-    if (newDescription) {
-        updates.push('ProductDescription = ?');
-        values.push(newDescription);
-    }
-
-    // If a new size is provided, add it to the update query and values array
-    if (newSize) {
-        updates.push('ProductSize = ?');
-        values.push(newSize);
-    }
-
-    // If a new category is provided, add it to the update query and values array
-    if (newCategory) {
-        updates.push('CategoryName = ?');
-        values.push(newCategory);
-    }
-
-    // Check if a new image file is provided in the request
-    if (file) {
-        // Define parameters for uploading the image to AWS S3
-        const params = {
-            Bucket: 'cis4375tv',  // The name of the S3 bucket
-            Key: `menu-items/${Date.now()}-${file.originalname}`, // Unique filename based on timestamp
-            Body: file.buffer,  // The image data
-            ContentType: file.mimetype,  // The content type of the image (e.g., image/jpeg)
-            ACL: 'public-read',  // Set the file to be publicly readable
-        };
-
-        // Upload the image to S3
-        s3.upload(params, (err, data) => {
-            if (err) {
-                console.error('Error uploading image to S3:', err);
-                return res.status(500).send('Error uploading image to S3');  // Return an error response if upload fails
-            }
-
-            // Store the new image URL from the S3 response
-            imageUrl = data.Location;
-            updates.push('ProductImage = ?');  // Add the image update to the SQL query
-            values.push(imageUrl);  // Store the new image URL in the values array
-
-            // Proceed with updating the product in the database after the image is uploaded
-            updateProductInDatabase();
-        });
-    } else {
-        // If no new image is provided, proceed with updating the product without modifying the image
-        updateProductInDatabase();
-    }
-
-    // Function to update the product in the database
-    function updateProductInDatabase() {
-        // If a new image was uploaded, fetch and delete the old image from S3
-        if (imageUrl) {
-            connection.query('SELECT ProductImage FROM Products WHERE ProductID = ?', [productID], (err, result) => {
-                if (err) {
-                    console.error('Error fetching product image:', err);
-                    return res.status(500).send('Error fetching product image');
-                }
-
-                // If no product is found, return a 404 error
-                if (result.length === 0) {
-                    return res.status(404).send('Product not found');
-                }
-
-                // Extract the old image URL from the database result
-                const oldImageUrl = result[0].ProductImage;
-                if (oldImageUrl) {
-                    // Extract the image key from the S3 URL
-                    const imageKey = oldImageUrl.split('amazonaws.com/')[1];
-
-                    // Define parameters for deleting the image from S3
-                    const s3Params = {
-                        Bucket: 'cis4375tv', // The S3 bucket name
-                        Key: imageKey,  // The unique key for the image in S3
-                    };
-
-                    // Delete the old image from S3
-                    s3.deleteObject(s3Params, (err, data) => {
-                        if (err) {
-                            console.error('Error deleting image from S3:', err);
-                        } else {
-                            console.log('Old image deleted successfully');  // Log success if deletion is successful
-                        }
-                    });
-                }
-            });
+    s3.upload(params, (err, data) => {
+        if (err) {
+            console.error('Error uploading image to S3:', err);
+            return res.status(500).send('Error uploading image to S3');
         }
 
-        // Construct the SQL query dynamically using the fields to be updated
-        let query = `UPDATE Products SET ${updates.join(', ')} WHERE ProductID = ?`;
-        values.push(productID);  // Append the product ID to the values array for the WHERE clause
+        // Image URL from S3
+        const imageUrl = data.Location;
 
-        // Execute the SQL query to update the product in the database
-        connection.query(query, values, (err, result) => {
+        // Save the menu item to the database
+        const query = `
+            INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl], (err, result) => {
             if (err) {
-                console.error('Error updating product:', err);
-                return res.status(500).json({ message: 'Error updating product' }); // Return an error if the update fails
+                console.error('Error adding menu item:', err);
+                return res.status(500).send('Error adding menu item');
+            }
+            res.redirect('/adminmenu');
+        });
+    });
+});
+
+router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
+    const productId = req.params.productId;
+
+    // Fetch product image URL from the database
+    connection.query('SELECT ProductImage FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+        if (err) {
+            console.error('Error fetching product image:', err);
+            return res.status(500).send('Error fetching product image');
+        }
+
+        if (result.length === 0) {
+            return res.status(404).send('Product not found');
+        }
+
+        const imageUrl = result[0].ProductImage;
+
+        // Extract the S3 object key (path after 'amazonaws.com/')
+        const imageKey = imageUrl.split('amazonaws.com/')[1];
+
+        // Ensure the image key is extracted correctly
+        if (!imageKey) {
+            console.error('No valid image key found in URL:', imageUrl);
+            return res.status(500).send('Error: Invalid image URL');
+        }
+
+        // Delete the image from S3
+        const s3Params = {
+            Bucket: 'cis4375tv', // Your S3 bucket name
+            Key: imageKey // Extracted key from image URL
+        };
+
+        s3.deleteObject(s3Params, (err, data) => {
+            if (err) {
+                console.error('Error deleting image from S3:', err);
+                return res.status(500).send('Error deleting image from S3');
             }
 
-            // If the update is successful, send a success response
-            res.json({ message: 'Product updated successfully' });
+            // After successfully deleting the image, delete the product from the database
+            connection.query('DELETE FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+                if (err) {
+                    console.error('Error deleting product from database:', err);
+                    return res.status(500).send('Error deleting product from database');
+                }
+
+                // Redirect back to the menu page after successful deletion
+                res.redirect('/adminmenu');
+            });
         });
-    }
+    });
 });
+
+router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => {
+    const { productId } = req.params;
+    const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
+    const newImage = req.file;
+
+    // Get the current product details before update
+    connection.query('SELECT * FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+        if (err) {
+            console.error('Error fetching product details:', err);
+            return res.status(500).send('Error fetching product details');
+        }
+
+        if (result.length === 0) {
+            return res.status(404).send('Product not found');
+        }
+
+        const currentProduct = result[0];
+        const updatedName = newName || currentProduct.ProductName;
+        const updatedDescription = newDescription || currentProduct.ProductDescription;
+        const updatedPrice = newPrice || currentProduct.ProductPrice;
+        const updatedSize = newSize || currentProduct.ProductSize;
+        const updatedCategory = newCategory || currentProduct.CategoryName;
+        let updatedImageUrl = currentProduct.ProductImage;  // Keep the existing image URL by default
+
+        // If a new image is uploaded, upload it to S3 and delete the old one
+        if (newImage) {
+            // Upload the new image to S3
+            const params = {
+                Bucket: 'cis4375tv',
+                Key: `menu-items/${Date.now()}-${newImage.originalname}`,
+                Body: newImage.buffer,
+                ContentType: newImage.mimetype,
+                ACL: 'public-read'
+            };
+
+            s3.upload(params, (err, data) => {
+                if (err) {
+                    console.error('Error uploading image to S3:', err);
+                    return res.status(500).send('Error uploading image to S3');
+                }
+
+                updatedImageUrl = data.Location;
+
+                // Delete the old image from S3
+                const imageKey = currentProduct.ProductImage.split('amazonaws.com/')[1];
+                const s3Params = {
+                    Bucket: 'cis4375tv',
+                    Key: imageKey
+                };
+
+                s3.deleteObject(s3Params, (err) => {
+                    if (err) {
+                        console.error('Error deleting old image from S3:', err);
+                        return res.status(500).send('Error deleting old image');
+                    }
+
+                    // Proceed to update product details in the database
+                    const updateQuery = `
+                        UPDATE Products
+                        SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                        WHERE ProductID = ?
+                    `;
+                    connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                        if (err) {
+                            console.error('Error updating product:', err);
+                            return res.status(500).send('Error updating product');
+                        }
+
+                        res.redirect('/adminmenu');
+                    });
+                });
+            });
+        } else {
+            // No new image, just update the other fields
+            const updateQuery = `
+                UPDATE Products
+                SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?
+                WHERE ProductID = ?
+            `;
+            connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, productId], (err, result) => {
+                if (err) {
+                    console.error('Error updating product:', err);
+                    return res.status(500).send('Error updating product');
+                }
+
+                res.redirect('/adminmenu');
+            });
+        }
+    });
+});
+
 
 
 module.exports = router;  // Export the router to be used in server.js

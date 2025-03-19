@@ -1,12 +1,8 @@
 const express = require('express');
+const isAuthenticated = require('../../middleware/auth');
 const router = express.Router();
-
-router.get('/', (req, res) => {
-
-    if (req.session && req.session.owner) {
-        // If the user is logged in, redirect to the admin home page
-        return res.redirect('/adminhome');  // Redirect to the admin (admin home page)
-    }
+const path = require('path');
+router.get('/adminhome', isAuthenticated,(req, res) => {
     // Corrected slideshow images array
     const slideshowImages = [
         '/photo/slideshow/france.jpg',
@@ -17,7 +13,7 @@ router.get('/', (req, res) => {
     ];
 
     // Render the 'home' view with the slideshow images array
-    res.render('home', { slideshowImages });
+    res.render(path.join(__dirname, '../../views', 'adminview', 'adminhome'), { slideshowImages });
 });
 
 module.exports = router;

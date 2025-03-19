@@ -1,0 +1,460 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f4e5;
+    padding: 20px;
+    margin-top: 180px;
+    margin-bottom: 100px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #8b4513;
+}
+
+label {
+    font-weight: bold;
+}
+
+button {
+    background-color: #8b4513;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #6a2c0f;
+}
+
+.disclaimer {
+    text-align: center;
+    font-size: 14px;
+    color: red;
+    margin-top: 15px;
+}
+
+h1 {
+    color: #8b4513;
+}
+
+.menu-container {
+    font-family: 'Dancing Script', cursive;
+    font-size: 25px;
+    width: 80%;
+    max-width: 800px;
+    min-width: 450px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.menu-container h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 36px;
+    margin-bottom: 40px;
+}
+
+.menu-item {
+    font-family: 'Dancing Script', cursive;
+    display: inline-block;
+    width: 270px;
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-radius: 40px;
+    vertical-align: top;
+}
+
+.deletebutton {
+    background-color: rgb(199, 0, 0);
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 40%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.deletebutton:hover {
+    background-color: rgb(100, 1, 1);
+}
+
+.updatebutton {
+    background-color: rgb(0, 119, 199);
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-top: 10px;
+    width: 40%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.updatebutton:hover {
+    background-color: rgb(1, 45, 82);
+}
+
+.menu-item img {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 15px;
+    border-radius: 30px;
+}
+
+.menu-item h3 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.menu-item p {
+    font-size: 18px;
+    color: #555;
+}
+
+.menu-item .price {
+    font-size: 20px;
+    color: #000000;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.header {
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 40px;
+}
+
+#menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.category {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.category-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+    width: 100%;
+    text-align: center;
+}
+
+.product {
+    width: 200px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex: 1 1 200px;
+    text-align: center;
+}
+
+.product h3 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.product p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.product strong {
+    color: #333;
+}
+
+/* Optional: Add media query for responsive menu layout */
+@media (max-width: 600px) {
+    #menu {
+        padding: 10px;
+    }
+
+    .category {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .product {
+        width: 100%;
+        padding: 8px;
+    }
+}
+
+/* Style for the product images */
+.menu-image {
+    width: 100%;
+    min-width: 200px;
+    max-width: 200px;
+    max-height: 200px;
+    min-height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 15px;
+}
+
+.footer {
+    background-color: #8b4513;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #8b4513;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.tab:hover {
+    background-color: #7a3f10;
+}
+
+.tab.active {
+    background-color: #5a2d05;
+}
+
+.menu-container {
+    display: none;
+}
+
+.menu-container.active {
+    display: block;
+}
+
+/* Add Menu Item Form - Adjusted for Smaller Size */
+.add-menu-item {
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+}
+
+.add-menu-item h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.add-menu-item label {
+    display: block;
+    font-size: 1em;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.add-menu-item input,
+.add-menu-item textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.add-menu-item input[type="file"] {
+    padding: 5px;
+}
+
+.add-menu-item button {
+    padding: 10px 18px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-menu-item button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Design - Ensure the form is still usable on smaller screens */
+@media (max-width: 768px) {
+    .add-menu-item {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .add-menu-item h2 {
+        font-size: 1.3em;
+    }
+
+    .add-menu-item label {
+        font-size: 0.9em;
+    }
+
+    .add-menu-item input,
+    .add-menu-item textarea {
+        padding: 6px;
+    }
+
+    .add-menu-item button {
+        padding: 8px 15px;
+        font-size: 1em;
+    }
+}
+
+.update-form-container {
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.update-form-container h4 {
+    font-size: 1em;
+    margin-bottom: 20px;
+    color: #8b4513; /* You can adjust this color */
+    text-align: center;
+}
+
+.update-form-container label {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    margin-top: 15px;
+}
+
+.update-form-container input,
+.update-form-container textarea {
+    width: 85%;
+    padding: 5px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 0.5em;
+    color: #333;
+    background-color: #fff;
+}
+
+.update-form-container textarea {
+    resize: vertical; /* Allow users to resize textarea vertically */
+    height: 100px; /* Set a default height for the textarea */
+}
+.update-form-container.show {
+    display: block;
+    max-height: 1000px;
+}
+
+/* Styles for the add menu item dropdown button */
+.dropdown-btn {
+    background-color: #4CAF50;
+    color: white;
+    width: 400px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.dropdown-btn:hover {
+    background-color: #16bb1e;
+}
+
+.add-menu-item {
+    display: none; /* Hide the form initially */
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-menu-item.show {
+    display: block; /* Show the form when toggled */
+}
+
+.add-menu-item form {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-menu-item label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.add-menu-item input,
+.add-menu-item textarea {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.add-menu-item button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.add-menu-item button:hover {
+    background-color: #45a049;
+}
+
+.centered {
+    text-align: center; /* Horizontally center text */
+    height: 200px; /* Make sure the container has a height */
+}
