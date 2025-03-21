@@ -1,5 +1,5 @@
 // Load confetti animation on page load
-document.addEventListener("DOMContentLoaded", function () {
+window.launchConfetti = function () {
     // Strong confetti burst lower on the screen
     confetti({
         particleCount: 250,   // More confetti for a bigger effect
@@ -26,4 +26,4 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
         confetti.reset();
     }, 5000);
-});
+};

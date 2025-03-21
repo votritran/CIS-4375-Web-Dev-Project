@@ -26,6 +26,8 @@
                 .then(data => {
                     document.getElementById("cakeOrderForm").reset(); // Clear the form
                     document.getElementById("thankYouModal").style.display = "flex";
+                    launchConfetti(); // 🎉 Fire the confetti when thank-you modal shows
+
                 })
                 .catch(error => console.error('Error:', error));
             });
@@ -117,6 +119,9 @@
             <button onclick="closeModal()">OK</button>
         </div>
     </div>
+    <!-- confetti after submission-->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="/js/confetti.js"></script>
 
     <!-- Footer Section -->
     <%- include('../partials/footer') %>
