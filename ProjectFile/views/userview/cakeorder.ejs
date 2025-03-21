@@ -24,12 +24,16 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert("Thank you for your order! We will contact you soon.");
-                    setTimeout(() => { window.location.href = '/cakeorder'; }, 2000);
+                    document.getElementById("cakeOrderForm").reset(); // Clear the form
+                    document.getElementById("thankYouModal").style.display = "flex";
                 })
                 .catch(error => console.error('Error:', error));
             });
         });
+        function closeModal() {
+        document.getElementById("thankYouModal").style.display = "none";
+        window.location.href = '/cakeorder'; // Refresh the page only after clicking OK
+        }
     </script>
     
 </head>
@@ -43,7 +47,7 @@
         <h2>Paris Sweet Patisserie - Cake Request Form</h2>
         <!-- thank you message after submit -->
 
-        <form action="/cakeorder" method="POST">
+        <form id="cakeOrderForm">
 
             <!-- client info -->
             <label for="name">Your Full Name:</label>
@@ -104,6 +108,14 @@
 
         <!-- disclaimer -->
         <p class="disclaimer">Filling out this form does not guarantee an order. We will contact you via phone or email to confirm if we can fulfill your cake request.</p>
+    </div>
+    <!-- custom message-->
+    <div id="thankYouModal" style="display: none;" class="modal-overlay">
+        <div class="modal-content">
+            <h3>From Paris Sweet Patisserie:</h3>
+            <p>Thank you for your submission! We will contact you soon.</p>
+            <button onclick="closeModal()">OK</button>
+        </div>
     </div>
 
     <!-- Footer Section -->

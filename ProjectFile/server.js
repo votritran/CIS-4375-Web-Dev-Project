@@ -11,7 +11,6 @@ const eventRoutes = require('./routes/frontend_route/eventRoutes');
 const contactusRoutes = require('./routes/frontend_route/contactusRoutes');
 const loginRoutes = require('./routes/frontend_route/loginRoutes');
 const forgotPasswordRoutes = require('./routes/frontend_route/forgotpasswordRoutes');
-const thankyouRoutes = require('./routes/frontend_route/thankyouRoutes');
 
 //backend routes
 const adminmenuRoutes = require('./routes/backend_route/adminmenuRoutes');
@@ -62,7 +61,6 @@ app.use(cakeorderRoutes);
 app.use(eventRoutes);
 app.use(contactusRoutes);
 app.use(loginRoutes);
-app.use(thankyouRoutes);
 //Backend
 app.use(emailRoutes); //Added email routes
 app.use(adminmenuRoutes);

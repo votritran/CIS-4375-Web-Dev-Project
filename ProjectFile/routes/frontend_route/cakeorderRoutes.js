@@ -22,7 +22,7 @@ router.post('/cakeorder', (req, res) => {
             return res.status(500).send("An error occurred. Please try again later.");
         }
         console.log("Cake order saved successfully!");
-        res.redirect('/cakeorder'); // Redirect after successful submission
+        res.json({ success: true, message: "Order received" });
     });
 });
 
