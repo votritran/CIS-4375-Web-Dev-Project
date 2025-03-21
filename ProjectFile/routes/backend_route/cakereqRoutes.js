@@ -42,5 +42,19 @@ router.post('/update_order_status', (req, res) => {
     });
 });
 
+// Delete Order
+router.post('/delete_order', (req, res) => {
+    const { orderID } = req.body;
+
+    const query = "DELETE FROM CakeOrder WHERE OrderID = ?";
+    db.query(query, [orderID], (err, result) => {
+        if (err) {
+            console.error("Error deleting order:", err);
+            return res.status(500).json({ success: false });
+        }
+        console.log(`Order ${orderID} deleted successfully`);
+        res.json({ success: true });
+    });
+});
 
 module.exports = router;

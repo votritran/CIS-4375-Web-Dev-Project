@@ -140,3 +140,20 @@ h2 {
     font-size: 20px !important;
     font-weight: normal !important;
 }
+.delete-btn {
+    background-color: #d9534f; /* red */
+    color: white;
+    font-weight: bold;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #c9302c;
+}
