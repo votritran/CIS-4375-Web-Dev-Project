@@ -5,7 +5,7 @@ const db = require('../../config/dbconnection');
 
 // Route to fetch Cake Orders and render CakeReq.ejs
 router.get('/cakereq', isAuthenticated, (req, res) => {
-    const query = "SELECT * FROM CakeOrder ORDER BY needByDate ASC";
+    const query = "SELECT * FROM CakeOrder ORDER BY OrderID ASC";
 
     db.query(query, (err, results) => {
         if (err) {
