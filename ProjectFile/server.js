@@ -14,6 +14,7 @@ const forgotPasswordRoutes = require('./routes/frontend_route/forgotpasswordRout
 
 //backend routes
 const adminmenuRoutes = require('./routes/backend_route/adminmenuRoutes');
+const admincontactusRoutes = require('./routes/backend_route/admincontactusRoutes');
 const emailRoutes = require('./routes/backend_route/emailRoutes')
 const logoutRoutes = require('./routes/backend_route/logoutRoutes');
 const accountRoutes = require('./routes/backend_route/accountRoutes');
@@ -70,6 +71,7 @@ app.use(accountRoutes);
 app.use(changepasswordRoutes);
 app.use(adminhomeRoutes)
 app.use(admineventRoutes); 
+app.use(admincontactusRoutes);
 app.use(cakeorderBackendRoutes);
 app.use(cakereqRoutes);
 
