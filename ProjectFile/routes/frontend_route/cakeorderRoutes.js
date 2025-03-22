@@ -5,6 +5,19 @@ const multer = require('multer');
 const AWS = require('aws-sdk');
 const path = require('path');
 
+// AWS S3 configuration (using your hardcoded credentials)
+AWS.config.update({
+    accessKeyId: 'AKIAXFG5L4NB7TWHTIMP',
+    secretAccessKey: 'uZ47L7iiABXYvIKKR0M86LbleaOPUGbXKFjbC/1j',
+    region: 'us-east-1'
+});
+
+const s3 = new AWS.S3();
+
+// Set up Multer for file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 // Route to render the Cake Order page
 router.get('/cakeorder', (req, res) => {
     res.render('cakeorder');  // Render cakeorder.ejs
