@@ -51,6 +51,15 @@
                                     <% } else { %>
                                         <p><strong>Description:</strong> No description provided.</p>
                                     <% } %>
+                                    <!-- To show image -->
+                                    <p><strong>Image:</strong> 
+                                        <% if (order.CakeImage) { %>
+                                            <img src="<%= order.CakeImage %>" alt="Cake Image" style="width: 100px; height: auto;">
+                                        <% } else { %>
+                                            No image available.
+                                        <% } %>
+                                    </p>
+                                    
                                     <!-- Delete Button -->
                                     <form class="delete-form" data-orderid="<%= order.OrderID %>">
                                         <button type="submit" class="delete-btn">Delete</button>
