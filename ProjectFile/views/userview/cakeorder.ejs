@@ -74,7 +74,7 @@
         <h2>Paris Sweet Patisserie - Cake Request Form</h2>
 
         <!-- Cake Order Form -->
-        <form id="cakeOrderForm">
+        <form id="cakeOrderForm" enctype="multipart/form-data">
 
             <!-- Client Info -->
             <label for="name">Your Full Name:</label>
@@ -134,7 +134,12 @@
             <!-- Additional Details -->
             <label for="description">Additional Details:</label>
             <textarea id="description" name="description" rows="4" placeholder="Describe any special requests..."></textarea>
+            
 
+            <!-- Image Upload -->
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            
             <button type="submit">Submit Order</button>
         </form>
 
