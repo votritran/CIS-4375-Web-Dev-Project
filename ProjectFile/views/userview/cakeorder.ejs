@@ -4,48 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paris Sweet Patisserie - Cake Order Form</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cakeorderstyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+    <!-- Handle form submission and toggle custom inputs -->
     <script>
-        // Function to handle the form submission
-        function handleSubmit(event) {
-            event.preventDefault(); // Prevent the form from submitting immediately
-            
-            // Display the thank you message popup
-            alert("Thank you for your order! We will contact you soon.");
-            
-            // Redirect to the cakeorder page after 2 seconds
-            setTimeout(function() {
-                window.location.href = '/cakeorder'; // Redirect to the cakeorder page
-            }); 
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById("cakeOrderForm");
+
+            // Handle form submission
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                const formData = new FormData(form);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+
+                // Replace selected "custom" values with actual input text if provided
+                if (formObject.cakeType === "custom") formObject.cakeType = formObject.customCakeType || "custom";
+                if (formObject.frosting === "custom") formObject.frosting = formObject.customFrosting || "custom";
+                if (formObject.size === "custom") formObject.size = formObject.customSize || "custom";
+                if (formObject.shape === "custom") formObject.shape = formObject.customShape || "custom";
+
+                // Send form data to the backend via Fetch API
+                fetch('/cakeorder', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formObject)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    form.reset(); // Clear the form
+                    document.getElementById("thankYouModal").style.display = "flex";
+                    launchConfetti(); // Fire the confetti when thank-you modal shows
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Show/hide custom input field if "custom" is selected from dropdown
+            const toggleCustomInput = (selectId, inputId) => {
+                const select = document.getElementById(selectId);
+                const input = document.getElementById(inputId);
+                select.addEventListener('change', () => {
+                    input.style.display = select.value === 'custom' ? 'block' : 'none';
+                });
+            };
+
+            // Attach toggle handlers for all dropdowns
+            toggleCustomInput('cakeType', 'customCakeType');
+            toggleCustomInput('frosting', 'customFrosting');
+            toggleCustomInput('size', 'customSize');
+            toggleCustomInput('shape', 'customShape');
+        });
+
+        function closeModal() {
+            document.getElementById("thankYouModal").style.display = "none";
+            window.location.href = '/cakeorder'; // Refresh the page only after clicking OK
         }
     </script>
 </head>
 <body>
-    
+
     <!-- Navigation bar -->
-    <!-- Include the Navbar -->
     <%- include('../partials/navbar') %>
 
     <div class="container">
         <h2>Paris Sweet Patisserie - Cake Request Form</h2>
-        <!-- thank you message after submit -->
-        <form action="/cakeorder" method="POST" onsubmit="handleSubmit(event)">
 
-            <!-- client info -->
+        <!-- Cake Order Form -->
+        <form id="cakeOrderForm">
+
+            <!-- Client Info -->
             <label for="name">Your Full Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" placeholder="Required" required>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="Required" required>
 
             <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required>
+            <input type="tel" id="phone" name="phone" placeholder="Required" required>
 
             <label for="needByDate">Cake Needed By (Date):</label>
             <input type="date" id="needByDate" name="needByDate" required>
-        
-            <!-- cake details -->  
+
+            <!-- Cake Type with Custom Option -->
             <label for="cakeType">Cake Type:</label>
             <select id="cakeType" name="cakeType">
                 <option value="chocolate">Chocolate</option>
@@ -54,7 +98,9 @@
                 <option value="carrot cake">Carrot Cake</option>
                 <option value="custom">Custom</option>
             </select>
+            <input type="text" id="customCakeType" name="customCakeType" placeholder="Enter custom cake type" style="display:none; margin-top: 5px;">
 
+            <!-- Frosting Type with Custom Option -->
             <label for="frosting">Frosting Type:</label>
             <select id="frosting" name="frosting">
                 <option value="buttercream">Buttercream</option>
@@ -63,7 +109,9 @@
                 <option value="ganache">Ganache</option>
                 <option value="custom">Custom</option>
             </select>
+            <input type="text" id="customFrosting" name="customFrosting" placeholder="Enter custom frosting type" style="display:none; margin-top: 5px;">
 
+            <!-- Cake Size with Custom Option -->
             <label for="size">Cake Size:</label>
             <select id="size" name="size">
                 <option value="6-inch">6-inch</option>
@@ -71,7 +119,9 @@
                 <option value="10-inch">10-inch</option>
                 <option value="custom">Custom</option>
             </select>
+            <input type="text" id="customSize" name="customSize" placeholder="Enter custom cake size" style="display:none; margin-top: 5px;">
 
+            <!-- Cake Shape with Custom Option -->
             <label for="shape">Cake Shape:</label>
             <select id="shape" name="shape">
                 <option value="round">Round</option>
@@ -79,19 +129,31 @@
                 <option value="heart">Heart</option>
                 <option value="custom">Custom</option>
             </select>
+            <input type="text" id="customShape" name="customShape" placeholder="Enter custom cake shape" style="display:none; margin-top: 5px;">
 
-            <label for="cakeImage">Upload Image (optional):</label>
-            <input type="file" id="cakeImage" name="cakeImage" accept="image/*">
-
+            <!-- Additional Details -->
             <label for="description">Additional Details:</label>
             <textarea id="description" name="description" rows="4" placeholder="Describe any special requests..."></textarea>
 
             <button type="submit">Submit Order</button>
         </form>
 
-        <!-- disclaimer -->
+        <!-- Disclaimer -->
         <p class="disclaimer">Filling out this form does not guarantee an order. We will contact you via phone or email to confirm if we can fulfill your cake request.</p>
     </div>
+
+    <!-- Thank You Modal -->
+    <div id="thankYouModal" style="display: none;" class="modal-overlay">
+        <div class="modal-content">
+            <h3>From Paris Sweet Patisserie:</h3>
+            <p>Thank you for your submission! We will contact you soon.</p>
+            <button onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Confetti After Submission -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="/js/confetti.js"></script>
 
     <!-- Footer Section -->
     <%- include('../partials/footer') %>
