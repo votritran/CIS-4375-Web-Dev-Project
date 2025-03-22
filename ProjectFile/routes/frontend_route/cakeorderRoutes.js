@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../config/dbconnection');
+const multer = require('multer');
+const AWS = require('aws-sdk');
+const path = require('path');
 
 // Route to render the Cake Order page
 router.get('/cakeorder', (req, res) => {
