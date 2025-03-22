@@ -24,7 +24,7 @@ router.get('/cakeorder', (req, res) => {
 });
 
 // Route to handle form submission
-router.post('/cakeorder', (req, res) => {
+router.post('/cakeorder', upload.single('image'), (req, res) => {
     const { name, email, phone, needByDate, cakeType, frosting, size, shape, description } = req.body;
 
     // Fetch the latest OwnerID from the Owner table
@@ -42,20 +42,55 @@ router.post('/cakeorder', (req, res) => {
             return res.status(500).send('No Owner found in the Owner table');
         }
 
-        // Insert order details into the database including OwnerID
-        const sql = `
-            INSERT INTO CakeOrder (name, email, phone, needByDate, cakeType, frosting, size, shape, description, status, OwnerID) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?)`;
+        let CakeImage = null;
 
-        db.query(sql, [name, email, phone, needByDate, cakeType, frosting, size, shape, description, ownerID], (err, result) => {
-            if (err) {
-                console.error('Error inserting order:', err);
-                return res.status(500).send('An error occurred. Please try again later.');
-            }
+        if (req.file) {
+            const params = {
+                Bucket: 'cis4375tv',  // Your hardcoded bucket name
+                Key: `cakeImages/${Date.now()}_${req.file.originalname}`,  // Unique file name
+                Body: req.file.buffer,
+                ContentType: req.file.mimetype,
+                ACL: 'public-read',  // Make it publicly readable
+            };
 
-            console.log('Cake order saved successfully with OwnerID:', ownerID);
-            res.json({ success: true, message: 'Order received' });
-        });
+            // Upload image to S3
+            s3.upload(params, (err, data) => {
+                if (err) {
+                    console.error('Error uploading image to S3:', err);
+                    return res.status(500).send('Error uploading image');
+                }
+
+                CakeImage = data.Location;  // Image URL from S3
+
+                // Insert order details into the database including OwnerID and Image URL
+                const sql = `
+                    INSERT INTO CakeOrder (name, email, phone, needByDate, cakeType, frosting, size, shape, description, status, OwnerID, CakeImage)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?)`;
+                db.query(sql, [name, email, phone, needByDate, cakeType, frosting, size, shape, description, ownerID, CakeImage], (err, result) => {
+                    if (err) {
+                        console.error('Error inserting order:', err);
+                        return res.status(500).send('An error occurred. Please try again later.');
+                    }
+
+                    console.log('Cake order saved successfully with OwnerID:', ownerID);
+                    res.json({ success: true, message: 'Order received' });
+                });
+            });
+        } else {
+            // If no image is uploaded, just insert the order without an image
+            const sql = `
+                INSERT INTO CakeOrder (name, email, phone, needByDate, cakeType, frosting, size, shape, description, status, OwnerID)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?)`;
+            db.query(sql, [name, email, phone, needByDate, cakeType, frosting, size, shape, description, ownerID], (err, result) => {
+                if (err) {
+                    console.error('Error inserting order:', err);
+                    return res.status(500).send('An error occurred. Please try again later.');
+                }
+
+                console.log('Cake order saved successfully with OwnerID:', ownerID);
+                res.json({ success: true, message: 'Order received' });
+            });
+        }
     });
 });
 
