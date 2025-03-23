@@ -42,45 +42,58 @@ router.get('/adminevent', isAuthenticated, (req, res) => {
 router.post('/adminevent/add', isAuthenticated, upload.single('eventImage'), (req, res) => {
     const { eventName, eventDescription, eventDate, eventTime } = req.body;
     const file = req.file;
+    const getOwnerIdQuery = 'SELECT OwnerID FROM Owner ORDER BY OwnerID DESC LIMIT 1';
 
-    if (!file) {
-        return res.status(400).send('No file uploaded.');
-    }
-
-    // Upload the image to AWS S3
-    const s3Params = {
-        Bucket: 'cis4375tv', 
-        Key: `events/${Date.now()}-${file.originalname}`,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-        ACL: 'public-read',
-    };
-
-    s3.upload(s3Params, (err, data) => {
+    connection.query(getOwnerIdQuery, (err, result) => {
         if (err) {
-            console.error('Error uploading image to S3:', err);
-            return res.status(500).send('Error uploading image to S3');
+            console.error('Error fetching latest OwnerID:', err);
+            return res.status(500).send('Error fetching latest OwnerID');
         }
 
-        const eventImageUrl = data.Location; // Get the public URL of the uploaded image
+        const ownerID = result[0]?.OwnerID;
 
-        // Save the event details to the database
-        const query = `INSERT INTO Events (EventName, EventDescription, EventDate, EventTime, EventImage) 
-                        VALUES (?, ?, ?, ?, ?)`;
+        if (!ownerID) {
+            return res.status(500).send('No Owner found in the Owner table');
+        }
 
-        connection.query(query, [eventName, eventDescription, eventDate, eventTime, eventImageUrl], (err, result) => {
+        if (!file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        // Upload the image to AWS S3
+        const s3Params = {
+            Bucket: 'cis4375tv', 
+            Key: `events/${Date.now()}-${file.originalname}`,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+            ACL: 'public-read',
+        };
+
+        s3.upload(s3Params, (err, data) => {
             if (err) {
-                console.error('Error adding event:', err);
-                return res.status(500).send('Error adding event');
+                console.error('Error uploading image to S3:', err);
+                return res.status(500).send('Error uploading image to S3');
             }
 
-            // Redirect back to the events page
-            res.redirect('/adminevent');
+            const eventImageUrl = data.Location; // Get the public URL of the uploaded image
+
+        
+            // Save the event details to the database
+            const query = `INSERT INTO Events (EventName, EventDescription, EventDate, EventTime, EventImage, OwnerID) 
+                            VALUES (?, ?, ?, ?, ?,?)`;
+
+            connection.query(query, [eventName, eventDescription, eventDate, eventTime, eventImageUrl, ownerID], (err, result) => {
+                if (err) {
+                    console.error('Error adding event:', err);
+                    return res.status(500).send('Error adding event');
+                }
+
+                // Redirect back to the events page
+                res.redirect('/adminevent');
+            });
         });
     });
 });
-
-
 // Get event data for updating
 router.get('/adminevent/getEvent/:id', isAuthenticated, async (req, res) => {
     const eventId = req.params.id;

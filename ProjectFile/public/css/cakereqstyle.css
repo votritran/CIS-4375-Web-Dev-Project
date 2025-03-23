@@ -157,3 +157,15 @@ h2 {
 .delete-btn:hover {
     background-color: #c9302c;
 }
+
+.order-image {
+    width: 150px; /* Fixed width */
+    height: 150px; /* Fixed height */
+    object-fit: cover; /* Ensures the image covers the area without stretching */
+    border-radius: 15px; /* Curves the corners */
+    display: block; /* Ensures image is on its own line */
+    margin-top: 10px; /* Adds space between the text and the image */
+    margin-bottom: 10px; /* Adds space below the image */
+}
+
+
