@@ -11,6 +11,8 @@ body {
 h1 { 
     font-family: 'Dancing Script', cursive;
     margin-bottom: 50px;
+    color: #8b4513;
+    font-size:38px;
 }
 .no-messages {
     text-align: center;
@@ -84,7 +86,7 @@ h1 {
 }
 
 /* Smaller Buttons */
-button {
+.contact-container button {
     padding: 2px 4px; /* Reduce padding */
     font-size: 10px; /* Smaller text */
     font-weight: bold;
