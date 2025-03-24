@@ -82,103 +82,141 @@ router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (r
         return res.status(400).send('No file uploaded.');
     }
 
-    // Query to get the latest OwnerID from the Owner table and put it into the OwnerID column of the Products table
-    connection.query('SELECT OwnerID FROM Owner ORDER BY OwnerID DESC LIMIT 1', (err, result) => {
+    // Upload image to S3
+    const params = {
+        Bucket: 'cis4375tv', // Your S3 bucket name
+        Key: `menu-items/${Date.now()}-${file.originalname}`, // Unique file name
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: 'public-read' // Make it publicly readable
+    };
+
+    s3.upload(params, (err, data) => {
         if (err) {
-            console.error('Error fetching latest OwnerID:', err);
-            return res.status(500).send('Error fetching latest OwnerID');
+            console.error('Error uploading image to S3:', err);
+            return res.status(500).send('Error uploading image to S3');
         }
 
-        const ownerID = result[0]?.OwnerID;
+        // Image URL from S3
+        const imageUrl = data.Location;
 
-        if (!ownerID) {
-            return res.status(500).send('No Owner found in the Owner table');
-        }
-
-        // Upload image to S3
-        const params = {
-            Bucket: 'cis4375tv', // Your S3 bucket name
-            Key: `menu-items/${Date.now()}-${file.originalname}`, // Unique file name
-            Body: file.buffer,
-            ContentType: file.mimetype,
-            ACL: 'public-read' // Make it publicly readable
-        };
-
-        s3.upload(params, (err, data) => {
+        // Save the menu item to the database
+        const query = `
+            INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl], (err, result) => {
             if (err) {
-                console.error('Error uploading image to S3:', err);
-                return res.status(500).send('Error uploading image to S3');
+                console.error('Error adding menu item:', err);
+                return res.status(500).send('Error adding menu item');
             }
-
-            // Image URL from S3
-            const imageUrl = data.Location;
-
-            // Save the menu item to the database, now including OwnerID
-            const query = `
-                INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage, OwnerID)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            `;
-            connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl, ownerID], (err, result) => {
-                if (err) {
-                    console.error('Error adding menu item:', err);
-                    return res.status(500).send('Error adding menu item');
-                }
-                res.redirect('/adminmenu');
-            });
+            res.redirect('/adminmenu');
         });
     });
 });
 
 router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
     const productId = req.params.productId;
+    const productSize = req.body.productSize; // Get product size from the form
 
-    // Fetch product image URL from the database
-    connection.query('SELECT ProductImage FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+    // Fetch product details from the database
+    connection.query('SELECT ProductImage, ProductName, ProductSize FROM Products WHERE ProductID = ?', [productId], (err, result) => {
         if (err) {
-            console.error('Error fetching product image:', err);
-            return res.status(500).send('Error fetching product image');
+            console.error('Error fetching product details:', err);
+            return res.status(500).send('Error fetching product details');
         }
 
         if (result.length === 0) {
             return res.status(404).send('Product not found');
         }
 
+        const productName = result[0].ProductName;
+        const storedProductSize = result[0].ProductSize;
         const imageUrl = result[0].ProductImage;
 
-        // Extract the S3 object key (path after 'amazonaws.com/')
-        const imageKey = imageUrl.split('amazonaws.com/')[1];
+        let deleteQuery;
+        let queryParams;
 
-        // Ensure the image key is extracted correctly
-        if (!imageKey) {
-            console.error('No valid image key found in URL:', imageUrl);
-            return res.status(500).send('Error: Invalid image URL');
+        if (!productSize || storedProductSize == null) {
+            // If no size was provided OR the product has no sizes in the database, delete by ProductID
+            deleteQuery = 'DELETE FROM Products WHERE ProductID = ?';
+            queryParams = [productId];
+        } else {
+            // If a size was selected, delete only that specific size
+            deleteQuery = 'DELETE FROM Products WHERE ProductName = ? AND ProductSize = ?';
+            queryParams = [productName, productSize];
         }
 
-        // Delete the image from S3
-        const s3Params = {
-            Bucket: 'cis4375tv', // Your S3 bucket name
-            Key: imageKey // Extracted key from image URL
-        };
-
-        s3.deleteObject(s3Params, (err, data) => {
+        // Execute deletion from database
+        connection.query(deleteQuery, queryParams, (err, result) => {
             if (err) {
-                console.error('Error deleting image from S3:', err);
-                return res.status(500).send('Error deleting image from S3');
+                console.error('Error deleting product from database:', err);
+                return res.status(500).send('Error deleting product from database');
             }
 
-            // After successfully deleting the image, delete the product from the database
-            connection.query('DELETE FROM Products WHERE ProductID = ?', [productId], (err, result) => {
-                if (err) {
-                    console.error('Error deleting product from database:', err);
-                    return res.status(500).send('Error deleting product from database');
+            if (result.affectedRows === 0) {
+                return res.status(404).send('No matching product found to delete.');
+            }
+
+            // If the whole product was deleted, remove the image from S3
+            if (!productSize || storedProductSize == null) {
+                if (!imageUrl) {
+                    console.error('No image URL found for product:', productId);
+                    return res.redirect('/adminmenu'); // Skip S3 deletion if no image
                 }
 
-                // Redirect back to the menu page after successful deletion
-                res.redirect('/adminmenu');
-            });
+                const imageKey = imageUrl.split('amazonaws.com/')[1];
+
+                if (!imageKey) {
+                    console.error('No valid image key found in URL:', imageUrl);
+                    return res.status(500).send('Error: Invalid image URL');
+                }
+
+                // Delete the image from S3
+                const s3Params = {
+                    Bucket: 'cis4375tv', // Your S3 bucket name
+                    Key: imageKey
+                };
+
+                s3.deleteObject(s3Params, (err, data) => {
+                    if (err) {
+                        console.error('Error deleting image from S3:', err);
+                        return res.status(500).send('Error deleting image from S3');
+                    }
+
+                    res.redirect('/adminmenu'); // Redirect after successful deletion
+                });
+            } else {
+                if (!imageUrl) {
+                    console.error('No image URL found for product:', productId);
+                    return res.redirect('/adminmenu'); // Skip S3 deletion if no image
+                }
+
+                const imageKey = imageUrl.split('amazonaws.com/')[1];
+
+                if (!imageKey) {
+                    console.error('No valid image key found in URL:', imageUrl);
+                    return res.status(500).send('Error: Invalid image URL');
+                }
+
+                // Delete the image from S3
+                const s3Params = {
+                    Bucket: 'cis4375tv', // Your S3 bucket name
+                    Key: imageKey
+                };
+
+                s3.deleteObject(s3Params, (err, data) => {
+                    if (err) {
+                        console.error('Error deleting image from S3:', err);
+                        return res.status(500).send('Error deleting image from S3');
+                    }
+                
+                    res.redirect('/adminmenu'); 
+            })};
         });
     });
 });
+
 
 router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => {
     const { productId } = req.params;
