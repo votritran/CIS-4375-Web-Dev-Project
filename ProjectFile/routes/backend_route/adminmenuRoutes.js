@@ -222,7 +222,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
     const { productId } = req.params;
     const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
     const newImage = req.file;
-    const productSize = req.body.productSize;
+    const currentproductSize = req.body.currentSize;
 
     // Get the current product details before update
     connection.query('SELECT * FROM Products WHERE ProductID = ?', [productId], (err, result) => {
@@ -234,7 +234,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         if (result.length === 0) {
             return res.status(404).send('Product not found');
         }
-        const storedProductSize = result[0].ProductSize;
+        const storedProductSize = result[0].currentproductSize;
         const productName = result[0].ProductName;
         
         const currentProduct = result[0];
@@ -279,8 +279,24 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
 
                     if (storedProductSize == null) {
 
+                        if (updatedSize.toLowerCase() === 'null'|| updatedSize.toLowerCase() === 'none') {
                         // Proceed to update product details in the database
-                        const updateQuery = `
+                            const updateQuery = `
+                                UPDATE Products
+                                SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = NULL, CategoryName = ?, ProductImage = ?
+                                WHERE ProductID = ?
+                            `;
+                            connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                                if (err) {
+                                    console.error('Error updating product:', err);
+                                    return res.status(500).send('Error updating product');
+                                }
+
+                                res.redirect('/adminmenu');
+                        });
+                        }
+                        else {
+                            const updateQuery = `
                             UPDATE Products
                             SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
                             WHERE ProductID = ?
@@ -292,24 +308,43 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                             }
 
                             res.redirect('/adminmenu');
-                    });
+                        });
+                        }
                     }
                     else {
                         // Proceed to update product details in the database
-                        const updateQuery = `
-                            UPDATE Products
-                            SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
-                            WHERE ProductName = ? AND ProductSize = ?
-                        `;
-                        connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productName, productSize], (err, result) => {
-                            if (err) {
-                                console.error('Error updating product:', err);
-                                return res.status(500).send('Error updating product');
-                            }
+                        if (updatedSize.toLowerCase() === 'null'|| updatedSize.toLowerCase() === 'none') {
+                            const updateQuery = `
+                                UPDATE Products
+                                SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = NULL, CategoryName = ?, ProductImage = ?
+                                WHERE ProductName = ? AND ProductSize = ?
+                            `;
+                            connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedCategory, updatedImageUrl, productName, currentproductSize], (err, result) => {
+                                if (err) {
+                                    console.error('Error updating product:', err);
+                                    return res.status(500).send('Error updating product');
+                                }
 
-                            res.redirect('/adminmenu');
-                    });
-                    }
+                                res.redirect('/adminmenu');
+                        });
+                        }
+                        else {
+                            const updateQuery = `
+                                UPDATE Products
+                                SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                                WHERE ProductName = ? AND ProductSize = ?
+                            `;
+                            connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize ,updatedCategory, updatedImageUrl, productName, currentproductSize], (err, result) => {
+                                if (err) {
+                                    console.error('Error updating product:', err);
+                                    return res.status(500).send('Error updating product');
+                                }
+
+                                res.redirect('/adminmenu');
+                        });
+                        }
+
+                }
                 });
             });
         } else {
@@ -319,40 +354,73 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
             if (storedProductSize == null) {
 
                 // Proceed to update product details in the database
-                const updateQuery = `
-                    UPDATE Products
-                    SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
-                    WHERE ProductID = ?
-                `;
-                connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
-                    if (err) {
-                        console.error('Error updating product:', err);
-                        return res.status(500).send('Error updating product');
-                    }
+                if (updatedSize.toLowerCase() === 'null'|| updatedSize.toLowerCase() === 'none') {
+                    // Proceed to update product details in the database
+                        const updateQuery = `
+                            UPDATE Products
+                            SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = NULL, CategoryName = ?, ProductImage = ?
+                            WHERE ProductID = ?
+                        `;
+                        connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                            if (err) {
+                                console.error('Error updating product:', err);
+                                return res.status(500).send('Error updating product');
+                            }
 
-                    res.redirect('/adminmenu');
-            });
+                            res.redirect('/adminmenu');
+                    });
+                    }
+                    else {
+                        const updateQuery = `
+                        UPDATE Products
+                        SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                        WHERE ProductID = ?
+                    `;
+                    connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                        if (err) {
+                            console.error('Error updating product:', err);
+                            return res.status(500).send('Error updating product');
+                        }
+
+                        res.redirect('/adminmenu');
+                    });
+                    }
             }
             else {
                 // Proceed to update product details in the database
-                const updateQuery = `
-                    UPDATE Products
-                    SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
-                    WHERE ProductName = ? AND ProductSize = ?
-                `;
-                connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productName, productSize], (err, result) => {
-                    if (err) {
-                        console.error('Error updating product:', err);
-                        return res.status(500).send('Error updating product');
-                    }
+                if (updatedSize.toLowerCase() === 'null'|| updatedSize.toLowerCase() === 'none') {
+                    const updateQuery = `
+                        UPDATE Products
+                        SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = NULL, CategoryName = ?, ProductImage = ?
+                        WHERE ProductName = ? AND ProductSize = ?
+                    `;
+                    connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedCategory, updatedImageUrl, productName, currentproductSize], (err, result) => {
+                        if (err) {
+                            console.error('Error updating product:', err);
+                            return res.status(500).send('Error updating product');
+                        }
 
-                    res.redirect('/adminmenu');
-            });
+                        res.redirect('/adminmenu');
+                });
+                }
+                else {
+                    const updateQuery = `
+                        UPDATE Products
+                        SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                        WHERE ProductName = ? AND ProductSize = ?
+                    `;
+                    connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize ,updatedCategory, updatedImageUrl, productName, currentproductSize], (err, result) => {
+                        if (err) {
+                            console.error('Error updating product:', err);
+                            return res.status(500).send('Error updating product');
+                        }
+
+                        res.redirect('/adminmenu');
+                });
+                }
             }
         }
     });
 });
-
-
 
 module.exports = router;  // Export the router to be used in server.js
