@@ -222,6 +222,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
     const { productId } = req.params;
     const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
     const newImage = req.file;
+    const productSize = req.body.productSize;
 
     // Get the current product details before update
     connection.query('SELECT * FROM Products WHERE ProductID = ?', [productId], (err, result) => {
@@ -233,7 +234,9 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         if (result.length === 0) {
             return res.status(404).send('Product not found');
         }
-
+        const storedProductSize = result[0].ProductSize;
+        const productName = result[0].ProductName;
+        
         const currentProduct = result[0];
         const updatedName = newName || currentProduct.ProductName;
         const updatedDescription = newDescription || currentProduct.ProductDescription;
@@ -274,37 +277,78 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         return res.status(500).send('Error deleting old image');
                     }
 
-                    // Proceed to update product details in the database
-                    const updateQuery = `
-                        UPDATE Products
-                        SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
-                        WHERE ProductID = ?
-                    `;
-                    connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
-                        if (err) {
-                            console.error('Error updating product:', err);
-                            return res.status(500).send('Error updating product');
-                        }
+                    if (storedProductSize == null) {
 
-                        res.redirect('/adminmenu');
+                        // Proceed to update product details in the database
+                        const updateQuery = `
+                            UPDATE Products
+                            SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                            WHERE ProductID = ?
+                        `;
+                        connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                            if (err) {
+                                console.error('Error updating product:', err);
+                                return res.status(500).send('Error updating product');
+                            }
+
+                            res.redirect('/adminmenu');
                     });
+                    }
+                    else {
+                        // Proceed to update product details in the database
+                        const updateQuery = `
+                            UPDATE Products
+                            SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                            WHERE ProductName = ? AND ProductSize = ?
+                        `;
+                        connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productName, productSize], (err, result) => {
+                            if (err) {
+                                console.error('Error updating product:', err);
+                                return res.status(500).send('Error updating product');
+                            }
+
+                            res.redirect('/adminmenu');
+                    });
+                    }
                 });
             });
         } else {
-            // No new image, just update the other fields
-            const updateQuery = `
-                UPDATE Products
-                SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?
-                WHERE ProductID = ?
-            `;
-            connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, productId], (err, result) => {
-                if (err) {
-                    console.error('Error updating product:', err);
-                    return res.status(500).send('Error updating product');
-                }
 
-                res.redirect('/adminmenu');
+
+            // No new image, just update the other fields
+            if (storedProductSize == null) {
+
+                // Proceed to update product details in the database
+                const updateQuery = `
+                    UPDATE Products
+                    SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                    WHERE ProductID = ?
+                `;
+                connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                    if (err) {
+                        console.error('Error updating product:', err);
+                        return res.status(500).send('Error updating product');
+                    }
+
+                    res.redirect('/adminmenu');
             });
+            }
+            else {
+                // Proceed to update product details in the database
+                const updateQuery = `
+                    UPDATE Products
+                    SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
+                    WHERE ProductName = ? AND ProductSize = ?
+                `;
+                connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productName, productSize], (err, result) => {
+                    if (err) {
+                        console.error('Error updating product:', err);
+                        return res.status(500).send('Error updating product');
+                    }
+
+                    res.redirect('/adminmenu');
+            });
+            }
         }
     });
 });
