@@ -37,3 +37,7 @@ function toggleAddMenuItem() {
     form.classList.toggle('show');
 }
 
+function toggleDeleteForm(productId) {
+    var form = document.getElementById('Delete-button' + productId);
+    form.classList.toggle('show');
+}
