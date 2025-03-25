@@ -91,10 +91,10 @@
                                         <input type="text" id="newName<%= item.ProductID %>" name="newName" value="<%= item.productName %>"><br>
 
                                         <label for="newDescription<%= item.ProductID %>">Description:</label>
-                                        <textarea id="newDescription<%= item.ProductID %>" name="newDescription"><%= item.ProductDescription %></textarea><br>
+                                        <textarea id="newDescription<%= item.ProductID %>" name="newDescription"></textarea><br>
 
                                         <label for="newPrice<%= item.ProductID %>">Price:</label>
-                                        <input type="number" id="newPrice<%= item.ProductID %>" name="newPrice" step="0.01" value="<%= item.ProductPrice %>"><br>
+                                        <input type="number" id="newPrice<%= item.ProductID %>" name="newPrice" step="0.01"><br>
 
                                         <label for="currentSize<%= item.ProductID %>">Size:</label><br>
                                         <select id="currentSize<%= item.ProductID %>" name="currentSize">
@@ -104,7 +104,7 @@
                                         </select><br>
 
                                         <label for="newSize<%= item.ProductID %>">New Size:</label>
-                                        <input type="text" id="newSize<%= item.ProductID %>" name="newSize" value="<%= item.Sizes.length > 0 ? item.Sizes[0].size : '' %>"><br>
+                                        <input type="text" id="newSize<%= item.ProductID %>" name="newSize"><br>
                                             
 
                                         <label for="newCategory<%= item.ProductID %>">Category:</label>
@@ -133,10 +133,10 @@
                                     <input type="text" id="newName<%= item.ProductID %>" name="newName" value="<%= item.productName %>"><br>
 
                                     <label for="newDescription<%= item.ProductID %>">Description:</label>
-                                    <textarea id="newDescription<%= item.ProductID %>" name="newDescription"><%= item.ProductDescription %></textarea><br>
+                                    <textarea id="newDescription<%= item.ProductID %>" name="newDescription"></textarea><br>
 
                                     <label for="newPrice<%= item.ProductID %>">Price:</label>
-                                    <input type="number" id="newPrice<%= item.ProductID %>" name="newPrice" step="0.01" value="<%= item.ProductPrice %>"><br>
+                                    <input type="number" id="newPrice<%= item.ProductID %>" name="newPrice" step="0.01" ><br>
 
                                     <label for="newSize<%= item.ProductID %>">Size:</label>
                                     <input type="text" id="newSize<%= item.ProductID %>" name="newSize" value="<%= item.Sizes.length > 0 ? item.Sizes[0].size : '' %>" placeholder ="Input Null or None to remove size type"><br>
