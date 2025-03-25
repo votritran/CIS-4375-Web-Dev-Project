@@ -234,7 +234,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         if (result.length === 0) {
             return res.status(404).send('Product not found');
         }
-        const storedProductSize = result[0].currentproductSize;
+        const storedProductSize = result[0].ProductSize;
         const productName = result[0].ProductName;
         
         const currentProduct = result[0];
