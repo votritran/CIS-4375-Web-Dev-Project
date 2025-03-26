@@ -303,13 +303,28 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
 
             updateQuery += updateParts.join(', ');
 
-            // Determine the update condition
             if (storedProductSize === null) {
+                // If product does not have multiple sizes, update everything based on ProductID
                 updateQuery += ' WHERE ProductID = ?';
                 queryParams.push(productId);
             } else {
-                updateQuery += ' WHERE ProductName = ? AND ProductSize = ?';
-                queryParams.push(productName, currentProductSize);
+                // If product has multiple sizes:
+                if (newDescription) {
+                    // Update description for all sizes of the same product
+                    connection.query(
+                        'UPDATE Products SET ProductDescription = ? WHERE ProductName = ? AND ProductSize IS NOT NULL',
+                        [newDescription, productName],
+                        (err) => {
+                            if (err) {
+                                console.error('Error updating descriptions for all sizes:', err);
+                            }
+                        }
+                    );
+                }
+
+                // Update only the selected size's price
+                updateQuery += ' WHERE ProductID = ?';
+                queryParams.push(productId);
             }
 
             connection.query(updateQuery, queryParams, (err, result) => {
