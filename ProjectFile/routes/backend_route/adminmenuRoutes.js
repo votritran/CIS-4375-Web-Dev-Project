@@ -314,66 +314,20 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
 
             updateQuery += updateParts.join(', ');
 
+            // Ensure there's only ONE WHERE clause
             if (storedProductSize === null) {
-                // If product does not have multiple sizes, update everything based on ProductID
+                // If the product does not have multiple sizes, update based on ProductID
                 updateQuery += ' WHERE ProductID = ?';
                 queryParams.push(productId);
             } else {
-                // If product has multiple sizes:
-                if (newDescription) {
-                    // Update description for all sizes of the same product
-                    connection.query(
-                        'UPDATE Products SET ProductDescription = ? WHERE ProductName = ? AND ProductSize IS NOT NULL',
-                        [newDescription, productName],
-                        (err) => {
-                            if (err) {
-                                console.error('Error updating descriptions for all sizes:', err);
-                            }
-                        }
-                    );
-                }
-                if (newCategory) {
-                    // Update category for all sizes of the same product
-                    connection.query(
-                        'UPDATE Products SET CategoryName = ? WHERE ProductName = ? AND ProductSize IS NOT NULL',
-                        [newCategory, productName],
-                        (err) => {
-                            if (err) {
-                                console.error('Error updating category for all sizes:', err);
-                            }
-                        }
-                    );
-                }
-                if (newName) {
-                    // Update ProductName for all sizes of the same product
-                    connection.query(
-                        'UPDATE Products SET ProductName = ? WHERE ProductName = ? AND ProductSize IS NOT NULL',
-                        [newName, productName],
-                        (err) => {
-                            if (err) {
-                                console.error('Error updating name for all sizes:', err);
-                            }
-                        }
-                    );
-                }
-                if (updatedFields.ProductImage) {
-                    // Update image for all sizes of the same product
-                    connection.query(
-                        'UPDATE Products SET ProductImage = ? WHERE ProductName = ? AND ProductSize IS NOT NULL',
-                        [updatedFields.ProductImage, productName],
-                        (err) => {
-                            if (err) {
-                                console.error('Error updating image for all sizes:', err);
-                            }
-                        }
-                    );
-                }
-
-                // Update only the selected size's price
-                updateQuery += ' WHERE ProductID = ?';
-                queryParams.push(productId);
+                // If the product has multiple sizes, update based on ProductName and ProductSize for non-price fields
+                updateQuery += ' WHERE ProductName = ? AND ProductSize = ?';
+                queryParams.push(productName, currentProductSize);
             }
 
+            
+            // Log the main update SQL query
+            console.log('SQL Command:', updateQuery, queryParams);
             connection.query(updateQuery, queryParams, (err, result) => {
                 if (err) {
                     console.error('Error updating product:', err);
@@ -381,8 +335,24 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                 }
                 res.redirect('/adminmenu');
             });
+
+            // If updating the description, update it for all sizes of the same product
+            if (newDescription) {
+                const descriptionUpdateQuery = 'UPDATE Products SET ProductDescription = ? WHERE ProductName = ? AND ProductSize IS NOT NULL';
+                console.log('SQL Command:', descriptionUpdateQuery, [newDescription, productName]);
+                connection.query(
+                    descriptionUpdateQuery,
+                    [newDescription, productName],
+                    (err) => {
+                        if (err) {
+                            console.error('Error updating descriptions for all sizes:', err);
+                        }
+                    }
+                );
+            }
         }
     });
 });
+
 
 module.exports = router;  // Export the router to be used in server.js
