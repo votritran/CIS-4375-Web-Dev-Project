@@ -100,17 +100,28 @@ router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (r
         // Image URL from S3
         const imageUrl = data.Location;
 
-        // Save the menu item to the database
-        const query = `
-            INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-        connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl], (err, result) => {
+        // Get the latest OwnerID from the Owner table
+        const ownerQuery = `SELECT OwnerID FROM Owner ORDER BY OwnerID DESC LIMIT 1`;
+        connection.query(ownerQuery, (err, ownerResult) => {
             if (err) {
-                console.error('Error adding menu item:', err);
-                return res.status(500).send('Error adding menu item');
+                console.error('Error retrieving OwnerID:', err);
+                return res.status(500).send('Error retrieving OwnerID');
             }
-            res.redirect('/adminmenu');
+
+            const ownerID = ownerResult.length > 0 ? ownerResult[0].OwnerID : null;
+            
+            // Save the menu item to the database with OwnerID
+            const query = `
+                INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage, OwnerID)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl, ownerID], (err, result) => {
+                if (err) {
+                    console.error('Error adding menu item:', err);
+                    return res.status(500).send('Error adding menu item');
+                }
+                res.redirect('/adminmenu');
+            });
         });
     });
 });
