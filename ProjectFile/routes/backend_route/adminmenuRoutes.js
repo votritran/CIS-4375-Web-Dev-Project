@@ -332,6 +332,18 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         }
                     );
                 }
+                if (newCategory) {
+                    // Update category for all sizes of the same product
+                    connection.query(
+                        'UPDATE Products SET CategoryName = ? WHERE ProductName = ? AND ProductSize IS NOT NULL',
+                        [newCategory, productName],
+                        (err) => {
+                            if (err) {
+                                console.error('Error updating category for all sizes:', err);
+                            }
+                        }
+                    );
+                }
 
                 // Update only the selected size's price
                 updateQuery += ' WHERE ProductID = ?';
