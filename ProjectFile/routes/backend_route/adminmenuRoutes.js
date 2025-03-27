@@ -344,6 +344,18 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         }
                     );
                 }
+                if (updatedFields.ProductImage) {
+                    // Update image for all sizes of the same product
+                    connection.query(
+                        'UPDATE Products SET ProductImage = ? WHERE ProductName = ? AND ProductSize IS NOT NULL',
+                        [updatedFields.ProductImage, productName],
+                        (err) => {
+                            if (err) {
+                                console.error('Error updating image for all sizes:', err);
+                            }
+                        }
+                    );
+                }
 
                 // Update only the selected size's price
                 updateQuery += ' WHERE ProductID = ?';
