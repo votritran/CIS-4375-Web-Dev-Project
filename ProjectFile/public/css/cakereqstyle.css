@@ -19,7 +19,7 @@ body {
     flex-wrap: wrap;
     justify-content: space-evenly;
     gap: 30px;
-    align-items: flex-start;
+    align-items: stretch;
     width: 100%;
     margin: 0 auto;
 }
@@ -35,6 +35,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    flex-grow: 1;
 }
  
 h2 {
@@ -63,7 +64,7 @@ h2 {
     background-color: #8b4513; /* Brown background */
     color: white; /* White text */
     border: none;
-    padding: 5px 10px;
+    padding: 8px 16px;
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
@@ -80,6 +81,9 @@ h2 {
     align-items: center;
     position: relative; /* Allows dropdown positioning */
     padding-bottom: 10px;
+}
+.order-status:hover {
+    background-color: #5a2d0c;
 }
 
 /* Modal Background */
@@ -124,10 +128,11 @@ h2 {
     background-color: #8b4513;
     color: white;
     border: none;
-    padding: 5px 10px;
+    padding: 8px 12px;
     font-size: 14px;
     cursor: pointer;
     border-radius: 5px;
+    min-width: 140px;
 }
 
 .view-more-btn:hover {
@@ -160,13 +165,13 @@ h2 {
 }
 
 .order-image {
-    width: 150px; /* Fixed width */
-    height: 150px; /* Fixed height */
-    object-fit: cover; /* Ensures the image covers the area without stretching */
-    border-radius: 15px; /* Curves the corners */
-    display: block; /* Ensures image is on its own line */
-    margin-top: 10px; /* Adds space between the text and the image */
-    margin-bottom: 10px; /* Adds space below the image */
+    width: 300px;            /* Make it larger */
+    height: auto;            /* Maintain aspect ratio */
+    object-fit: contain;     /* Don’t crop it */
+    border-radius: 15px;
+    margin: 20px auto 0;     /* Center it horizontally and add space above */
+    display: block;          /* Ensure it takes up its own line */
+    max-width: 100%;
 }
 
 /*Footer*/
