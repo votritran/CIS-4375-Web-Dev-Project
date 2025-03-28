@@ -257,7 +257,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         if (newCategory) updatedFields.CategoryName = newCategory;
         if (newPrice) updatedFields.ProductPrice = newPrice;
         if (newSize) {
-            updatedFields.ProductSize = newSize.toLowerCase() === 'null' ? null : newSize;
+            updatedFields.ProductSize = newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize;
         }
         
         // If a new image is uploaded, update the image field
@@ -394,7 +394,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         }
                         if (newSize) {
                             updateParts.push('ProductSize = ?');
-                            updateParams.push(newSize.toLowerCase() === 'null' ? null : newSize);
+                            updateParams.push(newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize);
                         }
                 
                         updateQuery += updateParts.join(', ') + ' WHERE ProductID = ?';
