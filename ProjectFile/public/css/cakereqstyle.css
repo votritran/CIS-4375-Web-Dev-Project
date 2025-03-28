@@ -88,7 +88,8 @@ h2 {
 
 /* Modal Background */
 .modal {
-    display: none; /* Ensures it is hidden on page load */
+    display: none !important; /* Ensures it is hidden on page load */
+    visibility: hidden;
     position: fixed;
     z-index: 1000;
     left: 0;
