@@ -255,11 +255,11 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         // Check which fields need to be updated
         if (newName) updatedFields.ProductName = newName;
         if (newDescription) updatedFields.ProductDescription = newDescription;
+        if (newCategory) updatedFields.CategoryName = newCategory;
         if (newPrice) updatedFields.ProductPrice = newPrice;
         if (newSize) {
             updatedFields.ProductSize = newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize;
         }
-        if (newCategory) updatedFields.CategoryName = newCategory;
 
         // If a new image is uploaded, update the image field
         if (newImage) {
@@ -304,52 +304,63 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                 return res.status(400).send('No fields to update');
             }
 
-            let updateQuery = 'UPDATE Products SET ';
-            const updateParts = [];
+            // Separate update queries to follow correct WHERE clause rules
+            if (newName || newDescription || newCategory) {
+                let updateQuery = 'UPDATE Products SET ';
+                const updateParts = [];
+                let updateParams = [];
 
-            Object.keys(updatedFields).forEach((key) => {
-                updateParts.push(`${key} = ?`);
-                queryParams.push(updatedFields[key]);
-            });
-
-            updateQuery += updateParts.join(', ');
-
-            // Ensure there's only ONE WHERE clause
-            if (storedProductSize === null) {
-                // If the product does not have multiple sizes, update based on ProductID
-                updateQuery += ' WHERE ProductID = ?';
-                queryParams.push(productId);
-            } else {
-                // If the product has multiple sizes, update based on ProductName and ProductSize for non-price fields
-                updateQuery += ' WHERE ProductName = ? AND ProductSize = ?';
-                queryParams.push(productName, currentProductSize);
-            }
-
-            
-            // Log the main update SQL query
-            console.log('SQL Command:', updateQuery, queryParams);
-            connection.query(updateQuery, queryParams, (err, result) => {
-                if (err) {
-                    console.error('Error updating product:', err);
-                    return res.status(500).send('Error updating product');
+                if (newName) {
+                    updateParts.push('ProductName = ?');
+                    updateParams.push(newName);
                 }
-                res.redirect('/adminmenu');
-            });
+                if (newDescription) {
+                    updateParts.push('ProductDescription = ?');
+                    updateParams.push(newDescription);
+                }
+                if (newCategory) {
+                    updateParts.push('CategoryName = ?');
+                    updateParams.push(newCategory);
+                }
 
-            // If updating the description, update it for all sizes of the same product
-            if (newDescription) {
-                const descriptionUpdateQuery = 'UPDATE Products SET ProductDescription = ? WHERE ProductName = ? AND ProductSize IS NOT NULL';
-                console.log('SQL Command:', descriptionUpdateQuery, [newDescription, productName]);
-                connection.query(
-                    descriptionUpdateQuery,
-                    [newDescription, productName],
-                    (err) => {
-                        if (err) {
-                            console.error('Error updating descriptions for all sizes:', err);
-                        }
+                updateQuery += updateParts.join(', ') + ' WHERE ProductName = ?';
+                updateParams.push(productName);
+
+                console.log('SQL Command (Names, Description, Category):', updateQuery, updateParams);
+                connection.query(updateQuery, updateParams, (err) => {
+                    if (err) {
+                        console.error('Error updating name/description/category:', err);
                     }
-                );
+                });
             }
+
+            if (newPrice || newSize) {
+                let updateQuery = 'UPDATE Products SET ';
+                const updateParts = [];
+                let updateParams = [];
+
+                if (newPrice) {
+                    updateParts.push('ProductPrice = ?');
+                    updateParams.push(newPrice);
+                }
+                if (newSize) {
+                    updateParts.push('ProductSize = ?');
+                    updateParams.push(newSize);
+                }
+
+                updateQuery += updateParts.join(', ') + ' WHERE ProductName = ? AND ProductSize = ?';
+                updateParams.push(productName, currentProductSize);
+
+                console.log('SQL Command (Price, Size):', updateQuery, updateParams);
+                connection.query(updateQuery, updateParams, (err) => {
+                    if (err) {
+                        console.error('Error updating price/size:', err);
+                    }
+                });
+            }
+
+            // Redirect after updates are done
+            res.redirect('/adminmenu');
         }
     });
 });
