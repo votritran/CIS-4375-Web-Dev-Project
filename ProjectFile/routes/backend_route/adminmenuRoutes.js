@@ -328,7 +328,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
             } 
             else {
                 // If product has multiple sizes, run the separate updates
-                if (newName || newDescription || newCategory) {
+                if (newName || newDescription || newCategory || newImage) {
                     let updateQuery = 'UPDATE Products SET ';
                     const updateParts = [];
                     let updateParams = [];
@@ -345,6 +345,10 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         updateParts.push('CategoryName = ?');
                         updateParams.push(newCategory);
                     }
+                    if (newImage) {
+                        updateParts.push('ProductImage = ?');
+                        updateParams.push(updatedFields.ProductImage); // New image URL from S3
+                    }
 
                     updateQuery += updateParts.join(', ') + ' WHERE ProductName = ?';
                     updateParams.push(productName);
@@ -352,7 +356,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                     console.log('SQL Command (Names, Description, Category):', updateQuery, updateParams);
                     connection.query(updateQuery, updateParams, (err) => {
                         if (err) {
-                            console.error('Error updating name/description/category:', err);
+                            console.error('Error updating name/description/category/image:', err);
                         }
                     });
                 }
