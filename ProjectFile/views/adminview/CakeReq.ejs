@@ -34,50 +34,42 @@
                                         </select>                                    
                                     </div>
                                 </div>                            
-                                <div class="customer-name"><strong>Customer:</strong> <%= order.name %></div>
-                                <div class="order-details">
-                                    <p><strong>Email:</strong> <%= order.email %></p>
-                                    <p><strong>Phone:</strong> <%= order.phone %></p>
-                                    <p><strong>Preferred Method:</strong> <%= order.preferredContact %></p>
-                                    <p><strong>Needed By:</strong> <%= new Date(order.needByDate).toLocaleDateString('en-US') %></p>
-                                    <p><strong>Cake Type:</strong> <%= order.cakeType %></p>
-                                    <p><strong>Frosting:</strong> <%= order.frosting %></p>
-                                    <p><strong>Size:</strong> <%= order.size %></p>
-                                    <p><strong>Shape:</strong> <%= order.shape %></p>
-                                    
-                                    <!-- Combined View More Button or fallback text -->
-                                    <% if ((order.description && order.description.trim() !== "") || order.CakeImage) { %>
-
-                                        <% if (!order.CakeImage) { %>
+                            
+                                <div class="order-scrollable">
+                                    <div class="customer-name"><strong>Customer:</strong> <%= order.name %></div>
+                                    <div class="order-details">
+                                        <p><strong>Email:</strong> <%= order.email %></p>
+                                        <p><strong>Phone:</strong> <%= order.phone %></p>
+                                        <p><strong>Preferred Method:</strong> <%= order.preferredContact %></p>
+                                        <p><strong>Needed By:</strong> <%= new Date(order.needByDate).toLocaleDateString('en-US') %></p>
+                                        <p><strong>Cake Type:</strong> <%= order.cakeType %></p>
+                                        <p><strong>Frosting:</strong> <%= order.frosting %></p>
+                                        <p><strong>Size:</strong> <%= order.size %></p>
+                                        <p><strong>Shape:</strong> <%= order.shape %></p>
+                            
+                                        <% if ((order.description && order.description.trim() !== "") || order.CakeImage) { %>
+                                            <% if (!order.CakeImage) { %>
+                                                <p><strong>Image:</strong> No image provided.</p>
+                                            <% } %>
+                                            <% if (!order.description || order.description.trim() === "") { %>
+                                                <p><strong>Description:</strong> No description provided.</p>
+                                            <% } %>
+                                            <button 
+                                                class="view-more-btn view-combined-btn" 
+                                                data-description="<%= order.description ? order.description.replace(/"/g, '&quot;').replace(/'/g, "\\'") : '' %>" 
+                                                data-image="<%= order.CakeImage ? order.CakeImage : '' %>"
+                                            >
+                                                View More
+                                            </button>
+                                        <% } else { %>
+                                            <p><strong>Description:</strong> No description provided.</p>
                                             <p><strong>Image:</strong> No image provided.</p>
                                         <% } %>
-                                    
-                                        <% if (!order.description || order.description.trim() === "") { %>
-                                            <p><strong>Description:</strong> No description provided.</p>
-                                        <% } %>
-                                    
-                                        <!-- View More Button -->
-                                        <button 
-                                            class="view-more-btn view-combined-btn" 
-                                            data-description="<%= order.description ? order.description.replace(/"/g, '&quot;').replace(/'/g, "\\'") : '' %>" 
-                                            data-image="<%= order.CakeImage ? order.CakeImage : '' %>"
-                                        >
-                                            View More
-                                        </button>
-                                    
-                                    <% } else { %>
-                                    
-                                        <!-- If nothing is present -->
-                                        <p><strong>Description:</strong> No description provided.</p>
-                                        <p><strong>Image:</strong> No image provided.</p>
-                                    
-                                    <% } %>
-                                                                        
-                                    
-                                    <!-- Delete Button -->
-                                    <form class="delete-form" data-orderid="<%= order.OrderID %>">
-                                        <button type="submit" class="delete-btn">Delete</button>
-                                    </form>
+                            
+                                        <form class="delete-form" data-orderid="<%= order.OrderID %>">
+                                            <button type="submit" class="delete-btn">Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         <% } %>
