@@ -249,28 +249,15 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         const productName = currentProduct.ProductName;
         const storedProductSize = currentProduct.ProductSize;
         let updatedFields = {};
-        let updated = false;
+        let queryParams = [];
 
         // Check which fields need to be updated
-        if (newName) {
-            updatedFields.ProductName = newName;
-            updated = true;
-        }
-        if (newDescription) {
-            updatedFields.ProductDescription = newDescription;
-            updated = true;
-        }
-        if (newCategory) {
-            updatedFields.CategoryName = newCategory;
-            updated = true;
-        }
-        if (newPrice) {
-            updatedFields.ProductPrice = newPrice;
-            updated = true;
-        }
+        if (newName) updatedFields.ProductName = newName;
+        if (newDescription) updatedFields.ProductDescription = newDescription;
+        if (newCategory) updatedFields.CategoryName = newCategory;
+        if (newPrice) updatedFields.ProductPrice = newPrice;
         if (newSize) {
             updatedFields.ProductSize = newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize;
-            updated = true;
         }
 
         // If a new image is uploaded, update the image field
@@ -300,7 +287,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         if (err) {
                             console.error('Error deleting old image from S3:', err);
                         }
-                        // Proceed with updating the database after the image upload
+                        // Proceed with updating the database
                         updateProduct();
                     });
                 } else {
@@ -335,11 +322,11 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                     if (err) {
                         console.error('Error updating product:', err);
                     }
-                    updated = true;
-                    // Refresh the page after update
-                    res.redirect('/adminmenu');
+                    // If everything went well, redirect to the admin menu
+            res.redirect('/adminmenu');
                 });
-            } else {
+            } 
+            else {
                 // If product has multiple sizes, run the separate updates
                 if (newName || newDescription || newCategory) {
                     let updateQuery = 'UPDATE Products SET ';
@@ -367,7 +354,6 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         if (err) {
                             console.error('Error updating name/description/category:', err);
                         }
-                        updated = true;
                     });
                 }
 
@@ -376,7 +362,12 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                     const queryProductName = newName || productName;
                 
                     // First, retrieve the correct ProductID
-                    const productIdQuery = `SELECT ProductID FROM Products WHERE ProductName = ? AND ProductSize = ?`;
+                    const productIdQuery = `
+                        SELECT ProductID 
+                        FROM Products 
+                        WHERE ProductName = ? 
+                        AND ProductSize = ?
+                    `;
                 
                     connection.query(productIdQuery, [queryProductName, currentProductSize], (err, results) => {
                         if (err) {
@@ -411,16 +402,17 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                             if (err) {
                                 console.error('Error updating price/size:', err);
                             }
-                            updated = true;
-                            // Refresh the page after update
                             res.redirect('/adminmenu');
                         });
                     });
-                }
+                } else 
+                res.redirect('/adminmenu');
+                
             }
         }
     });
 });
+
 
 
 
