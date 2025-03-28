@@ -85,7 +85,7 @@
     <!-- Description and image Modal -->
     <div id="descriptionModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeDescription()">&times;</span>
+            <span class="close-btn">&times;</span>
             <h3 id="modalTitle">Order Description</h3>
             <p id="descriptionText"></p>
             <img id="modalImage" class="order-image" style="display: none;" />
@@ -171,12 +171,10 @@
                 });
             });
     
-            // Close modal when clicking outside of it or on the close button
-            modal.addEventListener("click", function (event) {
-                if (event.target === modal || event.target.classList.contains("close-btn")) {
-                    modal.style.display = "none";
-                    modal.style.visibility = "hidden";
-                }
+            // Close only if user clicks the X
+            document.querySelector(".close-btn").addEventListener("click", function () {
+                modal.style.display = "none";
+                modal.style.visibility = "hidden";
             });
 
             // Handle delete form submit
