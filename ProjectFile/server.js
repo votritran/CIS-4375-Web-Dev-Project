@@ -21,7 +21,6 @@ const accountRoutes = require('./routes/backend_route/accountRoutes');
 const changepasswordRoutes = require('./routes/backend_route/changepasswordRoutes');
 const adminhomeRoutes = require('./routes/backend_route/adminhomeRoutes');
 const admineventRoutes = require('./routes/backend_route/admineventRoutes');
-const cakeorderBackendRoutes = require('./routes/backend_route/cakeorderRoutes');
 const cakereqRoutes = require('./routes/backend_route/cakereqRoutes');
 
 // Initialize Express app
@@ -72,7 +71,6 @@ app.use(changepasswordRoutes);
 app.use(adminhomeRoutes)
 app.use(admineventRoutes); 
 app.use(admincontactusRoutes);
-app.use(cakeorderBackendRoutes);
 app.use(cakereqRoutes);
 
 // Add a catch-all route for undefined routes
