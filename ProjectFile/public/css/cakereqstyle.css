@@ -117,7 +117,8 @@ h2 {
     text-align: center;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
     position: relative;
-
+    max-height: 80vh;          /* Limit height to viewport */
+    overflow-y: auto;          /* Scroll if content is too tall */
 }
 
 
