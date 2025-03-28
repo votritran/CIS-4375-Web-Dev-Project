@@ -38,6 +38,7 @@
                                 <div class="order-details">
                                     <p><strong>Email:</strong> <%= order.email %></p>
                                     <p><strong>Phone:</strong> <%= order.phone %></p>
+                                    <p><strong>Preferred Method:</strong> <%= order.preferredContact %></p>
                                     <p><strong>Needed By:</strong> <%= new Date(order.needByDate).toLocaleDateString('en-US') %></p>
                                     <p><strong>Cake Type:</strong> <%= order.cakeType %></p>
                                     <p><strong>Frosting:</strong> <%= order.frosting %></p>
