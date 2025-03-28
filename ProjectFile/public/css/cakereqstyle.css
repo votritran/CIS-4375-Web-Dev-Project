@@ -8,6 +8,7 @@ body {
 
 .orders-container {
     margin-top: 160px;
+    margin-bottom: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -168,4 +169,19 @@ h2 {
     margin-bottom: 10px; /* Adds space below the image */
 }
 
-
+/*Footer*/
+.footer {
+    background-color: #8b4513 !important;
+    color: white !important;
+    font-family: Arial, sans-serif !important;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
