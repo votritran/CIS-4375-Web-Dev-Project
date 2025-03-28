@@ -249,15 +249,28 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         const productName = currentProduct.ProductName;
         const storedProductSize = currentProduct.ProductSize;
         let updatedFields = {};
-        let queryParams = [];
+        let updated = false;
 
         // Check which fields need to be updated
-        if (newName) updatedFields.ProductName = newName;
-        if (newDescription) updatedFields.ProductDescription = newDescription;
-        if (newCategory) updatedFields.CategoryName = newCategory;
-        if (newPrice) updatedFields.ProductPrice = newPrice;
+        if (newName) {
+            updatedFields.ProductName = newName;
+            updated = true;
+        }
+        if (newDescription) {
+            updatedFields.ProductDescription = newDescription;
+            updated = true;
+        }
+        if (newCategory) {
+            updatedFields.CategoryName = newCategory;
+            updated = true;
+        }
+        if (newPrice) {
+            updatedFields.ProductPrice = newPrice;
+            updated = true;
+        }
         if (newSize) {
             updatedFields.ProductSize = newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize;
+            updated = true;
         }
 
         // If a new image is uploaded, update the image field
@@ -287,7 +300,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         if (err) {
                             console.error('Error deleting old image from S3:', err);
                         }
-                        // Proceed with updating the database
+                        // Proceed with updating the database after the image upload
                         updateProduct();
                     });
                 } else {
@@ -322,6 +335,9 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                     if (err) {
                         console.error('Error updating product:', err);
                     }
+                    updated = true;
+                    // Refresh the page after update
+                    res.redirect('/adminmenu');
                 });
             } else {
                 // If product has multiple sizes, run the separate updates
@@ -351,6 +367,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         if (err) {
                             console.error('Error updating name/description/category:', err);
                         }
+                        updated = true;
                     });
                 }
 
@@ -359,12 +376,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                     const queryProductName = newName || productName;
                 
                     // First, retrieve the correct ProductID
-                    const productIdQuery = `
-                        SELECT ProductID 
-                        FROM Products 
-                        WHERE ProductName = ? 
-                        AND ProductSize = ?
-                    `;
+                    const productIdQuery = `SELECT ProductID FROM Products WHERE ProductName = ? AND ProductSize = ?`;
                 
                     connection.query(productIdQuery, [queryProductName, currentProductSize], (err, results) => {
                         if (err) {
@@ -399,17 +411,17 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                             if (err) {
                                 console.error('Error updating price/size:', err);
                             }
+                            updated = true;
+                            // Refresh the page after update
+                            res.redirect('/adminmenu');
                         });
                     });
                 }
-                
             }
-
-            // Redirect after updates are done
-            res.redirect('/adminmenu');
         }
     });
 });
+
 
 
 module.exports = router;  // Export the router to be used in server.js
