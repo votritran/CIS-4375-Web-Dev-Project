@@ -228,7 +228,7 @@ router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
     });
 });
 
-router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => {
+router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => { 
     const { productId } = req.params;
     const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
     const newImage = req.file;
@@ -257,9 +257,9 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         if (newCategory) updatedFields.CategoryName = newCategory;
         if (newPrice) updatedFields.ProductPrice = newPrice;
         if (newSize) {
-            updatedFields.ProductSize = newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize;
+            updatedFields.ProductSize = newSize.toLowerCase() === 'null' ? null : newSize;
         }
-
+        
         // If a new image is uploaded, update the image field
         if (newImage) {
             const params = {
@@ -323,7 +323,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         console.error('Error updating product:', err);
                     }
                     // If everything went well, redirect to the admin menu
-            res.redirect('/adminmenu');
+                    res.redirect('/adminmenu');
                 });
             } 
             else {
@@ -390,7 +390,7 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                         }
                         if (newSize) {
                             updateParts.push('ProductSize = ?');
-                            updateParams.push(newSize);
+                            updateParams.push(newSize.toLowerCase() === 'null' ? null : newSize);
                         }
                 
                         updateQuery += updateParts.join(', ') + ' WHERE ProductID = ?';
@@ -405,13 +405,14 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                             res.redirect('/adminmenu');
                         });
                     });
-                } else 
-                res.redirect('/adminmenu');
-                
+                } else {
+                    res.redirect('/adminmenu');
+                }
             }
         }
     });
 });
+
 
 
 
