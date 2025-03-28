@@ -45,21 +45,33 @@
                                     <p><strong>Size:</strong> <%= order.size %></p>
                                     <p><strong>Shape:</strong> <%= order.shape %></p>
                                     
-                                    <% if (order.description && order.description.trim() !== "") { %>
-                                        <button class="view-more-btn" data-description="<%= order.description.replace(/"/g, '&quot;').replace(/'/g, "\\'") %>">
+                                    <!-- Combined View More Button or fallback text -->
+                                    <% if ((order.description && order.description.trim() !== "") || order.CakeImage) { %>
+
+                                        <% if (!order.CakeImage) { %>
+                                            <p><strong>Image:</strong> No image provided.</p>
+                                        <% } %>
+                                    
+                                        <% if (!order.description || order.description.trim() === "") { %>
+                                            <p><strong>Description:</strong> No description provided.</p>
+                                        <% } %>
+                                    
+                                        <!-- View More Button -->
+                                        <button 
+                                            class="view-more-btn view-combined-btn" 
+                                            data-description="<%= order.description ? order.description.replace(/"/g, '&quot;').replace(/'/g, "\\'") : '' %>" 
+                                            data-image="<%= order.CakeImage ? order.CakeImage : '' %>"
+                                        >
                                             View More
                                         </button>
+                                    
                                     <% } else { %>
+                                    
+                                        <!-- If nothing is present -->
                                         <p><strong>Description:</strong> No description provided.</p>
+                                        <p><strong>Image:</strong> No image provided.</p>
+                                    
                                     <% } %>
-                                    <!-- To show image -->
-                                    <p><strong>Image:</strong> 
-                                        <% if (order.CakeImage) { %>
-                                            <img src="<%= order.CakeImage %>" alt="Cake Image" class="order-image">
-                                        <% } else { %>
-                                            No image available.
-                                        <% } %>
-                                    </p>
                                                                         
                                     
                                     <!-- Delete Button -->
@@ -78,12 +90,13 @@
         <% }) %>
     </div>
 
-    <!-- Description Popup Modal -->
+    <!-- Description and image Modal -->
     <div id="descriptionModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeDescription()">&times;</span>
-            <h3>Order Description</h3>
+            <h3 id="modalTitle">Order Description</h3>
             <p id="descriptionText"></p>
+            <img id="modalImage" class="order-image" style="display: none;" />
         </div>
     </div>
 
@@ -133,16 +146,31 @@
             // Ensure modal is hidden on page load
             modal.style.display = "none";
 
-            // Attach event listener to "View More" buttons
-            document.querySelectorAll(".view-more-btn").forEach(button => {
+            // View More button logic (description + image)
+            document.querySelectorAll(".view-combined-btn").forEach(button => {
                 button.addEventListener("click", function () {
-                    // Get description from the button's data attribute
-                    const description = this.getAttribute("data-description") || "No description provided.";
-    
-                    // Set the modal content
-                    descriptionText.innerText = description;
+                    const description = this.getAttribute("data-description") || "";
+                    const image = this.getAttribute("data-image") || "";
 
-                    // Show the modal
+                    document.getElementById("modalTitle").innerText = "Order Details";
+
+                    // Handle description
+                    if (description.trim() !== "") {
+                        document.getElementById("descriptionText").innerText = description;
+                        document.getElementById("descriptionText").style.display = "block";
+                    } else {
+                        document.getElementById("descriptionText").innerText = "";
+                        document.getElementById("descriptionText").style.display = "none";
+                    }
+
+                    // Handle image
+                    if (image.trim() !== "") {
+                        document.getElementById("modalImage").src = image;
+                        document.getElementById("modalImage").style.display = "block";
+                    } else {
+                        document.getElementById("modalImage").style.display = "none";
+                    }
+
                     modal.style.display = "flex";
                 });
             });
