@@ -91,6 +91,9 @@
             <img id="modalImage" class="order-image" style="display: none;" />
         </div>
     </div>
+    
+    <!-- Footer Section -->
+    <%- include('../partials/footer') %>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -164,6 +167,7 @@
                     }
 
                     modal.style.display = "flex";
+                    modal.style.visibility = "visible";
                 });
             });
     
@@ -171,6 +175,7 @@
             modal.addEventListener("click", function (event) {
                 if (event.target === modal || event.target.classList.contains("close-btn")) {
                     modal.style.display = "none";
+                    modal.style.visibility = "hidden";
                 }
             });
 
@@ -203,9 +208,6 @@
         });
 
     </script>
-    
-    <!-- Footer Section -->
-    <%- include('../partials/footer') %>
     
 </body>
 </html>
