@@ -25,7 +25,7 @@ router.get('/cakeorder', (req, res) => {
 
 // Route to handle form submission
 router.post('/cakeorder', upload.single('image'), (req, res) => {
-    const { name, email, phone, needByDate, cakeType, frosting, size, shape, description } = req.body;
+    const { name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description } = req.body;
 
     // Fetch the latest OwnerID from the Owner table
     const getOwnerIdQuery = 'SELECT OwnerID FROM Owner ORDER BY OwnerID DESC LIMIT 1';
@@ -64,9 +64,9 @@ router.post('/cakeorder', upload.single('image'), (req, res) => {
 
                 // Insert order details into the database including OwnerID and Image URL
                 const sql = `
-                    INSERT INTO CakeOrder (name, email, phone, needByDate, cakeType, frosting, size, shape, description, status, OwnerID, CakeImage)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?)`;
-                db.query(sql, [name, email, phone, needByDate, cakeType, frosting, size, shape, description, ownerID, CakeImage], (err, result) => {
+                    INSERT INTO CakeOrder (name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, status, OwnerID, CakeImage)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?)`;
+                db.query(sql, [name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, ownerID, CakeImage], (err, result) => {
                     if (err) {
                         console.error('Error inserting order:', err);
                         return res.status(500).send('An error occurred. Please try again later.');
@@ -79,9 +79,9 @@ router.post('/cakeorder', upload.single('image'), (req, res) => {
         } else {
             // If no image is uploaded, just insert the order without an image
             const sql = `
-                INSERT INTO CakeOrder (name, email, phone, needByDate, cakeType, frosting, size, shape, description, status, OwnerID)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?)`;
-            db.query(sql, [name, email, phone, needByDate, cakeType, frosting, size, shape, description, ownerID], (err, result) => {
+                INSERT INTO CakeOrder (name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, status, OwnerID)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?)`;
+            db.query(sql, [name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, ownerID], (err, result) => {
                 if (err) {
                     console.error('Error inserting order:', err);
                     return res.status(500).send('An error occurred. Please try again later.');
