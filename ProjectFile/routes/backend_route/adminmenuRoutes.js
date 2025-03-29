@@ -100,17 +100,28 @@ router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (r
         // Image URL from S3
         const imageUrl = data.Location;
 
-        // Save the menu item to the database
-        const query = `
-            INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-        connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl], (err, result) => {
+        // Get the latest OwnerID from the Owner table
+        const ownerQuery = `SELECT OwnerID FROM Owner ORDER BY OwnerID DESC LIMIT 1`;
+        connection.query(ownerQuery, (err, ownerResult) => {
             if (err) {
-                console.error('Error adding menu item:', err);
-                return res.status(500).send('Error adding menu item');
+                console.error('Error retrieving OwnerID:', err);
+                return res.status(500).send('Error retrieving OwnerID');
             }
-            res.redirect('/adminmenu');
+
+            const ownerID = ownerResult.length > 0 ? ownerResult[0].OwnerID : null;
+            
+            // Save the menu item to the database with OwnerID
+            const query = `
+                INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage, OwnerID)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl, ownerID], (err, result) => {
+                if (err) {
+                    console.error('Error adding menu item:', err);
+                    return res.status(500).send('Error adding menu item');
+                }
+                res.redirect('/adminmenu');
+            });
         });
     });
 });
@@ -217,8 +228,7 @@ router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
     });
 });
 
-
-router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => {
+router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => { 
     const { productId } = req.params;
     const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
     const newImage = req.file;
@@ -244,12 +254,12 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         // Check which fields need to be updated
         if (newName) updatedFields.ProductName = newName;
         if (newDescription) updatedFields.ProductDescription = newDescription;
+        if (newCategory) updatedFields.CategoryName = newCategory;
         if (newPrice) updatedFields.ProductPrice = newPrice;
         if (newSize) {
             updatedFields.ProductSize = newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize;
         }
-        if (newCategory) updatedFields.CategoryName = newCategory;
-
+        
         // If a new image is uploaded, update the image field
         if (newImage) {
             const params = {
@@ -293,34 +303,122 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                 return res.status(400).send('No fields to update');
             }
 
-            let updateQuery = 'UPDATE Products SET ';
-            const updateParts = [];
-
-            Object.keys(updatedFields).forEach((key) => {
-                updateParts.push(`${key} = ?`);
-                queryParams.push(updatedFields[key]);
-            });
-
-            updateQuery += updateParts.join(', ');
-
-            // Determine the update condition
             if (storedProductSize === null) {
-                updateQuery += ' WHERE ProductID = ?';
-                queryParams.push(productId);
-            } else {
-                updateQuery += ' WHERE ProductName = ? AND ProductSize = ?';
-                queryParams.push(productName, currentProductSize);
-            }
+                // If product does not have multiple sizes, update everything based on ProductID
+                let updateQuery = 'UPDATE Products SET ';
+                const updateParts = [];
+                let updateParams = [];
 
-            connection.query(updateQuery, queryParams, (err, result) => {
-                if (err) {
-                    console.error('Error updating product:', err);
-                    return res.status(500).send('Error updating product');
+                for (const [key, value] of Object.entries(updatedFields)) {
+                    updateParts.push(`${key} = ?`);
+                    updateParams.push(value);
                 }
-                res.redirect('/adminmenu');
-            });
+
+                updateQuery += updateParts.join(', ') + ' WHERE ProductID = ?';
+                updateParams.push(productId);
+
+                console.log('SQL Command (Single Size Product):', updateQuery, updateParams);
+                connection.query(updateQuery, updateParams, (err) => {
+                    if (err) {
+                        console.error('Error updating product:', err);
+                    }
+                    // If everything went well, redirect to the admin menu
+                    res.redirect('/adminmenu');
+                });
+            } 
+            else {
+                // If product has multiple sizes, run the separate updates
+                if (newName || newDescription || newCategory || newImage) {
+                    let updateQuery = 'UPDATE Products SET ';
+                    const updateParts = [];
+                    let updateParams = [];
+
+                    if (newName) {
+                        updateParts.push('ProductName = ?');
+                        updateParams.push(newName);
+                    }
+                    if (newDescription) {
+                        updateParts.push('ProductDescription = ?');
+                        updateParams.push(newDescription);
+                    }
+                    if (newCategory) {
+                        updateParts.push('CategoryName = ?');
+                        updateParams.push(newCategory);
+                    }
+                    if (newImage) {
+                        updateParts.push('ProductImage = ?');
+                        updateParams.push(updatedFields.ProductImage); // New image URL from S3
+                    }
+
+                    updateQuery += updateParts.join(', ') + ' WHERE ProductName = ?';
+                    updateParams.push(productName);
+
+                    console.log('SQL Command (Names, Description, Category):', updateQuery, updateParams);
+                    connection.query(updateQuery, updateParams, (err) => {
+                        if (err) {
+                            console.error('Error updating name/description/category/image:', err);
+                        }
+                    });
+                }
+
+                if (newPrice || newSize) {
+                    // Use the new product name if available, otherwise use the old product name
+                    const queryProductName = newName || productName;
+                
+                    // First, retrieve the correct ProductID
+                    const productIdQuery = `
+                        SELECT ProductID 
+                        FROM Products 
+                        WHERE ProductName = ? 
+                        AND ProductSize = ?
+                    `;
+                
+                    connection.query(productIdQuery, [queryProductName, currentProductSize], (err, results) => {
+                        if (err) {
+                            console.error('Error fetching ProductID:', err);
+                            return res.status(500).send('Error fetching ProductID');
+                        }
+                
+                        if (results.length === 0) {
+                            console.error('No matching ProductID found.');
+                            return res.status(404).send('No matching product found.');
+                        }
+                
+                        let updateQuery = 'UPDATE Products SET ';
+                        const updateParts = [];
+                        let updateParams = [];
+                
+                        if (newPrice) {
+                            updateParts.push('ProductPrice = ?');
+                            updateParams.push(newPrice);
+                        }
+                        if (newSize) {
+                            updateParts.push('ProductSize = ?');
+                            updateParams.push(newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize);
+                        }
+                
+                        updateQuery += updateParts.join(', ') + ' WHERE ProductID = ?';
+                        updateParams.push(results[0].ProductID); // Use the ProductID directly
+                
+                        console.log('SQL Command (Price, Size):', updateQuery, updateParams);
+                
+                        connection.query(updateQuery, updateParams, (err) => {
+                            if (err) {
+                                console.error('Error updating price/size:', err);
+                            }
+                            res.redirect('/adminmenu');
+                        });
+                    });
+                } else {
+                    res.redirect('/adminmenu');
+                }
+            }
         }
     });
 });
+
+
+
+
 
 module.exports = router;  // Export the router to be used in server.js
