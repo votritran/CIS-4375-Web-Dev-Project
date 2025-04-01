@@ -172,6 +172,38 @@ h1 {
     
 }
 
+.service-provided {
+    
+    border: 3px dashed #8b4513; /* Dashed brown border */
+    padding: 10px; /* Add space inside the border */
+    margin: 20px auto; /* Center the section */        border-radius: 10px; /* Optional: rounded corners */
+    background-color: #f8f4e5; /* Optional: Light background */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow for depth */
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    align-items: center;     /* Vertically align the content in the middle */
+    gap: 20px;               /* Adds space between the image and text */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 100px;
+    width: 700px;
+}
+
+.service-provided h1 {
+    font-size: 30px;
+    text-align: center;
+    
+}
+
+.service-provided li {
+    
+    font-size: 20px;
+}
+.service-provided p {
+    text-align: center;
+    font-weight: bold;
+}
+    
 .history-container {
     display: flex;
     justify-content: center; /* Center the content horizontally */
@@ -215,6 +247,10 @@ h1 {
 
     .history-text {
         padding: 10px;  /* Reduced padding for smaller screens */
+    }
+
+    .service-provided {
+        width: 90%;    /* Center the items */
     }
 }
 .footer {

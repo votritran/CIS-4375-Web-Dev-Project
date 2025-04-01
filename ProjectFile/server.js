@@ -1,6 +1,8 @@
 const express = require('express'); 
 const path = require('path');
 const session = require('express-session');
+require('./public/js/passwordExpirationNotifier');
+
 require('dotenv').config(); // Load environment variables from .env file
 const cookieParser = require('cookie-parser');
 // Import routes
@@ -21,7 +23,7 @@ const accountRoutes = require('./routes/backend_route/accountRoutes');
 const changepasswordRoutes = require('./routes/backend_route/changepasswordRoutes');
 const adminhomeRoutes = require('./routes/backend_route/adminhomeRoutes');
 const admineventRoutes = require('./routes/backend_route/admineventRoutes');
-
+const cakereqRoutes = require('./routes/backend_route/cakereqRoutes');
 
 // Initialize Express app
 const app = express();
@@ -31,7 +33,10 @@ app.use(cookieParser());
 const port = process.env.PORT || 3000;
 
 // Set view engine to EJS
-app.set('views', path.join(__dirname, 'views', 'userview'));
+app.set('views', [
+    path.join(__dirname, 'views', 'userview'),
+    path.join(__dirname, 'views', 'adminview')
+]);
 app.set('view engine', 'ejs');
 
 // Define static folder for serving CSS, images, and JS files
@@ -66,8 +71,10 @@ app.use(logoutRoutes);
 app.use(accountRoutes);
 app.use(changepasswordRoutes);
 app.use(adminhomeRoutes)
-app.use(admineventRoutes);
+app.use(admineventRoutes); 
 app.use(admincontactusRoutes);
+app.use(cakereqRoutes);
+
 // Add a catch-all route for undefined routes
 app.use((req, res) => {
     res.status(404).send('Page Not Found');

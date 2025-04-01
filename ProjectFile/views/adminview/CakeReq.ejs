@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cake Requests</title>
+    <link rel="stylesheet" href="/css/cakereqstyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+    <!-- Include the Navbar -->
+    <%- include('../partials/loginnavbar') %>
+
+    <!-- Orders Container -->
+    <div class="orders-container" id="ordersContainer">
+
+        <% const statuses = ["New", "Pending", "Completed"]; %>
+        <% statuses.forEach(status => { %>
+            <div id="<%= status.toLowerCase() %>Orders">
+                <h2><%= status %> Orders</h2>
+                <div class="orders-grid" id="<%= status.toLowerCase() %>Grid">
+                    <% cakeOrders.forEach(order => { %>
+                        <% if (order.status === status) { %>
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <div class="order-title"><strong>Order ID:</strong> <%= order.OrderID %></div>
+                                    <div class="dropdown-container">
+                                        <select class="order-status" data-orderid="<%= order.OrderID %>">
+                                            <% statuses.forEach(opt => { %>
+                                                <option value="<%= opt %>" <%= order.status === opt ? "selected" : "" %>><%= opt %></option>
+                                            <% }) %>
+                                        </select>                                    
+                                    </div>
+                                </div>                            
+                            
+                                <div class="order-scrollable">
+                                    <div class="customer-name"><strong>Customer:</strong> <%= order.name %></div>
+                                    <div class="order-details">
+                                        <p><strong>Email:</strong> <%= order.email %></p>
+                                        <p><strong>Phone:</strong> <%= order.phone %></p>
+                                        <p><strong>Preferred Method:</strong> <%= order.preferredContact %></p>
+                                        <p><strong>Needed By:</strong> <%= new Date(order.needByDate).toLocaleDateString('en-US') %></p>
+                                        <p><strong>Cake Type:</strong> <%= order.cakeType %></p>
+                                        <p><strong>Frosting:</strong> <%= order.frosting %></p>
+                                        <p><strong>Size:</strong> <%= order.size %></p>
+                                        <p><strong>Shape:</strong> <%= order.shape %></p>
+                            
+                                        <% if ((order.description && order.description.trim() !== "") || order.CakeImage) { %>
+                                            <% if (!order.CakeImage) { %>
+                                                <p><strong>Image:</strong> No image provided.</p>
+                                            <% } %>
+                                            <% if (!order.description || order.description.trim() === "") { %>
+                                                <p><strong>Description:</strong> No description provided.</p>
+                                            <% } %>
+                                            <button 
+                                                class="view-more-btn view-combined-btn" 
+                                                data-description="<%= order.description ? order.description.replace(/"/g, '&quot;').replace(/'/g, "\\'") : '' %>" 
+                                                data-image="<%= order.CakeImage ? order.CakeImage : '' %>"
+                                            >
+                                                View More
+                                            </button>
+                                        <% } else { %>
+                                            <p><strong>Description:</strong> No description provided.</p>
+                                            <p><strong>Image:</strong> No image provided.</p>
+                                        <% } %>
+                            
+                                        <form class="delete-form" data-orderid="<%= order.OrderID %>">
+                                            <button type="submit" class="delete-btn">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% }) %>
+                </div>
+            </div>
+            <% if (status !== "Completed") { %>
+                <hr class="section-divider">
+            <% } %>
+        <% }) %>
+    </div>
+
+    <!-- Description and image Modal -->
+    <div id="descriptionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modalTitle">Order Description</h3>
+            <p id="descriptionText"></p>
+            <img id="modalImage" class="order-image" style="display: none;" />
+        </div>
+    </div>
+    
+    <!-- Footer Section -->
+    <%- include('../partials/footer') %>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("descriptionModal");
+            const modalContent = document.querySelector(".modal-content");
+            const descriptionText = document.getElementById("descriptionText");
+
+            // Handle Order Status Change
+            document.querySelectorAll(".order-status").forEach(select => {
+                select.addEventListener("change", function () {
+                    const orderID = this.dataset.orderid;
+                    const newStatus = this.value;
+                    const orderCard = this.closest(".order-card");
+    
+                    // Send status update to backend
+                    fetch("/update_order_status", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ orderID, status: newStatus })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log(`Order ${orderID} status updated to ${newStatus}`);
+                            moveOrder(orderCard, newStatus);
+                        } else {
+                            alert("Failed to update order status.");
+                        }
+                    })
+                    .catch(error => console.error("Error updating order:", error));
+                });
+            });
+    
+            function moveOrder(orderCard, status) {
+                // Remove the order card from its current section
+                orderCard.remove();
+    
+                // Append it to the correct section based on the new status
+                const targetGrid = document.getElementById(status.toLowerCase() + "Grid");
+                if (targetGrid) {
+                    targetGrid.appendChild(orderCard);
+                }
+            }
+    
+            // Ensure modal is hidden on page load
+            modal.style.display = "none";
+
+            // View More button logic (description + image)
+            document.querySelectorAll(".view-combined-btn").forEach(button => {
+                button.addEventListener("click", function () {
+                    const description = this.getAttribute("data-description") || "";
+                    const image = this.getAttribute("data-image") || "";
+
+                    document.getElementById("modalTitle").innerText = "Order Details";
+
+                    // Handle description
+                    if (description.trim() !== "") {
+                        document.getElementById("descriptionText").innerText = description;
+                        document.getElementById("descriptionText").style.display = "block";
+                    } else {
+                        document.getElementById("descriptionText").innerText = "";
+                        document.getElementById("descriptionText").style.display = "none";
+                    }
+
+                    // Handle image
+                    if (image.trim() !== "") {
+                        document.getElementById("modalImage").src = image;
+                        document.getElementById("modalImage").style.display = "block";
+                    } else {
+                        document.getElementById("modalImage").style.display = "none";
+                    }
+
+                    modal.style.display = "flex";
+                    modal.style.visibility = "visible";
+                });
+            });
+    
+            // Close only if user clicks the X
+            document.querySelector(".close-btn").addEventListener("click", function () {
+                modal.style.display = "none";
+                modal.style.visibility = "hidden";
+            });
+
+            // Handle delete form submit
+            document.querySelectorAll(".delete-form").forEach(form => {
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    const orderID = this.dataset.orderid;
+
+                    if (confirm("Are you sure you want to delete this order?")) {
+                        fetch("/delete_order", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ orderID })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Remove the order card from the DOM
+                                this.closest(".order-card").remove();
+                            } else {
+                                alert("Failed to delete the order.");
+                            }
+                        })
+                        .catch(error => console.error("Error deleting order:", error));
+                    }
+                });
+            });
+            
+        });
+
+    </script>
+    
+</body>
+</html>

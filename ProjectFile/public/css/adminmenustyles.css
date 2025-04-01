@@ -383,6 +383,12 @@ h1 {
     background-color: #fff;
 }
 
+.update-form-container select {
+    width: 85%;
+    margin-bottom: 15px;
+
+}
+
 .update-form-container textarea {
     resize: vertical; /* Allow users to resize textarea vertically */
     height: 100px; /* Set a default height for the textarea */

@@ -66,6 +66,14 @@ const bcrypt = require('bcrypt');
 router.post('/forgot-password', (req, res) => {
     const { email, newPassword } = req.body;  
 
+    
+    const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+    // Validate the password before proceeding
+    if (!passwordRegex.test(newPassword)) {
+        return res.status(400).json({ message: "Password must be at least 8 characters long, contain 1 number, and 1 special character." });
+    }
+
     // Hash the new password
     bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
         if (err) {
@@ -87,12 +95,12 @@ router.post('/forgot-password', (req, res) => {
                     return res.status(404).json({ message: 'Email not found' });
                 }
 
-                
                 res.json({ message: 'Password updated successfully!' });
             }
         );
     });
 });
+
 
 
 module.exports = router;

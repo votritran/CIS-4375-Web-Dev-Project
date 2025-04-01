@@ -100,76 +100,139 @@ router.post('/adminmenu/add', isAuthenticated, upload.single('productImage'), (r
         // Image URL from S3
         const imageUrl = data.Location;
 
-        // Save the menu item to the database
-        const query = `
-            INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-        connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl], (err, result) => {
+        // Get the latest OwnerID from the Owner table
+        const ownerQuery = `SELECT OwnerID FROM Owner ORDER BY OwnerID DESC LIMIT 1`;
+        connection.query(ownerQuery, (err, ownerResult) => {
             if (err) {
-                console.error('Error adding menu item:', err);
-                return res.status(500).send('Error adding menu item');
-            }
-            res.redirect('/adminmenu');
-        });
-    });
-});
-
-router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
-    const productId = req.params.productId;
-
-    // Fetch product image URL from the database
-    connection.query('SELECT ProductImage FROM Products WHERE ProductID = ?', [productId], (err, result) => {
-        if (err) {
-            console.error('Error fetching product image:', err);
-            return res.status(500).send('Error fetching product image');
-        }
-
-        if (result.length === 0) {
-            return res.status(404).send('Product not found');
-        }
-
-        const imageUrl = result[0].ProductImage;
-
-        // Extract the S3 object key (path after 'amazonaws.com/')
-        const imageKey = imageUrl.split('amazonaws.com/')[1];
-
-        // Ensure the image key is extracted correctly
-        if (!imageKey) {
-            console.error('No valid image key found in URL:', imageUrl);
-            return res.status(500).send('Error: Invalid image URL');
-        }
-
-        // Delete the image from S3
-        const s3Params = {
-            Bucket: 'cis4375tv', // Your S3 bucket name
-            Key: imageKey // Extracted key from image URL
-        };
-
-        s3.deleteObject(s3Params, (err, data) => {
-            if (err) {
-                console.error('Error deleting image from S3:', err);
-                return res.status(500).send('Error deleting image from S3');
+                console.error('Error retrieving OwnerID:', err);
+                return res.status(500).send('Error retrieving OwnerID');
             }
 
-            // After successfully deleting the image, delete the product from the database
-            connection.query('DELETE FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+            const ownerID = ownerResult.length > 0 ? ownerResult[0].OwnerID : null;
+            
+            // Save the menu item to the database with OwnerID
+            const query = `
+                INSERT INTO Products (ProductName, ProductDescription, ProductPrice, ProductSize, CategoryName, ProductImage, OwnerID)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            connection.query(query, [productName, productDescription, productPrice, productSize, categoryName, imageUrl, ownerID], (err, result) => {
                 if (err) {
-                    console.error('Error deleting product from database:', err);
-                    return res.status(500).send('Error deleting product from database');
+                    console.error('Error adding menu item:', err);
+                    return res.status(500).send('Error adding menu item');
                 }
-
-                // Redirect back to the menu page after successful deletion
                 res.redirect('/adminmenu');
             });
         });
     });
 });
 
-router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => {
+router.post('/adminmenu/delete/:productId', isAuthenticated, (req, res) => {
+    const productId = req.params.productId;
+    const productSize = req.body.productSize; // Get product size from the form
+
+    // Fetch product details from the database
+    connection.query('SELECT ProductImage, ProductName, ProductSize FROM Products WHERE ProductID = ?', [productId], (err, result) => {
+        if (err) {
+            console.error('Error fetching product details:', err);
+            return res.status(500).send('Error fetching product details');
+        }
+
+        if (result.length === 0) {
+            return res.status(404).send('Product not found');
+        }
+
+        const productName = result[0].ProductName;
+        const storedProductSize = result[0].ProductSize;
+        const imageUrl = result[0].ProductImage;
+
+        let deleteQuery;
+        let queryParams;
+
+        if (!productSize || storedProductSize == null) {
+            // If no size was provided OR the product has no sizes in the database, delete by ProductID
+            deleteQuery = 'DELETE FROM Products WHERE ProductID = ?';
+            queryParams = [productId];
+        } else {
+            // If a size was selected, delete only that specific size
+            deleteQuery = 'DELETE FROM Products WHERE ProductName = ? AND ProductSize = ?';
+            queryParams = [productName, productSize];
+        }
+
+        // Execute deletion from database
+        connection.query(deleteQuery, queryParams, (err, result) => {
+            if (err) {
+                console.error('Error deleting product from database:', err);
+                return res.status(500).send('Error deleting product from database');
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).send('No matching product found to delete.');
+            }
+
+            // If the whole product was deleted, remove the image from S3
+            if (!productSize || storedProductSize == null) {
+                if (!imageUrl) {
+                    console.error('No image URL found for product:', productId);
+                    return res.redirect('/adminmenu'); // Skip S3 deletion if no image
+                }
+
+                const imageKey = imageUrl.split('amazonaws.com/')[1];
+
+                if (!imageKey) {
+                    console.error('No valid image key found in URL:', imageUrl);
+                    return res.status(500).send('Error: Invalid image URL');
+                }
+
+                // Delete the image from S3
+                const s3Params = {
+                    Bucket: 'cis4375tv', // Your S3 bucket name
+                    Key: imageKey
+                };
+
+                s3.deleteObject(s3Params, (err, data) => {
+                    if (err) {
+                        console.error('Error deleting image from S3:', err);
+                        return res.status(500).send('Error deleting image from S3');
+                    }
+
+                    res.redirect('/adminmenu'); // Redirect after successful deletion
+                });
+            } else {
+                if (!imageUrl) {
+                    console.error('No image URL found for product:', productId);
+                    return res.redirect('/adminmenu'); // Skip S3 deletion if no image
+                }
+
+                const imageKey = imageUrl.split('amazonaws.com/')[1];
+
+                if (!imageKey) {
+                    console.error('No valid image key found in URL:', imageUrl);
+                    return res.status(500).send('Error: Invalid image URL');
+                }
+
+                // Delete the image from S3
+                const s3Params = {
+                    Bucket: 'cis4375tv', // Your S3 bucket name
+                    Key: imageKey
+                };
+
+                s3.deleteObject(s3Params, (err, data) => {
+                    if (err) {
+                        console.error('Error deleting image from S3:', err);
+                        return res.status(500).send('Error deleting image from S3');
+                    }
+                
+                    res.redirect('/adminmenu'); 
+            })};
+        });
+    });
+});
+
+router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newImage'), (req, res) => { 
     const { productId } = req.params;
     const { newName, newDescription, newPrice, newSize, newCategory } = req.body;
     const newImage = req.file;
+    const currentProductSize = req.body.currentSize;
 
     // Get the current product details before update
     connection.query('SELECT * FROM Products WHERE ProductID = ?', [productId], (err, result) => {
@@ -183,16 +246,22 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
         }
 
         const currentProduct = result[0];
-        const updatedName = newName || currentProduct.ProductName;
-        const updatedDescription = newDescription || currentProduct.ProductDescription;
-        const updatedPrice = newPrice || currentProduct.ProductPrice;
-        const updatedSize = newSize || currentProduct.ProductSize;
-        const updatedCategory = newCategory || currentProduct.CategoryName;
-        let updatedImageUrl = currentProduct.ProductImage;  // Keep the existing image URL by default
+        const productName = currentProduct.ProductName;
+        const storedProductSize = currentProduct.ProductSize;
+        let updatedFields = {};
+        let queryParams = [];
 
-        // If a new image is uploaded, upload it to S3 and delete the old one
+        // Check which fields need to be updated
+        if (newName) updatedFields.ProductName = newName;
+        if (newDescription) updatedFields.ProductDescription = newDescription;
+        if (newCategory) updatedFields.CategoryName = newCategory;
+        if (newPrice) updatedFields.ProductPrice = newPrice;
+        if (newSize) {
+            updatedFields.ProductSize = newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize;
+        }
+        
+        // If a new image is uploaded, update the image field
         if (newImage) {
-            // Upload the new image to S3
             const params = {
                 Bucket: 'cis4375tv',
                 Key: `menu-items/${Date.now()}-${newImage.originalname}`,
@@ -207,55 +276,148 @@ router.post('/adminmenu/update/:productId', isAuthenticated, upload.single('newI
                     return res.status(500).send('Error uploading image to S3');
                 }
 
-                updatedImageUrl = data.Location;
+                updatedFields.ProductImage = data.Location;
 
-                // Delete the old image from S3
-                const imageKey = currentProduct.ProductImage.split('amazonaws.com/')[1];
-                const s3Params = {
-                    Bucket: 'cis4375tv',
-                    Key: imageKey
-                };
+                // Delete the old image from S3 if it exists
+                if (currentProduct.ProductImage) {
+                    const imageKey = currentProduct.ProductImage.split('amazonaws.com/')[1];
+                    const s3Params = { Bucket: 'cis4375tv', Key: imageKey };
 
-                s3.deleteObject(s3Params, (err) => {
-                    if (err) {
-                        console.error('Error deleting old image from S3:', err);
-                        return res.status(500).send('Error deleting old image');
-                    }
-
-                    // Proceed to update product details in the database
-                    const updateQuery = `
-                        UPDATE Products
-                        SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?, ProductImage = ?
-                        WHERE ProductID = ?
-                    `;
-                    connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, updatedImageUrl, productId], (err, result) => {
+                    s3.deleteObject(s3Params, (err) => {
                         if (err) {
-                            console.error('Error updating product:', err);
-                            return res.status(500).send('Error updating product');
+                            console.error('Error deleting old image from S3:', err);
                         }
-
-                        res.redirect('/adminmenu');
+                        // Proceed with updating the database
+                        updateProduct();
                     });
-                });
+                } else {
+                    updateProduct();
+                }
             });
         } else {
-            // No new image, just update the other fields
-            const updateQuery = `
-                UPDATE Products
-                SET ProductName = ?, ProductDescription = ?, ProductPrice = ?, ProductSize = ?, CategoryName = ?
-                WHERE ProductID = ?
-            `;
-            connection.query(updateQuery, [updatedName, updatedDescription, updatedPrice, updatedSize, updatedCategory, productId], (err, result) => {
-                if (err) {
-                    console.error('Error updating product:', err);
-                    return res.status(500).send('Error updating product');
+            updateProduct();
+        }
+
+        function updateProduct() {
+            if (Object.keys(updatedFields).length === 0) {
+                return res.status(400).send('No fields to update');
+            }
+
+            if (storedProductSize === null) {
+                // If product does not have multiple sizes, update everything based on ProductID
+                let updateQuery = 'UPDATE Products SET ';
+                const updateParts = [];
+                let updateParams = [];
+
+                for (const [key, value] of Object.entries(updatedFields)) {
+                    updateParts.push(`${key} = ?`);
+                    updateParams.push(value);
                 }
 
-                res.redirect('/adminmenu');
-            });
+                updateQuery += updateParts.join(', ') + ' WHERE ProductID = ?';
+                updateParams.push(productId);
+
+                console.log('SQL Command (Single Size Product):', updateQuery, updateParams);
+                connection.query(updateQuery, updateParams, (err) => {
+                    if (err) {
+                        console.error('Error updating product:', err);
+                    }
+                    // If everything went well, redirect to the admin menu
+                    res.redirect('/adminmenu');
+                });
+            } 
+            else {
+                // If product has multiple sizes, run the separate updates
+                if (newName || newDescription || newCategory || newImage) {
+                    let updateQuery = 'UPDATE Products SET ';
+                    const updateParts = [];
+                    let updateParams = [];
+
+                    if (newName) {
+                        updateParts.push('ProductName = ?');
+                        updateParams.push(newName);
+                    }
+                    if (newDescription) {
+                        updateParts.push('ProductDescription = ?');
+                        updateParams.push(newDescription);
+                    }
+                    if (newCategory) {
+                        updateParts.push('CategoryName = ?');
+                        updateParams.push(newCategory);
+                    }
+                    if (newImage) {
+                        updateParts.push('ProductImage = ?');
+                        updateParams.push(updatedFields.ProductImage); // New image URL from S3
+                    }
+
+                    updateQuery += updateParts.join(', ') + ' WHERE ProductName = ?';
+                    updateParams.push(productName);
+
+                    console.log('SQL Command (Names, Description, Category):', updateQuery, updateParams);
+                    connection.query(updateQuery, updateParams, (err) => {
+                        if (err) {
+                            console.error('Error updating name/description/category/image:', err);
+                        }
+                    });
+                }
+
+                if (newPrice || newSize) {
+                    // Use the new product name if available, otherwise use the old product name
+                    const queryProductName = newName || productName;
+                
+                    // First, retrieve the correct ProductID
+                    const productIdQuery = `
+                        SELECT ProductID 
+                        FROM Products 
+                        WHERE ProductName = ? 
+                        AND ProductSize = ?
+                    `;
+                
+                    connection.query(productIdQuery, [queryProductName, currentProductSize], (err, results) => {
+                        if (err) {
+                            console.error('Error fetching ProductID:', err);
+                            return res.status(500).send('Error fetching ProductID');
+                        }
+                
+                        if (results.length === 0) {
+                            console.error('No matching ProductID found.');
+                            return res.status(404).send('No matching product found.');
+                        }
+                
+                        let updateQuery = 'UPDATE Products SET ';
+                        const updateParts = [];
+                        let updateParams = [];
+                
+                        if (newPrice) {
+                            updateParts.push('ProductPrice = ?');
+                            updateParams.push(newPrice);
+                        }
+                        if (newSize) {
+                            updateParts.push('ProductSize = ?');
+                            updateParams.push(newSize.toLowerCase() === 'null' || newSize.toLowerCase() === 'none' ? null : newSize);
+                        }
+                
+                        updateQuery += updateParts.join(', ') + ' WHERE ProductID = ?';
+                        updateParams.push(results[0].ProductID); // Use the ProductID directly
+                
+                        console.log('SQL Command (Price, Size):', updateQuery, updateParams);
+                
+                        connection.query(updateQuery, updateParams, (err) => {
+                            if (err) {
+                                console.error('Error updating price/size:', err);
+                            }
+                            res.redirect('/adminmenu');
+                        });
+                    });
+                } else {
+                    res.redirect('/adminmenu');
+                }
+            }
         }
     });
 });
+
+
 
 
 
