@@ -1,6 +1,8 @@
 const express = require('express'); 
 const path = require('path');
 const session = require('express-session');
+require('./public/js/passwordExpirationNotifier');
+
 require('dotenv').config(); // Load environment variables from .env file
 const cookieParser = require('cookie-parser');
 // Import routes
