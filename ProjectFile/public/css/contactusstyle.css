@@ -77,17 +77,12 @@ padding: 20px;
 border-radius: 10px;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.footer {
-    background-color: #8b4513;
-    color: white;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    left: 0; /* Ensure it starts from the very left of the screen */
-    width: 100%; /* Full width */
-    height: 50px;
-    display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    z-index: 100; /* Ensure footer is above other content */
+
+.contact-us input,textarea {
+    width: 97%;
+}
+@media (max-width: 600px) {
+    .contact-us input,textarea {
+        width: 96%;
+    }
 }

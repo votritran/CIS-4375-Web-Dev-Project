@@ -209,6 +209,10 @@ h1 {
         width: 100%;
         padding: 8px;
     }
+    .menu-container {
+        max-width: 350px;
+        min-width: 350px; /* Even smaller menu cards on smaller screens */
+    }
 }
 
 /* Style for the product images */

@@ -56,6 +56,34 @@
             toggleCustomInput('frosting', 'customFrosting');
             toggleCustomInput('size', 'customSize');
             toggleCustomInput('shape', 'customShape');
+
+            // Need By Date date restrictions
+            const dateInput = document.getElementById('needByDate');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayStr = today.toISOString().split('T')[0];
+            dateInput.setAttribute('min', todayStr);
+
+            dateInput.addEventListener('change', () => {
+                const selectedDateParts = dateInput.value.split('-');
+                const selectedDate = new Date(
+                    selectedDateParts[0],
+                    selectedDateParts[1] - 1,
+                    selectedDateParts[2]
+                );
+                selectedDate.setHours(0, 0, 0, 0);
+
+                const currentDate = new Date();
+                currentDate.setHours(0, 0, 0, 0);
+
+                if (selectedDate.getTime() === currentDate.getTime()) {
+                    alert("Please call the bakry to check availability for same day orders.");
+                    dateInput.value = '';
+                } else if (selectedDate < currentDate) {
+                    alert("You cannot select a past date. Please choose a future date.");
+                    dateInput.value = '';
+                }
+            });
         });
 
         function closeModal() {
@@ -84,6 +112,13 @@
 
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" placeholder="Required" required>
+
+            <label for="preferredContact">Preferred Contact Method:</label>
+            <select id="preferredContact" name="preferredContact" required>
+                <option value="">--Please choose an option--</option>
+                <option value="phone">Phone</option>
+                <option value="email">Email</option>
+            </select>
 
             <label for="needByDate">Cake Needed By (Date):</label>
             <input type="date" id="needByDate" name="needByDate" required>
