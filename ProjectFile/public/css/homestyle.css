@@ -250,7 +250,10 @@ h1 {
     }
 
     .service-provided {
-        width: 90%;    /* Center the items */
+        width: 90%;   /* Center the items */
+    }
+    iframe {
+        width: 50%;
     }
 }
 .footer {
