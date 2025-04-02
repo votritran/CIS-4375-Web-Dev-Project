@@ -61,5 +61,7 @@ cron.schedule('0 0 * * *', () => {
     timezone: 'America/Chicago' 
 });
 
+checkPasswordExpirations();
+
 
 
