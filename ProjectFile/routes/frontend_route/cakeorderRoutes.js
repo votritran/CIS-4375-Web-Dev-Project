@@ -3,24 +3,70 @@ const router = express.Router();
 const db = require('../../config/dbconnection');
 const multer = require('multer');
 const AWS = require('aws-sdk');
-const path = require('path');
+const nodemailer = require('nodemailer');
 
-// AWS S3 configuration (using your hardcoded credentials)
+// AWS S3 configuration
 AWS.config.update({
-    accessKeyId: 'AKIAXFG5L4NB7TWHTIMP',
-    secretAccessKey: 'uZ47L7iiABXYvIKKR0M86LbleaOPUGbXKFjbC/1j',
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
     region: 'us-east-1'
 });
 
 const s3 = new AWS.S3();
 
-// Set up Multer for file uploads
+// Multer for file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Route to render the Cake Order page
+// Nodemailer email configuration
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS 
+    }
+});
+
+// Function to send order notification email
+async function sendOrderEmail(orderDetails, imageBuffer, imageName) {
+    try {
+        let emailText = `
+        New Cake Order Received!
+        
+        Name: ${orderDetails.name}
+        Email: ${orderDetails.email}
+        Phone: ${orderDetails.phone}
+        Preferred Contact: ${orderDetails.preferredContact}
+        Need By: ${orderDetails.needByDate}
+        
+        Cake Details:
+        - Type: ${orderDetails.cakeType || orderDetails.customCakeType}
+        - Frosting: ${orderDetails.frosting || orderDetails.customFrosting}
+        - Size: ${orderDetails.size || orderDetails.customSize}
+        - Shape: ${orderDetails.shape || orderDetails.customShape}
+
+        Additional Details:
+        ${orderDetails.description || "No additional details provided."}
+        `;
+
+        let mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: 'parissweetorder1@gmail.com',
+            subject: 'New Cake Order Received!',
+            text: emailText,
+            attachments: imageBuffer ? [{ filename: imageName, content: imageBuffer }] : []
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully.');
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+
+// Route to render Cake Order page
 router.get('/cakeorder', (req, res) => {
-    res.render('cakeorder');  // Render cakeorder.ejs
+    res.render('cakeorder');
 });
 
 // Route to handle form submission
@@ -37,58 +83,56 @@ router.post('/cakeorder', upload.single('image'), (req, res) => {
         }
 
         const ownerID = result[0]?.OwnerID;
-
-        if (!ownerID) {
-            return res.status(500).send('No Owner found in the Owner table');
-        }
+        if (!ownerID) return res.status(500).send('No Owner found in the Owner table');
 
         let CakeImage = null;
+        let imageBuffer = null;
+        let imageName = null;
 
         if (req.file) {
             const params = {
-                Bucket: 'cis4375tv',  // Your hardcoded bucket name
-                Key: `cakeImages/${Date.now()}_${req.file.originalname}`,  // Unique file name
+                Bucket: 'cis4375tv',
+                Key: `cakeImages/${Date.now()}_${req.file.originalname}`,
                 Body: req.file.buffer,
                 ContentType: req.file.mimetype,
-                ACL: 'public-read',  // Make it publicly readable
+                ACL: 'public-read',
             };
 
-            // Upload image to S3
             s3.upload(params, (err, data) => {
                 if (err) {
                     console.error('Error uploading image to S3:', err);
                     return res.status(500).send('Error uploading image');
                 }
 
-                CakeImage = data.Location;  // Image URL from S3
+                CakeImage = data.Location;
+                imageBuffer = req.file.buffer;
+                imageName = req.file.originalname;
 
-                // Insert order details into the database including OwnerID and Image URL
-                const sql = `
-                    INSERT INTO CakeOrder (name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, status, OwnerID, CakeImage)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?)`;
-                db.query(sql, [name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, ownerID, CakeImage], (err, result) => {
-                    if (err) {
-                        console.error('Error inserting order:', err);
-                        return res.status(500).send('An error occurred. Please try again later.');
-                    }
-
-                    console.log('Cake order saved successfully with OwnerID:', ownerID);
-                    res.json({ success: true, message: 'Order received' });
-                });
+                // Save to database and send email
+                saveOrderAndSendEmail();
             });
         } else {
-            // If no image is uploaded, just insert the order without an image
+            // No image uploaded
+            saveOrderAndSendEmail();
+        }
+
+        function saveOrderAndSendEmail() {
             const sql = `
-                INSERT INTO CakeOrder (name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, status, OwnerID)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?)`;
-            db.query(sql, [name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, ownerID], (err, result) => {
+                INSERT INTO CakeOrder (name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, status, OwnerID, CakeImage)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?)`;
+            
+            db.query(sql, [name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description, ownerID, CakeImage], (err, result) => {
                 if (err) {
                     console.error('Error inserting order:', err);
                     return res.status(500).send('An error occurred. Please try again later.');
                 }
 
                 console.log('Cake order saved successfully with OwnerID:', ownerID);
-                res.json({ success: true, message: 'Order received' });
+
+                // Call the sendOrderEmail function
+                sendOrderEmail({ name, email, phone, preferredContact, needByDate, cakeType, frosting, size, shape, description }, imageBuffer, imageName);
+
+                res.json({ success: true, message: 'Order received and email sent!' });
             });
         }
     });
